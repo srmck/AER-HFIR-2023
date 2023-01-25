@@ -1,0 +1,163 @@
+/**************************************************************************
+*
+* McStas, neutron ray-tracing package
+*         Copyright 1997-2006, All rights reserved
+*         Risoe National Laboratory, Roskilde, Denmark
+*         Institut Laue Langevin, Grenoble, France
+*
+* Component: pol_MWP_FI_expansion_v2
+* 
+* %I
+* Written by: Sam McKay
+* Date: May 2022
+* Origin: Indiana University
+*
+* Model of a magnetic Wollaston prism (MWP) that uses a supplied field integral
+* expansion with fitting parameters a, b, c, and d.
+*
+* %D
+* Rectangular box that approximates the action of an MWP. A neutron hitting outside of 
+* the opening square or the walls is absorbed. Precession only occurs in the z-x plane.
+*
+* This component does NOT take gravity into account.
+*
+* Example: pol_MWP_FI_expansion_v2(xwidth=0.02, yheight=0.02, zdepth=0.1, current=10.0, B_inv=0, Hyp_inv=0)
+*
+* %P
+* INPUT PARAMETERS:
+* xwidth:   [m]   Width of opening 
+* yheight:  [m]   Height of opening
+* zdepth:   [m]   Length of field region
+* current:  [A]	  Current in each triangular field region
+* B_inv:    [N/A] (0 or 1) determines the signs of B in each triangle
+* Hyp_inv:  [N/A] (0 or 1) determines the triangle orientations
+*
+* OUTPUT PARAMETERS:
+* phase_fin: [N/A]   Phase angle of spin in the x-z plane (local coordintates)
+*
+* %E
+*******************************************************************************/
+
+DEFINE COMPONENT pol_MWP_FI_expansion_v2
+SETTING PARAMETERS (xwidth=0.02, yheight=0.02, zdepth=0.1, current=10.0, B_inv=0, Hyp_inv=0)
+OUTPUT PARAMETERS (phase_fin)
+// Neutron parameters: x, y, z, vx, vy, vz, t, sx, sy, sz, p
+
+SHARE
+%{
+%}
+
+DECLARE
+%{
+  double phase_fin; //final phase
+  
+  //Constants used to calculate	Larmor phase
+  double gamma;
+  double velocity;
+  double FI;
+  
+  double a;  //field integral expansion constants
+  double b;
+  double c;
+  double d;
+  
+  double phi;
+  double psi;
+  
+  int unpol;  //flags beam as unpolarized
+  
+%}
+
+INITIALIZE
+%{
+  gamma = -1.832471*pow(10,8); //neutron gyromagnetic ratio
+  
+  a = 6*pow(10,-3);  //converted from mT to T
+  b = 6.2*pow(10,-3); 
+  c = 0.1*pow(10,-3);
+  d = -220*pow(10,-3);
+  
+  if((xwidth<=0) || (yheight<=0) || (zdepth<=0)) {
+     fprintf(stderr, "Pol_filter: %s: Null or negative volume! \n"
+	 "ERROR (xwidth, yheight, zdepth); exiting. \n",
+	 NAME_CURRENT_COMP);
+     exit(1);
+  }
+  if(B_inv !=0 && B_inv!=1) {
+     fprintf(stderr, "B_inv must be either 0 or 1! \n"
+	 "ERROR; exiting. \n",
+	 NAME_CURRENT_COMP);
+     exit(1);
+  }
+  if(Hyp_inv !=0 && Hyp_inv!=1) {
+     fprintf(stderr, "Hyp_inv must be either 0 or 1! \n"
+	 "ERROR; exiting. \n",
+	 NAME_CURRENT_COMP);
+     exit(1);
+  }
+%}
+
+TRACE
+%{
+  double sx_in = sx, sy_in = sy, sz_in = sz; //initial spin components
+  double phi_in = atan2(sz_in, sx_in);  //horizontal initial Larmor phase
+  double theta_in;  //vertical initial Larmor phase
+  if(sx_in == 0 && sy_in == 0 && sz_in == 0) {
+	unpol = 1; //beam is completely depolarized
+  }
+  else {
+	unpol = 0;
+	theta_in = acos(sy_in/(sx_in*sx_in + sy_in*sy_in + sz_in*sz_in));
+  }
+  double deltaT = zdepth/vz; //time spent inside prism
+  
+  PROP_Z0;  //propagate neutron to local coordinate system origin (front face)
+  
+  if (!inside_rectangle(x, y, xwidth, yheight)){  //defines front mask
+	 SCATTER;  //indicates interaction with device
+     ABSORB;
+  }
+
+  if (!inside_rectangle(x+vx*deltaT, y+vy*deltaT, xwidth, yheight)) {  //defines walls and back mask
+	 SCATTER;  //indicates interaction with device
+     ABSORB;
+  }  
+  
+  PROP_DT(deltaT/2);  //propagate to center of device
+  SCATTER;  //indicates interaction with device
+  
+  if unpol {
+	sx = 0, sy = 0, sz = 0;
+  }
+  else {
+  velocity = sqrt(vx*vx+vy*vy+vz*vz);
+  phi = atan2(vx,vz); //horizontal plane angle
+  psi = atan2(vy,vz); //vertical plane angle
+  
+  FI = a*x + b*x*phi + c*y*psi + d*x*y*y;
+  
+  //Used when the hypotenuse of the prism is in the opposite sense
+  if(Hyp_inv == 1) {
+      FI = -a*x + b*x*phi + c*y*psi - d*x*y*y;
+  }
+  
+  //Used when the field directions of the prisms are switched
+  if(B_inv == 1) {
+      FI = -FI;
+  }
+  
+  phase_fin = gamma/velocity*current*FI + phi_in;  //precession about y-axis
+  sx = cos(phase_fin)*sin(theta_in);
+  sy = cos(theta_in);
+  sz = sin(phase_fin)*sin(theta_in);
+  }
+  
+  PROP_DT(deltaT/2);  //exits device
+%}
+
+MCDISPLAY
+%{
+  box(0, 0, zdepth/2.0, xwidth, yheight, zdepth);
+%}
+
+END
