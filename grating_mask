@@ -1,0 +1,86 @@
+/*******************************************************************************
+*
+* McStas, neutron ray-tracing package
+*         Copyright 1997-2002, All rights reserved
+*         Risoe National Laboratory, Roskilde, Denmark
+*         Institut Laue Langevin, Grenoble, France
+*
+* Component: Mask grating for AER experiment. 
+*
+* %I
+* Written by: Sam McKay
+* Date: January 2023
+* Origin: Indiana University 
+*
+* Models a square diffraction grating used for the HFIR cycle 502
+* demonstration of AER. Includes thickness as a parameter.
+*
+* %D
+* A simple square diffraction grating.
+*
+* Example: grating_mask(mask_size=.04,grating_size=.002,thickness=.001,pitch=.002)
+* 
+* %P
+* INPUT PARAMETERS
+*
+* xwidth: [m]   Width of slit
+* yheight: [m]  Height of slit 
+* sep: [m]     Separation between the two slits measured from edge to edge
+*
+* *
+* %E
+*******************************************************************************/
+
+
+DEFINE COMPONENT dfi_pattern
+DEFINITION PARAMETERS ()
+  SETTING PARAMETERS (xwidth=0.001, yheight=0.01, sep=0.001)
+OUTPUT PARAMETERS ()
+/* Neutron parameters: (x,y,z,vx,vy,vz,t,sx,sy,sz,p) */
+
+DECLARE
+%{
+    double xmin;
+	double xmax;
+	double ymin;
+	double ymax;
+%}
+
+INITIALIZE
+%{
+    xmin = -xwidth;
+	xmax = xwidth;
+	ymin = -yheight/2;
+	ymax = yheight/2;
+%}
+
+TRACE
+%{
+    PROP_Z0;
+    if (x<(xmin - sep/2) || (x>-sep/2 && x<sep/2) || x>(xmax + sep/2) || y<ymin || y>ymax)
+      ABSORB;
+    else
+        SCATTER;
+%}
+
+MCDISPLAY
+%{
+/* Fix this section later to show two slits.*/
+    double xw, yh;
+    xw = (xmax - xmin)/2.0;
+    yh = (ymax - ymin)/2.0;
+    multiline(3, xmin-xw, (double)ymax, 0.0,
+              (double)xmin, (double)ymax, 0.0,
+              (double)xmin, ymax+yh, 0.0);
+    multiline(3, xmax+xw, (double)ymax, 0.0,
+              (double)xmax, (double)ymax, 0.0,
+              (double)xmax, ymax+yh, 0.0);
+    multiline(3, xmin-xw, (double)ymin, 0.0,
+              (double)xmin, (double)ymin, 0.0,
+              (double)xmin, ymin-yh, 0.0);
+    multiline(3, xmax+xw, (double)ymin, 0.0,
+              (double)xmax, (double)ymin, 0.0,
+              (double)xmax, ymin-yh, 0.0);
+%}
+
+END
