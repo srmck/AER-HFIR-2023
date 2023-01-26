@@ -35,35 +35,54 @@
 *******************************************************************************/
 DEFINE COMPONENT grating_mask
 DEFINITION PARAMETERS ()
-SETTING PARAMETERS (outer=.04,inner=.02,Tr_len=.001,Ab_len=.001,offset=0.,int slits=11)
+SETTING PARAMETERS (outer=.04,inner=.022,Tr_len=.001,Ab_len=.001,offset=.0005,int slits=11)
 OUTPUT PARAMETERS ()
 /* Neutron parameters: (x,y,z,vx,vy,vz,t,sx,sy,sz,p) */
 
 DECLARE
 %{
+	double ymax; //Why do all of these have to be on a separate line!?!?!?!?!
+	double ymin;
+	double xmax;
+	double xmin;
+	double y_inner_max;
+	double y_inner_min;
+	double x_inner_max;
+	double x_inner_min;
+	double extra;
 %}
 
 INITIALIZE
 %{
-	double ymax = outer/2, ymin = -outer/2;
-	double xmax = outer/2, xmin = -outer/2;
-	double y_inner_max = inner/2, y_inner_min = -inner/2;
-	double extra = inner - (offset + slits*Tr_len + (slits - 1)*Ab_len); //extra absorbing material
+	ymax = outer/2;
+	ymin = -outer/2;
+	xmax = outer/2;
+	xmin = -outer/2;
+	y_inner_max = inner/2;
+	y_inner_min = -inner/2;
+	x_inner_max = inner/2;
+	extra = inner - (offset + slits*Tr_len + (slits - 1)*Ab_len); //extra absorbing material
 	
 	if (inner > outer)
-		{fprintf(stderr,"MASK: %s: Error: Inner mask dimension is larger than outer dimension!\n", NAME_CURRENT_COMP); exit(-1);
+		{fprintf(stderr,"MASK: %s: Error: Inner mask dimension is larger than outer dimension!\n", NAME_CURRENT_COMP);
+		exit(-1);
 		}
 	if (Tr_len*slits > inner)
-		{fprintf(stderr,"MASK: %s: Error: Slits are too large!\n", NAME_CURRENT_COMP); exit(-1);
+		{fprintf(stderr,"MASK: %s: Error: Slits are too large!\n", NAME_CURRENT_COMP);
+		exit(-1);
 		}
 	if (Ab_len*(slits-1) > inner)
-		{fprintf(stderr,"MASK: %s: Error: Absorbers are too large!\n", NAME_CURRENT_COMP); exit(-1);
+		{fprintf(stderr,"MASK: %s: Error: Absorbers are too large!\n", NAME_CURRENT_COMP);
+		exit(-1);
 		}
 	if ((slits*Tr_len + (slits - 1)*Ab_len + offset) > inner)
-		{fprintf(stderr,"MASK: %s: Error: Too many slits for inner mask parameter!\n", NAME_CURRENT_COMP); exit(-1);
+		{fprintf(stderr,"MASK: %s: Error: Too many slits for inner mask parameter!\n", NAME_CURRENT_COMP);
+		exit(-1);
 		}
 	if (extra < 0)
-		{fprintf(stderr,"MASK: %s: Error: Too many slits!\n", NAME_CURRENT_COMP); exit(-1);
+		{fprintf(stderr,"MASK: %s: Error: Too many slits!\n", NAME_CURRENT_COMP);
+		exit(-1);
+		}
 %}
 
 TRACE
@@ -75,9 +94,10 @@ TRACE
 		{
 		if ((y < y_inner_max) && (y > y_inner_min))
 			{
-			for (n = 1; n <= slits; ++n)
+			SCATTER;
+			for (int n = 1; n <= slits; ++n) //Checking slits from right to left (neutron pov)
 				{
-				if ((x < max - offset - n*(Tr_len + Ab_len)) && (x > xmax - offset - n*Tr_len - Ab_len*(n-1)))
+				if ((x > (x_inner_max - offset - (Tr_len + Ab_len)*(n - 1) - Tr_len)) && (x < (x_inner_max - offset - (Tr_len + Ab_len)*(n - 1))))
 					{ SCATTER; } //Pass through one of the slits in the mask
 				else
 					{ ABSORB; }
