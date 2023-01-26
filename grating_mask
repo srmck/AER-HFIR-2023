@@ -13,74 +13,84 @@
 * Origin: Indiana University 
 *
 * Models a square diffraction grating used for the HFIR cycle 502
-* demonstration of AER. Includes thickness as a parameter.
+* demonstration of AER. Does not include thickness as a parameter.
+* Allows transmission outside of mask boundaries.
 *
 * %D
-* A simple square diffraction grating.
+* A simple square diffraction grating mask.
 *
-* Example: grating_mask(mask_size=.04,grating_size=.002,thickness=.001,pitch=.002)
+* Example: grating_mask(outer=.04,inner=.02,Tr_len=.001,Ab_len=.001,offset=0.,slits=11)
 * 
 * %P
 * INPUT PARAMETERS
 *
-* xwidth: [m]   Width of slit
-* yheight: [m]  Height of slit 
-* sep: [m]     Separation between the two slits measured from edge to edge
-*
+* outer: [m]		Width/height of mask
+* inner: [m]		Width/height of area of mask with the grating
+* Tr_len: [m]		Length of slits
+* Ab_len: [m]		Length of absorbing section
+* slits: [N/A]		Number of slits
+* offset: [m]		Offset of first slit
 * *
 * %E
 *******************************************************************************/
-
-
-DEFINE COMPONENT dfi_pattern
+DEFINE COMPONENT grating_mask
 DEFINITION PARAMETERS ()
-  SETTING PARAMETERS (xwidth=0.001, yheight=0.01, sep=0.001)
+SETTING PARAMETERS (outer=.04,inner=.02,Tr_len=.001,Ab_len=.001,offset=0.,int slits=11)
 OUTPUT PARAMETERS ()
 /* Neutron parameters: (x,y,z,vx,vy,vz,t,sx,sy,sz,p) */
 
 DECLARE
 %{
-    double xmin;
-	double xmax;
-	double ymin;
-	double ymax;
 %}
 
 INITIALIZE
 %{
-    xmin = -xwidth;
-	xmax = xwidth;
-	ymin = -yheight/2;
-	ymax = yheight/2;
+	double ymax = outer/2, ymin = -outer/2;
+	double xmax = outer/2, xmin = -outer/2;
+	double y_inner_max = inner/2, y_inner_min = -inner/2;
+	double extra = inner - (offset + slits*Tr_len + (slits - 1)*Ab_len); //extra absorbing material
+	
+	if (inner > outer)
+		{fprintf(stderr,"MASK: %s: Error: Inner mask dimension is larger than outer dimension!\n", NAME_CURRENT_COMP); exit(-1);
+		}
+	if (Tr_len*slits > inner)
+		{fprintf(stderr,"MASK: %s: Error: Slits are too large!\n", NAME_CURRENT_COMP); exit(-1);
+		}
+	if (Ab_len*(slits-1) > inner)
+		{fprintf(stderr,"MASK: %s: Error: Absorbers are too large!\n", NAME_CURRENT_COMP); exit(-1);
+		}
+	if ((slits*Tr_len + (slits - 1)*Ab_len + offset) > inner)
+		{fprintf(stderr,"MASK: %s: Error: Too many slits for inner mask parameter!\n", NAME_CURRENT_COMP); exit(-1);
+		}
+	if (extra < 0)
+		{fprintf(stderr,"MASK: %s: Error: Too many slits!\n", NAME_CURRENT_COMP); exit(-1);
 %}
 
 TRACE
 %{
     PROP_Z0;
-    if (x<(xmin - sep/2) || (x>-sep/2 && x<sep/2) || x>(xmax + sep/2) || y<ymin || y>ymax)
-      ABSORB;
-    else
-        SCATTER;
+	if (y > ymax || y < ymin || x > xmax || x < xmin)
+		{ SCATTER; } //Pass outside mask
+	else
+		{
+		if ((y < y_inner_max) && (y > y_inner_min))
+			{
+			for (n = 1; n <= slits; ++n)
+				{
+				if ((x < max - offset - n*(Tr_len + Ab_len)) && (x > xmax - offset - n*Tr_len - Ab_len*(n-1)))
+					{ SCATTER; } //Pass through one of the slits in the mask
+				else
+					{ ABSORB; }
+				}
+			}
+		else
+			{ ABSORB; }
+		}
 %}
 
 MCDISPLAY
 %{
-/* Fix this section later to show two slits.*/
-    double xw, yh;
-    xw = (xmax - xmin)/2.0;
-    yh = (ymax - ymin)/2.0;
-    multiline(3, xmin-xw, (double)ymax, 0.0,
-              (double)xmin, (double)ymax, 0.0,
-              (double)xmin, ymax+yh, 0.0);
-    multiline(3, xmax+xw, (double)ymax, 0.0,
-              (double)xmax, (double)ymax, 0.0,
-              (double)xmax, ymax+yh, 0.0);
-    multiline(3, xmin-xw, (double)ymin, 0.0,
-              (double)xmin, (double)ymin, 0.0,
-              (double)xmin, ymin-yh, 0.0);
-    multiline(3, xmax+xw, (double)ymin, 0.0,
-              (double)xmax, (double)ymin, 0.0,
-              (double)xmax, ymin-yh, 0.0);
+/* Draw outer and inner square */
 %}
 
 END
