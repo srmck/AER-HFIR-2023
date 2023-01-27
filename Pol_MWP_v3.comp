@@ -1,0 +1,141 @@
+/**************************************************************************
+*
+* McStas, neutron ray-tracing package
+*         Copyright 1997-2006, All rights reserved
+*         Risoe National Laboratory, Roskilde, Denmark
+*         Institut Laue Langevin, Grenoble, France
+*
+* Component: pol_MWP_FI_expansion_v2
+* 
+* %I
+* Written by: Sam McKay
+* Date: Jan 2023
+* Origin: Indiana University
+*
+* Model of a magnetic Wollaston prism (MWP) that uses a supplied field integral
+* expansion.
+*
+* %D
+* Rectangular box that approximates the action of an MWP. A neutron hitting outside of 
+* the opening square or the walls is absorbed. Precession only occurs in the z-x plane.
+*
+* This component does NOT take gravity into account.
+*
+* Example: Pol_MWP_v3(xwidth=0.02,yheight=0.02,zdepth=0.1,current=10.0,Hyp_inv=0,FI0=0,a=.006,b=.0062,c=.0001,d=-.22,B0=0.0,Bx=0.0,By=0.0,Bz=0.0)
+*
+* %P
+* INPUT PARAMETERS:
+* xwidth:   [m]   	Width of opening 
+* yheight:  [m]   	Height of opening
+* zdepth:   [m]   	Length of field region
+* current:  [A]	  	Current in each triangular field region
+* Hyp_inv:  [N/A] 	(0 or 1) determines the hypotenuse orientation
+* FI0:		[T/m] 	Constant field integral term
+* a:		[T/m^2]
+* b:		[T/m^2]	
+* c:		[T/m^2]	
+* d:		[T/m^2]	
+* B0:		[T/m^2]	
+* Bx:		[T/m^2]	
+* By:		[T/m^2]	
+* Bz:		[T/m^2]	
+*
+* OUTPUT PARAMETERS:
+*
+* %E
+*******************************************************************************/
+
+DEFINE COMPONENT Pol_MWP_v3
+SETTING PARAMETERS (xwidth=.02,yheight=.02,zdepth=0.1,current=10.0,Hyp_inv=0,FI0=.0,a=.006,b=.0062,c=.0001,d=-.22,B0=.0,Bx=.0,By=.0,Bz=.0)
+OUTPUT PARAMETERS ()
+// Neutron parameters: x, y, z, vx, vy, vz, t, sx, sy, sz, p
+
+SHARE
+%{
+%}
+
+DECLARE
+%{
+	double phase_fin;
+  
+	double gamma; //gyromagnetic ratio
+	double velocity;
+	double FI;
+	double LG;
+	
+	double phi;
+	double psi; 
+%}
+
+INITIALIZE
+%{
+	gamma = -1.832471*pow(10,8); //neutron gyromagnetic ratio
+  
+	if((xwidth<=0) || (yheight<=0) || (zdepth<=0)) {
+		fprintf(stderr, "MWP: %s: Null or negative volume! \n"
+		"ERROR (xwidth, yheight, zdepth); exiting. \n",
+		NAME_CURRENT_COMP);
+		exit(1);
+	}
+	if(Hyp_inv !=0 && Hyp_inv!=1) {
+		fprintf(stderr, "MWP: %s: Hyp_inv must be either 0 or 1! \n"
+		"ERROR; exiting. \n",
+		NAME_CURRENT_COMP);
+		exit(1);
+	}
+%}
+
+TRACE
+%{
+	int unpol = 0;  //flags neutron as unpolarized
+	double sx_in = sx, sy_in = sy, sz_in = sz; //initial spin components
+	
+	double phi_in = atan2(sz_in, sx_in);  //horizontal initial Larmor phase
+	double theta_in;  //vertical initial Larmor phase
+	
+	if(sx_in == 0 && sy_in == 0 && sz_in == 0) 
+		{ unpol = 1; }  //neutron is completely depolarized
+	else {
+		theta_in = acos(sy_in/(sx_in*sx_in + sy_in*sy_in + sz_in*sz_in));
+	}
+	
+	double deltaT = zdepth/vz; //time spent inside prism
+	
+	if (!inside_rectangle(x, y, xwidth, yheight)) //defines front mask
+		{ ABSORB; }
+
+	if (!inside_rectangle(x+vx*deltaT, y+vy*deltaT, xwidth, yheight)) //defines back mask
+		{ ABSORB; }  
+	
+	PROP_Z0;
+	PROP_DT(deltaT/2);  //propagate to center of device
+	
+	if (unpol == 0) {
+		velocity = sqrt(vx*vx+vy*vy+vz*vz);
+		phi = atan2(vx,vz); //horizontal plane angle
+		psi = atan2(vy,vz); //vertical plane angle
+  
+		if(Hyp_inv == 1) {  //inverted hypotenuse
+			a = -a, d = -d;
+			Bx = -Bx, Bz = -Bz;
+		}
+		
+		LG = zdepth*(B0 + Bx*x + By*y + Bz*z);  //linear gradient term
+		FI = FI0 + a*x + b*x*phi + c*y*psi + d*x*y*y + LG;
+  
+		phase_fin = gamma/velocity*current*FI + phi_in;  //precession about y-axis
+		sx = cos(phase_fin)*sin(theta_in);
+		sy = cos(theta_in);
+		sz = sin(phase_fin)*sin(theta_in);
+	}
+  
+	SCATTER;
+	PROP_DT(deltaT/2);
+%}
+
+MCDISPLAY
+%{
+	box(0, 0, zdepth/2.0, xwidth, yheight, zdepth);
+%}
+
+END
