@@ -50,6 +50,7 @@ DECLARE
 	double x_inner_max;
 	double x_inner_min;
 	double extra;
+	int pass; //flag for passing through one of the slits
 %}
 
 INITIALIZE
@@ -87,6 +88,7 @@ INITIALIZE
 
 TRACE
 %{
+	pass = 0;
     PROP_Z0;
 	if (y > ymax || y < ymin || x > xmax || x < xmin)
 		{ SCATTER; } //Pass outside mask
@@ -94,14 +96,16 @@ TRACE
 		{
 		if ((y < y_inner_max) && (y > y_inner_min))
 			{
-			SCATTER;
 			for (int n = 1; n <= slits; ++n) //Checking slits from right to left (neutron pov)
 				{
 				if ((x > (x_inner_max - offset - (Tr_len + Ab_len)*(n - 1) - Tr_len)) && (x < (x_inner_max - offset - (Tr_len + Ab_len)*(n - 1))))
-					{ SCATTER; } //Pass through one of the slits in the mask
-				else
-					{ ABSORB; }
+					{ 
+					SCATTER; //Pass through one of the slits in the mask
+					pass += 1;
+					} 
 				}
+			if (pass == 0)
+				{ ABSORB; }
 			}
 		else
 			{ ABSORB; }
