@@ -21,7 +21,7 @@
 *
 * This component does NOT take gravity into account.
 *
-* Example: Pol_MWP_v3(xwidth=0.02,yheight=0.02,zdepth=0.1,current=10.0,Hyp_inv=0,FI0=0,a=.006,b=.0062,c=.0001,d=-.22,B0=0.0,Bx=0.0,By=0.0,Bz=0.0)
+* Example: Pol_MWP_v3(xwidth=0.02,yheight=0.02,zdepth=0.1,current=10.0,Hyp_inv=0,FI0=.0,a=.006,b=.0062,c=.0001,d=-.22,B0=.0,Bx=.0,By=.0,Bz=.0)
 *
 * %P
 * INPUT PARAMETERS:
@@ -30,15 +30,15 @@
 * zdepth:   [m]   	Length of field region
 * current:  [A]	  	Current in each triangular field region
 * Hyp_inv:  [N/A] 	(0 or 1) determines the hypotenuse orientation
-* FI0:		[T/m] 	Constant field integral term
+* FI0:		[T m] 	Constant field integral term
 * a:		[T/m^2]
 * b:		[T/m^2]	
 * c:		[T/m^2]	
 * d:		[T/m^2]	
-* B0:		[T/m^2]	
-* Bx:		[T/m^2]	
-* By:		[T/m^2]	
-* Bz:		[T/m^2]	
+* B0:		[T]	Constant field (depends on length)
+* Bx:		[T/m]	x field gradient (depends on length, independent of current)
+* By:		[T/m]	y field gradient (depends on length, independent of current)
+* Bz:		[T/m]	z field gradient (depends on length, independent of current)
 *
 * OUTPUT PARAMETERS:
 *
