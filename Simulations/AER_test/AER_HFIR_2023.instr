@@ -11,11 +11,11 @@
 * European Spallation Source Data Management and 
 * Software Centre
 * 
-* Instrument AER
+* Instrument AER_HFIR_2023
 * 
 * %Identification
 * Written by: Sam McKay
-* Date: 14:28:09 on January 25, 2023
+* Date: 12:28:05 on January 30, 2023
 * Origin: Indiana University
 * %INSTRUMENT_SITE: Generated_instruments
 * 
@@ -25,14 +25,12 @@
 * %End 
 ********************************************************************************/
 
-DEFINE INSTRUMENT AER (
+DEFINE INSTRUMENT AER_HFIR_2023 (
 double delta_lambda = 0.055, // Wavelength spread [AA]
 int low_count = 0, // if true flips analyzer direction [N/A]
 int all_off = 0, // if true turns off all MWPs [N/A]
-double cur1 = 1.23313, // MWP1 current [Amps]
-double cur2 = -1.23313, // MWP2 current [Amps]
-double cur3 = -1.23313, // MWP3 current [Amps]
-double cur4 = 1.23313, // MWP4 current [Amps]
+double cur1 = 0, // MWP1 current [Amps]
+double cur2 = -0, // MWP2 current [Amps]
 double polx = 1, // x-component of polarizer [N/A]
 double poly = 0, // y-component of polarizer [N/A]
 double polz = 0 // z-component of polarizer [N/A]
@@ -44,7 +42,7 @@ DECLARE
 
 INITIALIZE 
 %{
-// Start of initialize for generated AER
+// Start of initialize for generated AER_HFIR_2023
 %}
 
 TRACE 
@@ -55,10 +53,10 @@ COMPONENT arm = Arm()
 AT (0,0,0) RELATIVE origin
 
 COMPONENT src = Source_sam(
- radius = 0.005, dist = 3,
- focus_xw = 0.00354, focus_yh = 0.015,
+ radius = 0.005, dist = 2.5,
+ focus_xw = 0.015, focus_yh = 0.015,
  lambda0 = 5.5, dlambda = delta_lambda,
- I1 = 1E+18, x_offset = 0)
+ I1 = 1E+12)
 AT (0,0,0) RELATIVE origin
 
 COMPONENT pol = Set_pol(
@@ -66,49 +64,36 @@ COMPONENT pol = Set_pol(
  pz = polz)
 AT (0,0,1e-06) RELATIVE origin
 
-COMPONENT MWP1 = pol_MWP_FI_expansion_v2(
+COMPONENT MWP1 = Pol_MWP_v3(
  xwidth = 0.02, yheight = 0.02,
- zdepth = 0.105, current = cur1*(1-all_off),
- Hyp_inv = 0)
-AT (0,0,0.787) RELATIVE origin
+ zdepth = 0.1, current = cur1*(1-all_off))
+AT (0,0,0.55) RELATIVE origin
 
-COMPONENT MWP2 = pol_MWP_FI_expansion_v2(
+COMPONENT MWP2 = Pol_MWP_v3(
  xwidth = 0.02, yheight = 0.02,
- zdepth = 0.105, current = cur2*(1-all_off),
- Hyp_inv = 1)
-AT (0,0,1.0) RELATIVE origin
-
-COMPONENT MWP3 = pol_MWP_FI_expansion_v2(
- xwidth = 0.02, yheight = 0.02,
- zdepth = 0.105, current = cur3*(1-all_off),
- Hyp_inv = 0)
-AT (0,0,1.287) RELATIVE origin
-
-COMPONENT MWP4 = pol_MWP_FI_expansion_v2(
- xwidth = 0.02, yheight = 0.02,
- zdepth = 0.105, current = cur4*(1-all_off),
- Hyp_inv = 1)
-AT (0,0,1.5) RELATIVE origin
+ zdepth = 0.1, current = cur2*(1-all_off))
+AT (0,0,0.95) RELATIVE origin
 
 COMPONENT ana = PolAnalyser_ideal(
  mx = polx*(1-2*low_count), my = poly*(1-2*low_count),
  mz = polz*(1-2*low_count))
-AT (0,0,1.999998) RELATIVE origin
+AT (0,0,1.15) RELATIVE origin
 
-COMPONENT pat_x = dfi_pattern(
- xwidth = 0.0002, yheight = 0.01,
- sep = 0.0002)
-AT (0.0003,0,2.0) RELATIVE origin
+COMPONENT sam = grating_mask(
+ outer = 40, inner = 22,
+ Tr_len = 1, Ab_len = 1,
+ offset = 0.5, slits = 11)
+AT (0.0,0.0,1.25) RELATIVE origin
 
-COMPONENT twoD_det = PSD_monitor(
- nx = 128, ny = 128,
- filename = "AER_twoD.dat", xwidth = 0.00354,
+COMPONENT det = PSD_monitor(
+ nx = 37, ny = 9,
+ filename = "AER_2D.dat", xwidth = 0.015,
  yheight = 0.015)
-AT (0.0,0,3.000002) RELATIVE origin
+AT (0,0,2.5) RELATIVE origin
 
 FINALLY 
 %{
-// Start of finally for generated AER
+// Start of finally for generated AER_HFIR_2023
 %}
 
 END

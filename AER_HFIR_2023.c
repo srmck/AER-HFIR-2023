@@ -1,9 +1,9 @@
 /* Automatically generated file. Do not edit. 
  * Format:     ANSI C source code
  * Creator:    McStas <http://www.mcstas.org>
- * Instrument: AER.instr (AER)
- * Date:       Wed Jan 25 14:28:10 2023
- * File:       AER.c
+ * Instrument: AER_HFIR_2023.instr (AER_HFIR_2023)
+ * Date:       Mon Jan 30 12:31:43 2023
+ * File:       AER_HFIR_2023.c
  * CFLAGS=
  */
 
@@ -6075,7 +6075,7 @@ int plane_intersect(double *t, double x, double y, double z,
 
 
 /* *****************************************************************************
-* Start of instrument 'AER' generated code
+* Start of instrument 'AER_HFIR_2023' generated code
 ***************************************************************************** */
 
 #ifdef MC_TRACE_ENABLED
@@ -6085,15 +6085,15 @@ int traceenabled = 0;
 #endif
 #define MCSTAS "C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\"
 int   defaultmain         = 1;
-char  instrument_name[]   = "AER";
-char  instrument_source[] = "AER.instr";
+char  instrument_name[]   = "AER_HFIR_2023";
+char  instrument_source[] = "AER_HFIR_2023.instr";
 char *instrument_exe      = NULL; /* will be set to argv[0] in main */
-char  instrument_code[]   = "Instrument AER source code AER.instr is not embedded in this executable.\n  Use --source option when running McStas.\n";
+char  instrument_code[]   = "Instrument AER_HFIR_2023 source code AER_HFIR_2023.instr is not embedded in this executable.\n  Use --source option when running McStas.\n";
 
 int main(int argc, char *argv[]){return mccode_main(argc, argv);}
 
 /* *****************************************************************************
-* instrument 'AER' and components DECLARE
+* instrument 'AER_HFIR_2023' and components DECLARE
 ***************************************************************************** */
 
 /* Instrument parameters: structure and a table for the initialisation
@@ -6105,8 +6105,6 @@ struct _struct_instrument_parameters {
   long all_off;
   MCNUM cur1;
   MCNUM cur2;
-  MCNUM cur3;
-  MCNUM cur4;
   MCNUM polx;
   MCNUM poly;
   MCNUM polz;
@@ -6114,29 +6112,27 @@ struct _struct_instrument_parameters {
 typedef struct _struct_instrument_parameters _class_instrument_parameters;
 
 struct _instrument_struct {
-  char   _name[256]; /* the name of this instrument e.g. 'AER' */
+  char   _name[256]; /* the name of this instrument e.g. 'AER_HFIR_2023' */
 /* Counters per component instance */
-  double counter_AbsorbProp[13]; /* absorbed events in PROP routines */
-  double counter_N[13], counter_P[13], counter_P2[13]; /* event counters after each component instance */
-  _class_particle _trajectory[13]; /* current trajectory for STORE/RESTORE */
+  double counter_AbsorbProp[11]; /* absorbed events in PROP routines */
+  double counter_N[11], counter_P[11], counter_P2[11]; /* event counters after each component instance */
+  _class_particle _trajectory[11]; /* current trajectory for STORE/RESTORE */
 /* Components position table (absolute and relative coords) */
-  Coords _position_relative[13]; /* positions of all components */
-  Coords _position_absolute[13];
+  Coords _position_relative[11]; /* positions of all components */
+  Coords _position_absolute[11];
   _class_instrument_parameters _parameters; /* instrument parameters */
 } _instrument_var;
 struct _instrument_struct *instrument = & _instrument_var;
 #pragma acc declare create ( _instrument_var )
 #pragma acc declare create ( instrument )
 
-int numipar = 10;
+int numipar = 8;
 struct mcinputtable_struct mcinputtable[] = {
   "delta_lambda", &(_instrument_var._parameters.delta_lambda), instr_type_double, "0.055", 
   "low_count", &(_instrument_var._parameters.low_count), instr_type_int, "0", 
   "all_off", &(_instrument_var._parameters.all_off), instr_type_int, "0", 
-  "cur1", &(_instrument_var._parameters.cur1), instr_type_double, "1.23313", 
-  "cur2", &(_instrument_var._parameters.cur2), instr_type_double, "-1.23313", 
-  "cur3", &(_instrument_var._parameters.cur3), instr_type_double, "-1.23313", 
-  "cur4", &(_instrument_var._parameters.cur4), instr_type_double, "1.23313", 
+  "cur1", &(_instrument_var._parameters.cur1), instr_type_double, "0", 
+  "cur2", &(_instrument_var._parameters.cur2), instr_type_double, "-0", 
   "polx", &(_instrument_var._parameters.polx), instr_type_double, "1", 
   "poly", &(_instrument_var._parameters.poly), instr_type_double, "0", 
   "polz", &(_instrument_var._parameters.polz), instr_type_double, "0", 
@@ -7839,35 +7835,39 @@ typedef struct _struct_Set_pol _class_Set_pol;
 _class_Set_pol _pol_var;
 #pragma acc declare create ( _pol_var )
 
-/* component MWP1=pol_MWP_FI_expansion_v2() [5] DECLARE */
-/* Parameter definition for component type 'pol_MWP_FI_expansion_v2' */
-struct _struct_pol_MWP_FI_expansion_v2_parameters {
-  /* Component type 'pol_MWP_FI_expansion_v2' setting parameters */
+/* component MWP1=Pol_MWP_v3() [5] DECLARE */
+/* Parameter definition for component type 'Pol_MWP_v3' */
+struct _struct_Pol_MWP_v3_parameters {
+  /* Component type 'Pol_MWP_v3' setting parameters */
   MCNUM xwidth;
   MCNUM yheight;
   MCNUM zdepth;
   MCNUM current;
-  MCNUM B_inv;
   MCNUM Hyp_inv;
-  /* Component type 'pol_MWP_FI_expansion_v2' private parameters */
+  MCNUM FI0;
+  MCNUM a;
+  MCNUM b;
+  MCNUM c;
+  MCNUM d;
+  MCNUM B0;
+  MCNUM Bx;
+  MCNUM By;
+  MCNUM Bz;
+  /* Component type 'Pol_MWP_v3' private parameters */
   double  phase_fin;
   double  gamma;
   double  velocity;
   double  FI;
-  double  a;
-  double  b;
-  double  c;
-  double  d;
+  double  LG;
   double  phi;
   double  psi;
-  int  unpol;
-}; /* _struct_pol_MWP_FI_expansion_v2_parameters */
-typedef struct _struct_pol_MWP_FI_expansion_v2_parameters _class_pol_MWP_FI_expansion_v2_parameters;
+}; /* _struct_Pol_MWP_v3_parameters */
+typedef struct _struct_Pol_MWP_v3_parameters _class_Pol_MWP_v3_parameters;
 
-/* Parameters for component type 'pol_MWP_FI_expansion_v2' */
-struct _struct_pol_MWP_FI_expansion_v2 {
+/* Parameters for component type 'Pol_MWP_v3' */
+struct _struct_Pol_MWP_v3 {
   char     _name[256]; /* e.g. MWP1 */
-  char     _type[256]; /* pol_MWP_FI_expansion_v2 */
+  char     _type[256]; /* Pol_MWP_v3 */
   long     _index; /* e.g. 2 index in TRACE list */
   Coords   _position_absolute;
   Coords   _position_relative; /* wrt PREVIOUS */
@@ -7875,22 +7875,16 @@ struct _struct_pol_MWP_FI_expansion_v2 {
   Rotation _rotation_relative; /* wrt PREVIOUS */
   int      _rotation_is_identity;
   int      _position_relative_is_zero;
-  _class_pol_MWP_FI_expansion_v2_parameters _parameters;
+  _class_Pol_MWP_v3_parameters _parameters;
 };
-typedef struct _struct_pol_MWP_FI_expansion_v2 _class_pol_MWP_FI_expansion_v2;
-_class_pol_MWP_FI_expansion_v2 _MWP1_var;
+typedef struct _struct_Pol_MWP_v3 _class_Pol_MWP_v3;
+_class_Pol_MWP_v3 _MWP1_var;
 #pragma acc declare create ( _MWP1_var )
 
-_class_pol_MWP_FI_expansion_v2 _MWP2_var;
+_class_Pol_MWP_v3 _MWP2_var;
 #pragma acc declare create ( _MWP2_var )
 
-_class_pol_MWP_FI_expansion_v2 _MWP3_var;
-#pragma acc declare create ( _MWP3_var )
-
-_class_pol_MWP_FI_expansion_v2 _MWP4_var;
-#pragma acc declare create ( _MWP4_var )
-
-/* component ana=PolAnalyser_ideal() [9] DECLARE */
+/* component ana=PolAnalyser_ideal() [7] DECLARE */
 /* Parameter definition for component type 'PolAnalyser_ideal' */
 struct _struct_PolAnalyser_ideal_parameters {
   /* Component type 'PolAnalyser_ideal' setting parameters */
@@ -7917,25 +7911,34 @@ typedef struct _struct_PolAnalyser_ideal _class_PolAnalyser_ideal;
 _class_PolAnalyser_ideal _ana_var;
 #pragma acc declare create ( _ana_var )
 
-/* component pat_x=dfi_pattern() [10] DECLARE */
-/* Parameter definition for component type 'dfi_pattern' */
-struct _struct_dfi_pattern_parameters {
-  /* Component type 'dfi_pattern' setting parameters */
-  MCNUM xwidth;
-  MCNUM yheight;
-  MCNUM sep;
-  /* Component type 'dfi_pattern' private parameters */
-  double  xmin;
-  double  xmax;
-  double  ymin;
+/* component sam=grating_mask() [8] DECLARE */
+/* Parameter definition for component type 'grating_mask' */
+struct _struct_grating_mask_parameters {
+  /* Component type 'grating_mask' setting parameters */
+  MCNUM outer;
+  MCNUM inner;
+  MCNUM Tr_len;
+  MCNUM Ab_len;
+  MCNUM offset;
+  long slits;
+  /* Component type 'grating_mask' private parameters */
   double  ymax;
-}; /* _struct_dfi_pattern_parameters */
-typedef struct _struct_dfi_pattern_parameters _class_dfi_pattern_parameters;
+  double  ymin;
+  double  xmax;
+  double  xmin;
+  double  y_inner_max;
+  double  y_inner_min;
+  double  x_inner_max;
+  double  x_inner_min;
+  double  extra;
+  int  pass;
+}; /* _struct_grating_mask_parameters */
+typedef struct _struct_grating_mask_parameters _class_grating_mask_parameters;
 
-/* Parameters for component type 'dfi_pattern' */
-struct _struct_dfi_pattern {
-  char     _name[256]; /* e.g. pat_x */
-  char     _type[256]; /* dfi_pattern */
+/* Parameters for component type 'grating_mask' */
+struct _struct_grating_mask {
+  char     _name[256]; /* e.g. sam */
+  char     _type[256]; /* grating_mask */
   long     _index; /* e.g. 2 index in TRACE list */
   Coords   _position_absolute;
   Coords   _position_relative; /* wrt PREVIOUS */
@@ -7943,13 +7946,13 @@ struct _struct_dfi_pattern {
   Rotation _rotation_relative; /* wrt PREVIOUS */
   int      _rotation_is_identity;
   int      _position_relative_is_zero;
-  _class_dfi_pattern_parameters _parameters;
+  _class_grating_mask_parameters _parameters;
 };
-typedef struct _struct_dfi_pattern _class_dfi_pattern;
-_class_dfi_pattern _pat_x_var;
-#pragma acc declare create ( _pat_x_var )
+typedef struct _struct_grating_mask _class_grating_mask;
+_class_grating_mask _sam_var;
+#pragma acc declare create ( _sam_var )
 
-/* component twoD_det=PSD_monitor() [11] DECLARE */
+/* component det=PSD_monitor() [9] DECLARE */
 /* Parameter definition for component type 'PSD_monitor' */
 struct _struct_PSD_monitor_parameters {
   /* Component type 'PSD_monitor' setting parameters */
@@ -7973,7 +7976,7 @@ typedef struct _struct_PSD_monitor_parameters _class_PSD_monitor_parameters;
 
 /* Parameters for component type 'PSD_monitor' */
 struct _struct_PSD_monitor {
-  char     _name[256]; /* e.g. twoD_det */
+  char     _name[256]; /* e.g. det */
   char     _type[256]; /* PSD_monitor */
   long     _index; /* e.g. 2 index in TRACE list */
   Coords   _position_absolute;
@@ -7985,20 +7988,20 @@ struct _struct_PSD_monitor {
   _class_PSD_monitor_parameters _parameters;
 };
 typedef struct _struct_PSD_monitor _class_PSD_monitor;
-_class_PSD_monitor _twoD_det_var;
-#pragma acc declare create ( _twoD_det_var )
+_class_PSD_monitor _det_var;
+#pragma acc declare create ( _det_var )
 
-int mcNUMCOMP = 11;
+int mcNUMCOMP = 9;
 
 /* User declarations from instrument definition. Can define functions. */
 
 #undef compcurname
 #undef compcurtype
 #undef compcurindex
-/* end of instrument 'AER' and components DECLARE */
+/* end of instrument 'AER_HFIR_2023' and components DECLARE */
 
 /* *****************************************************************************
-* instrument 'AER' and components INITIALISE
+* instrument 'AER_HFIR_2023' and components INITIALISE
 ***************************************************************************** */
 
 /* component origin=Progress_bar() SETTING, POSITION/ROTATION */
@@ -8082,7 +8085,7 @@ int _arm_setpos(void)
 /* component src=Source_sam() SETTING, POSITION/ROTATION */
 int _src_setpos(void)
 { /* sets initial component parameters, position and rotation */
-  SIG_MESSAGE("[_src_setpos] component src=Source_sam() SETTING [Source_sam.comp:209]");
+  SIG_MESSAGE("[_src_setpos] component src=Source_sam() SETTING [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\contrib\\Source_sam.comp:209]");
   stracpy(_src_var._name, "src", 16384);
   stracpy(_src_var._type, "Source_sam", 16384);
   _src_var._index=3;
@@ -8099,8 +8102,8 @@ int _src_setpos(void)
   else 
   _src_var._parameters.ydiv_file[0]='\0';
   _src_var._parameters.radius = 0.005;
-  _src_var._parameters.dist = 3;
-  _src_var._parameters.focus_xw = 0.00354;
+  _src_var._parameters.dist = 2.5;
+  _src_var._parameters.focus_xw = 0.015;
   _src_var._parameters.focus_yh = 0.015;
   _src_var._parameters.focus_aw = 0;
   _src_var._parameters.focus_ah = 0;
@@ -8108,7 +8111,7 @@ int _src_setpos(void)
   _src_var._parameters.dE = 0;
   _src_var._parameters.lambda0 = 5.5;
   _src_var._parameters.dlambda = _instrument_var._parameters.delta_lambda;
-  _src_var._parameters.I1 = 1E+18;
+  _src_var._parameters.I1 = 1E+10;
   _src_var._parameters.yheight = 0.1;
   _src_var._parameters.xwidth = 0.1;
   _src_var._parameters.verbose = 0;
@@ -8202,22 +8205,30 @@ int _pol_setpos(void)
   return(0);
 } /* _pol_setpos */
 
-/* component MWP1=pol_MWP_FI_expansion_v2() SETTING, POSITION/ROTATION */
+/* component MWP1=Pol_MWP_v3() SETTING, POSITION/ROTATION */
 int _MWP1_setpos(void)
 { /* sets initial component parameters, position and rotation */
-  SIG_MESSAGE("[_MWP1_setpos] component MWP1=pol_MWP_FI_expansion_v2() SETTING [pol_MWP_FI_expansion_v2.comp:72]");
+  SIG_MESSAGE("[_MWP1_setpos] component MWP1=Pol_MWP_v3() SETTING [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\contrib\\Pol_MWP_v3.comp:71]");
   stracpy(_MWP1_var._name, "MWP1", 16384);
-  stracpy(_MWP1_var._type, "pol_MWP_FI_expansion_v2", 16384);
+  stracpy(_MWP1_var._type, "Pol_MWP_v3", 16384);
   _MWP1_var._index=5;
   _MWP1_var._parameters.xwidth = 0.02;
   _MWP1_var._parameters.yheight = 0.02;
-  _MWP1_var._parameters.zdepth = 0.105;
+  _MWP1_var._parameters.zdepth = 0.1;
   _MWP1_var._parameters.current = _instrument_var._parameters.cur1 * ( 1 - _instrument_var._parameters.all_off );
-  _MWP1_var._parameters.B_inv = 0;
   _MWP1_var._parameters.Hyp_inv = 0;
+  _MWP1_var._parameters.FI0 = .0;
+  _MWP1_var._parameters.a = .006;
+  _MWP1_var._parameters.b = .0062;
+  _MWP1_var._parameters.c = .0001;
+  _MWP1_var._parameters.d = -.22;
+  _MWP1_var._parameters.B0 = .0;
+  _MWP1_var._parameters.Bx = .0;
+  _MWP1_var._parameters.By = .0;
+  _MWP1_var._parameters.Bz = .0;
 
 
-  /* component MWP1=pol_MWP_FI_expansion_v2() AT ROTATED */
+  /* component MWP1=Pol_MWP_v3() AT ROTATED */
   {
     Coords tc1, tc2;
     tc1 = coords_set(0,0,0);
@@ -8231,13 +8242,13 @@ int _MWP1_setpos(void)
     rot_mul(_MWP1_var._rotation_absolute, tr1, _MWP1_var._rotation_relative);
     _MWP1_var._rotation_is_identity =  rot_test_identity(_MWP1_var._rotation_relative);
     tc1 = coords_set(
-      0, 0, 0.787);
+      0, 0, 0.55);
     rot_transpose(_origin_var._rotation_absolute, tr1);
     tc2 = rot_apply(tr1, tc1);
     _MWP1_var._position_absolute = coords_add(_origin_var._position_absolute, tc2);
     tc1 = coords_sub(_pol_var._position_absolute, _MWP1_var._position_absolute);
     _MWP1_var._position_relative = rot_apply(_MWP1_var._rotation_absolute, tc1);
-  } /* MWP1=pol_MWP_FI_expansion_v2() AT ROTATED */
+  } /* MWP1=Pol_MWP_v3() AT ROTATED */
   DEBUG_COMPONENT("MWP1", _MWP1_var._position_absolute, _MWP1_var._rotation_absolute);
   instrument->_position_absolute[5] = _MWP1_var._position_absolute;
   instrument->_position_relative[5] = _MWP1_var._position_relative;
@@ -8247,22 +8258,30 @@ int _MWP1_setpos(void)
   return(0);
 } /* _MWP1_setpos */
 
-/* component MWP2=pol_MWP_FI_expansion_v2() SETTING, POSITION/ROTATION */
+/* component MWP2=Pol_MWP_v3() SETTING, POSITION/ROTATION */
 int _MWP2_setpos(void)
 { /* sets initial component parameters, position and rotation */
-  SIG_MESSAGE("[_MWP2_setpos] component MWP2=pol_MWP_FI_expansion_v2() SETTING [pol_MWP_FI_expansion_v2.comp:72]");
+  SIG_MESSAGE("[_MWP2_setpos] component MWP2=Pol_MWP_v3() SETTING [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\contrib\\Pol_MWP_v3.comp:71]");
   stracpy(_MWP2_var._name, "MWP2", 16384);
-  stracpy(_MWP2_var._type, "pol_MWP_FI_expansion_v2", 16384);
+  stracpy(_MWP2_var._type, "Pol_MWP_v3", 16384);
   _MWP2_var._index=6;
   _MWP2_var._parameters.xwidth = 0.02;
   _MWP2_var._parameters.yheight = 0.02;
-  _MWP2_var._parameters.zdepth = 0.105;
+  _MWP2_var._parameters.zdepth = 0.1;
   _MWP2_var._parameters.current = _instrument_var._parameters.cur2 * ( 1 - _instrument_var._parameters.all_off );
-  _MWP2_var._parameters.B_inv = 0;
-  _MWP2_var._parameters.Hyp_inv = 1;
+  _MWP2_var._parameters.Hyp_inv = 0;
+  _MWP2_var._parameters.FI0 = .0;
+  _MWP2_var._parameters.a = .006;
+  _MWP2_var._parameters.b = .0062;
+  _MWP2_var._parameters.c = .0001;
+  _MWP2_var._parameters.d = -.22;
+  _MWP2_var._parameters.B0 = .0;
+  _MWP2_var._parameters.Bx = .0;
+  _MWP2_var._parameters.By = .0;
+  _MWP2_var._parameters.Bz = .0;
 
 
-  /* component MWP2=pol_MWP_FI_expansion_v2() AT ROTATED */
+  /* component MWP2=Pol_MWP_v3() AT ROTATED */
   {
     Coords tc1, tc2;
     tc1 = coords_set(0,0,0);
@@ -8276,13 +8295,13 @@ int _MWP2_setpos(void)
     rot_mul(_MWP2_var._rotation_absolute, tr1, _MWP2_var._rotation_relative);
     _MWP2_var._rotation_is_identity =  rot_test_identity(_MWP2_var._rotation_relative);
     tc1 = coords_set(
-      0, 0, 1.0);
+      0, 0, 0.95);
     rot_transpose(_origin_var._rotation_absolute, tr1);
     tc2 = rot_apply(tr1, tc1);
     _MWP2_var._position_absolute = coords_add(_origin_var._position_absolute, tc2);
     tc1 = coords_sub(_MWP1_var._position_absolute, _MWP2_var._position_absolute);
     _MWP2_var._position_relative = rot_apply(_MWP2_var._rotation_absolute, tc1);
-  } /* MWP2=pol_MWP_FI_expansion_v2() AT ROTATED */
+  } /* MWP2=Pol_MWP_v3() AT ROTATED */
   DEBUG_COMPONENT("MWP2", _MWP2_var._position_absolute, _MWP2_var._rotation_absolute);
   instrument->_position_absolute[6] = _MWP2_var._position_absolute;
   instrument->_position_relative[6] = _MWP2_var._position_relative;
@@ -8292,103 +8311,13 @@ int _MWP2_setpos(void)
   return(0);
 } /* _MWP2_setpos */
 
-/* component MWP3=pol_MWP_FI_expansion_v2() SETTING, POSITION/ROTATION */
-int _MWP3_setpos(void)
-{ /* sets initial component parameters, position and rotation */
-  SIG_MESSAGE("[_MWP3_setpos] component MWP3=pol_MWP_FI_expansion_v2() SETTING [pol_MWP_FI_expansion_v2.comp:72]");
-  stracpy(_MWP3_var._name, "MWP3", 16384);
-  stracpy(_MWP3_var._type, "pol_MWP_FI_expansion_v2", 16384);
-  _MWP3_var._index=7;
-  _MWP3_var._parameters.xwidth = 0.02;
-  _MWP3_var._parameters.yheight = 0.02;
-  _MWP3_var._parameters.zdepth = 0.105;
-  _MWP3_var._parameters.current = _instrument_var._parameters.cur3 * ( 1 - _instrument_var._parameters.all_off );
-  _MWP3_var._parameters.B_inv = 0;
-  _MWP3_var._parameters.Hyp_inv = 0;
-
-
-  /* component MWP3=pol_MWP_FI_expansion_v2() AT ROTATED */
-  {
-    Coords tc1, tc2;
-    tc1 = coords_set(0,0,0);
-    tc2 = coords_set(0,0,0);
-    Rotation tr1;
-    rot_set_rotation(tr1,0,0,0);
-    rot_set_rotation(tr1,
-      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
-    rot_mul(tr1, _origin_var._rotation_absolute, _MWP3_var._rotation_absolute);
-    rot_transpose(_MWP2_var._rotation_absolute, tr1);
-    rot_mul(_MWP3_var._rotation_absolute, tr1, _MWP3_var._rotation_relative);
-    _MWP3_var._rotation_is_identity =  rot_test_identity(_MWP3_var._rotation_relative);
-    tc1 = coords_set(
-      0, 0, 1.287);
-    rot_transpose(_origin_var._rotation_absolute, tr1);
-    tc2 = rot_apply(tr1, tc1);
-    _MWP3_var._position_absolute = coords_add(_origin_var._position_absolute, tc2);
-    tc1 = coords_sub(_MWP2_var._position_absolute, _MWP3_var._position_absolute);
-    _MWP3_var._position_relative = rot_apply(_MWP3_var._rotation_absolute, tc1);
-  } /* MWP3=pol_MWP_FI_expansion_v2() AT ROTATED */
-  DEBUG_COMPONENT("MWP3", _MWP3_var._position_absolute, _MWP3_var._rotation_absolute);
-  instrument->_position_absolute[7] = _MWP3_var._position_absolute;
-  instrument->_position_relative[7] = _MWP3_var._position_relative;
-    _MWP3_var._position_relative_is_zero =  coords_test_zero(_MWP3_var._position_relative);
-  instrument->counter_N[7]  = instrument->counter_P[7] = instrument->counter_P2[7] = 0;
-  instrument->counter_AbsorbProp[7]= 0;
-  return(0);
-} /* _MWP3_setpos */
-
-/* component MWP4=pol_MWP_FI_expansion_v2() SETTING, POSITION/ROTATION */
-int _MWP4_setpos(void)
-{ /* sets initial component parameters, position and rotation */
-  SIG_MESSAGE("[_MWP4_setpos] component MWP4=pol_MWP_FI_expansion_v2() SETTING [pol_MWP_FI_expansion_v2.comp:72]");
-  stracpy(_MWP4_var._name, "MWP4", 16384);
-  stracpy(_MWP4_var._type, "pol_MWP_FI_expansion_v2", 16384);
-  _MWP4_var._index=8;
-  _MWP4_var._parameters.xwidth = 0.02;
-  _MWP4_var._parameters.yheight = 0.02;
-  _MWP4_var._parameters.zdepth = 0.105;
-  _MWP4_var._parameters.current = _instrument_var._parameters.cur4 * ( 1 - _instrument_var._parameters.all_off );
-  _MWP4_var._parameters.B_inv = 0;
-  _MWP4_var._parameters.Hyp_inv = 1;
-
-
-  /* component MWP4=pol_MWP_FI_expansion_v2() AT ROTATED */
-  {
-    Coords tc1, tc2;
-    tc1 = coords_set(0,0,0);
-    tc2 = coords_set(0,0,0);
-    Rotation tr1;
-    rot_set_rotation(tr1,0,0,0);
-    rot_set_rotation(tr1,
-      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
-    rot_mul(tr1, _origin_var._rotation_absolute, _MWP4_var._rotation_absolute);
-    rot_transpose(_MWP3_var._rotation_absolute, tr1);
-    rot_mul(_MWP4_var._rotation_absolute, tr1, _MWP4_var._rotation_relative);
-    _MWP4_var._rotation_is_identity =  rot_test_identity(_MWP4_var._rotation_relative);
-    tc1 = coords_set(
-      0, 0, 1.5);
-    rot_transpose(_origin_var._rotation_absolute, tr1);
-    tc2 = rot_apply(tr1, tc1);
-    _MWP4_var._position_absolute = coords_add(_origin_var._position_absolute, tc2);
-    tc1 = coords_sub(_MWP3_var._position_absolute, _MWP4_var._position_absolute);
-    _MWP4_var._position_relative = rot_apply(_MWP4_var._rotation_absolute, tc1);
-  } /* MWP4=pol_MWP_FI_expansion_v2() AT ROTATED */
-  DEBUG_COMPONENT("MWP4", _MWP4_var._position_absolute, _MWP4_var._rotation_absolute);
-  instrument->_position_absolute[8] = _MWP4_var._position_absolute;
-  instrument->_position_relative[8] = _MWP4_var._position_relative;
-    _MWP4_var._position_relative_is_zero =  coords_test_zero(_MWP4_var._position_relative);
-  instrument->counter_N[8]  = instrument->counter_P[8] = instrument->counter_P2[8] = 0;
-  instrument->counter_AbsorbProp[8]= 0;
-  return(0);
-} /* _MWP4_setpos */
-
 /* component ana=PolAnalyser_ideal() SETTING, POSITION/ROTATION */
 int _ana_setpos(void)
 { /* sets initial component parameters, position and rotation */
   SIG_MESSAGE("[_ana_setpos] component ana=PolAnalyser_ideal() SETTING [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\optics\\PolAnalyser_ideal.comp:46]");
   stracpy(_ana_var._name, "ana", 16384);
   stracpy(_ana_var._type, "PolAnalyser_ideal", 16384);
-  _ana_var._index=9;
+  _ana_var._index=7;
   _ana_var._parameters.mx = _instrument_var._parameters.polx * ( 1 -2 * _instrument_var._parameters.low_count );
   _ana_var._parameters.my = _instrument_var._parameters.poly * ( 1 -2 * _instrument_var._parameters.low_count );
   _ana_var._parameters.mz = _instrument_var._parameters.polz * ( 1 -2 * _instrument_var._parameters.low_count );
@@ -8403,39 +8332,42 @@ int _ana_setpos(void)
     rot_set_rotation(tr1,
       (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
     rot_mul(tr1, _origin_var._rotation_absolute, _ana_var._rotation_absolute);
-    rot_transpose(_MWP4_var._rotation_absolute, tr1);
+    rot_transpose(_MWP2_var._rotation_absolute, tr1);
     rot_mul(_ana_var._rotation_absolute, tr1, _ana_var._rotation_relative);
     _ana_var._rotation_is_identity =  rot_test_identity(_ana_var._rotation_relative);
     tc1 = coords_set(
-      0, 0, 1.999998);
+      0, 0, 1.15);
     rot_transpose(_origin_var._rotation_absolute, tr1);
     tc2 = rot_apply(tr1, tc1);
     _ana_var._position_absolute = coords_add(_origin_var._position_absolute, tc2);
-    tc1 = coords_sub(_MWP4_var._position_absolute, _ana_var._position_absolute);
+    tc1 = coords_sub(_MWP2_var._position_absolute, _ana_var._position_absolute);
     _ana_var._position_relative = rot_apply(_ana_var._rotation_absolute, tc1);
   } /* ana=PolAnalyser_ideal() AT ROTATED */
   DEBUG_COMPONENT("ana", _ana_var._position_absolute, _ana_var._rotation_absolute);
-  instrument->_position_absolute[9] = _ana_var._position_absolute;
-  instrument->_position_relative[9] = _ana_var._position_relative;
+  instrument->_position_absolute[7] = _ana_var._position_absolute;
+  instrument->_position_relative[7] = _ana_var._position_relative;
     _ana_var._position_relative_is_zero =  coords_test_zero(_ana_var._position_relative);
-  instrument->counter_N[9]  = instrument->counter_P[9] = instrument->counter_P2[9] = 0;
-  instrument->counter_AbsorbProp[9]= 0;
+  instrument->counter_N[7]  = instrument->counter_P[7] = instrument->counter_P2[7] = 0;
+  instrument->counter_AbsorbProp[7]= 0;
   return(0);
 } /* _ana_setpos */
 
-/* component pat_x=dfi_pattern() SETTING, POSITION/ROTATION */
-int _pat_x_setpos(void)
+/* component sam=grating_mask() SETTING, POSITION/ROTATION */
+int _sam_setpos(void)
 { /* sets initial component parameters, position and rotation */
-  SIG_MESSAGE("[_pat_x_setpos] component pat_x=dfi_pattern() SETTING [dfi_pattern.comp:49]");
-  stracpy(_pat_x_var._name, "pat_x", 16384);
-  stracpy(_pat_x_var._type, "dfi_pattern", 16384);
-  _pat_x_var._index=10;
-  _pat_x_var._parameters.xwidth = 0.0002;
-  _pat_x_var._parameters.yheight = 0.01;
-  _pat_x_var._parameters.sep = 0.0002;
+  SIG_MESSAGE("[_sam_setpos] component sam=grating_mask() SETTING [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\contrib\\grating_mask.comp:57]");
+  stracpy(_sam_var._name, "sam", 16384);
+  stracpy(_sam_var._type, "grating_mask", 16384);
+  _sam_var._index=8;
+  _sam_var._parameters.outer = 40;
+  _sam_var._parameters.inner = 22;
+  _sam_var._parameters.Tr_len = 1;
+  _sam_var._parameters.Ab_len = 1;
+  _sam_var._parameters.offset = 0.5;
+  _sam_var._parameters.slits = 11;
 
 
-  /* component pat_x=dfi_pattern() AT ROTATED */
+  /* component sam=grating_mask() AT ROTATED */
   {
     Coords tc1, tc2;
     tc1 = coords_set(0,0,0);
@@ -8444,51 +8376,51 @@ int _pat_x_setpos(void)
     rot_set_rotation(tr1,0,0,0);
     rot_set_rotation(tr1,
       (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
-    rot_mul(tr1, _origin_var._rotation_absolute, _pat_x_var._rotation_absolute);
+    rot_mul(tr1, _origin_var._rotation_absolute, _sam_var._rotation_absolute);
     rot_transpose(_ana_var._rotation_absolute, tr1);
-    rot_mul(_pat_x_var._rotation_absolute, tr1, _pat_x_var._rotation_relative);
-    _pat_x_var._rotation_is_identity =  rot_test_identity(_pat_x_var._rotation_relative);
+    rot_mul(_sam_var._rotation_absolute, tr1, _sam_var._rotation_relative);
+    _sam_var._rotation_is_identity =  rot_test_identity(_sam_var._rotation_relative);
     tc1 = coords_set(
-      0.0003, 0, 2.0);
+      0.0, 0.0, 1.25);
     rot_transpose(_origin_var._rotation_absolute, tr1);
     tc2 = rot_apply(tr1, tc1);
-    _pat_x_var._position_absolute = coords_add(_origin_var._position_absolute, tc2);
-    tc1 = coords_sub(_ana_var._position_absolute, _pat_x_var._position_absolute);
-    _pat_x_var._position_relative = rot_apply(_pat_x_var._rotation_absolute, tc1);
-  } /* pat_x=dfi_pattern() AT ROTATED */
-  DEBUG_COMPONENT("pat_x", _pat_x_var._position_absolute, _pat_x_var._rotation_absolute);
-  instrument->_position_absolute[10] = _pat_x_var._position_absolute;
-  instrument->_position_relative[10] = _pat_x_var._position_relative;
-    _pat_x_var._position_relative_is_zero =  coords_test_zero(_pat_x_var._position_relative);
-  instrument->counter_N[10]  = instrument->counter_P[10] = instrument->counter_P2[10] = 0;
-  instrument->counter_AbsorbProp[10]= 0;
+    _sam_var._position_absolute = coords_add(_origin_var._position_absolute, tc2);
+    tc1 = coords_sub(_ana_var._position_absolute, _sam_var._position_absolute);
+    _sam_var._position_relative = rot_apply(_sam_var._rotation_absolute, tc1);
+  } /* sam=grating_mask() AT ROTATED */
+  DEBUG_COMPONENT("sam", _sam_var._position_absolute, _sam_var._rotation_absolute);
+  instrument->_position_absolute[8] = _sam_var._position_absolute;
+  instrument->_position_relative[8] = _sam_var._position_relative;
+    _sam_var._position_relative_is_zero =  coords_test_zero(_sam_var._position_relative);
+  instrument->counter_N[8]  = instrument->counter_P[8] = instrument->counter_P2[8] = 0;
+  instrument->counter_AbsorbProp[8]= 0;
   return(0);
-} /* _pat_x_setpos */
+} /* _sam_setpos */
 
-/* component twoD_det=PSD_monitor() SETTING, POSITION/ROTATION */
-int _twoD_det_setpos(void)
+/* component det=PSD_monitor() SETTING, POSITION/ROTATION */
+int _det_setpos(void)
 { /* sets initial component parameters, position and rotation */
-  SIG_MESSAGE("[_twoD_det_setpos] component twoD_det=PSD_monitor() SETTING [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\monitors\\PSD_monitor.comp:62]");
-  stracpy(_twoD_det_var._name, "twoD_det", 16384);
-  stracpy(_twoD_det_var._type, "PSD_monitor", 16384);
-  _twoD_det_var._index=11;
-  _twoD_det_var._parameters.nx = 128;
-  _twoD_det_var._parameters.ny = 128;
-  if("AER_twoD.dat" && strlen("AER_twoD.dat"))
-    stracpy(_twoD_det_var._parameters.filename, "AER_twoD.dat" ? "AER_twoD.dat" : "", 16384);
+  SIG_MESSAGE("[_det_setpos] component det=PSD_monitor() SETTING [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\monitors\\PSD_monitor.comp:62]");
+  stracpy(_det_var._name, "det", 16384);
+  stracpy(_det_var._type, "PSD_monitor", 16384);
+  _det_var._index=9;
+  _det_var._parameters.nx = 37;
+  _det_var._parameters.ny = 9;
+  if("AER_2D.dat" && strlen("AER_2D.dat"))
+    stracpy(_det_var._parameters.filename, "AER_2D.dat" ? "AER_2D.dat" : "", 16384);
   else 
-  _twoD_det_var._parameters.filename[0]='\0';
-  _twoD_det_var._parameters.xmin = -0.05;
-  _twoD_det_var._parameters.xmax = 0.05;
-  _twoD_det_var._parameters.ymin = -0.05;
-  _twoD_det_var._parameters.ymax = 0.05;
-  _twoD_det_var._parameters.xwidth = 0.00354;
-  _twoD_det_var._parameters.yheight = 0.015;
-  _twoD_det_var._parameters.restore_neutron = 0;
-  _twoD_det_var._parameters.nowritefile = 0;
+  _det_var._parameters.filename[0]='\0';
+  _det_var._parameters.xmin = -0.05;
+  _det_var._parameters.xmax = 0.05;
+  _det_var._parameters.ymin = -0.05;
+  _det_var._parameters.ymax = 0.05;
+  _det_var._parameters.xwidth = 0.015;
+  _det_var._parameters.yheight = 0.015;
+  _det_var._parameters.restore_neutron = 0;
+  _det_var._parameters.nowritefile = 0;
 
 
-  /* component twoD_det=PSD_monitor() AT ROTATED */
+  /* component det=PSD_monitor() AT ROTATED */
   {
     Coords tc1, tc2;
     tc1 = coords_set(0,0,0);
@@ -8497,26 +8429,26 @@ int _twoD_det_setpos(void)
     rot_set_rotation(tr1,0,0,0);
     rot_set_rotation(tr1,
       (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
-    rot_mul(tr1, _origin_var._rotation_absolute, _twoD_det_var._rotation_absolute);
-    rot_transpose(_pat_x_var._rotation_absolute, tr1);
-    rot_mul(_twoD_det_var._rotation_absolute, tr1, _twoD_det_var._rotation_relative);
-    _twoD_det_var._rotation_is_identity =  rot_test_identity(_twoD_det_var._rotation_relative);
+    rot_mul(tr1, _origin_var._rotation_absolute, _det_var._rotation_absolute);
+    rot_transpose(_sam_var._rotation_absolute, tr1);
+    rot_mul(_det_var._rotation_absolute, tr1, _det_var._rotation_relative);
+    _det_var._rotation_is_identity =  rot_test_identity(_det_var._rotation_relative);
     tc1 = coords_set(
-      0.0, 0, 3.000002);
+      0, 0, 2.5);
     rot_transpose(_origin_var._rotation_absolute, tr1);
     tc2 = rot_apply(tr1, tc1);
-    _twoD_det_var._position_absolute = coords_add(_origin_var._position_absolute, tc2);
-    tc1 = coords_sub(_pat_x_var._position_absolute, _twoD_det_var._position_absolute);
-    _twoD_det_var._position_relative = rot_apply(_twoD_det_var._rotation_absolute, tc1);
-  } /* twoD_det=PSD_monitor() AT ROTATED */
-  DEBUG_COMPONENT("twoD_det", _twoD_det_var._position_absolute, _twoD_det_var._rotation_absolute);
-  instrument->_position_absolute[11] = _twoD_det_var._position_absolute;
-  instrument->_position_relative[11] = _twoD_det_var._position_relative;
-    _twoD_det_var._position_relative_is_zero =  coords_test_zero(_twoD_det_var._position_relative);
-  instrument->counter_N[11]  = instrument->counter_P[11] = instrument->counter_P2[11] = 0;
-  instrument->counter_AbsorbProp[11]= 0;
+    _det_var._position_absolute = coords_add(_origin_var._position_absolute, tc2);
+    tc1 = coords_sub(_sam_var._position_absolute, _det_var._position_absolute);
+    _det_var._position_relative = rot_apply(_det_var._rotation_absolute, tc1);
+  } /* det=PSD_monitor() AT ROTATED */
+  DEBUG_COMPONENT("det", _det_var._position_absolute, _det_var._rotation_absolute);
+  instrument->_position_absolute[9] = _det_var._position_absolute;
+  instrument->_position_relative[9] = _det_var._position_relative;
+    _det_var._position_relative_is_zero =  coords_test_zero(_det_var._position_relative);
+  instrument->counter_N[9]  = instrument->counter_P[9] = instrument->counter_P2[9] = 0;
+  instrument->counter_AbsorbProp[9]= 0;
   return(0);
-} /* _twoD_det_setpos */
+} /* _det_setpos */
 
 _class_Progress_bar *class_Progress_bar_init(_class_Progress_bar *_comp
 ) {
@@ -8604,7 +8536,7 @@ _class_Source_sam *class_Source_sam_init(_class_Source_sam *_comp
   #define pTable_dxmax (_comp->_parameters.pTable_dxmax)
   #define pTable_dymin (_comp->_parameters.pTable_dymin)
   #define pTable_dymax (_comp->_parameters.pTable_dymax)
-  SIG_MESSAGE("[_src_init] component src=Source_sam() INITIALISE [Source_sam.comp:209]");
+  SIG_MESSAGE("[_src_init] component src=Source_sam() INITIALISE [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\contrib\\Source_sam.comp:209]");
 
   pTable_xsum=0;
   pTable_ysum=0;
@@ -8959,71 +8891,68 @@ _class_Set_pol *class_Set_pol_init(_class_Set_pol *_comp
   return(_comp);
 } /* class_Set_pol_init */
 
-_class_pol_MWP_FI_expansion_v2 *class_pol_MWP_FI_expansion_v2_init(_class_pol_MWP_FI_expansion_v2 *_comp
+_class_Pol_MWP_v3 *class_Pol_MWP_v3_init(_class_Pol_MWP_v3 *_comp
 ) {
   #define xwidth (_comp->_parameters.xwidth)
   #define yheight (_comp->_parameters.yheight)
   #define zdepth (_comp->_parameters.zdepth)
   #define current (_comp->_parameters.current)
-  #define B_inv (_comp->_parameters.B_inv)
   #define Hyp_inv (_comp->_parameters.Hyp_inv)
-  #define phase_fin (_comp->_parameters.phase_fin)
-  #define gamma (_comp->_parameters.gamma)
-  #define velocity (_comp->_parameters.velocity)
-  #define FI (_comp->_parameters.FI)
+  #define FI0 (_comp->_parameters.FI0)
   #define a (_comp->_parameters.a)
   #define b (_comp->_parameters.b)
   #define c (_comp->_parameters.c)
   #define d (_comp->_parameters.d)
+  #define B0 (_comp->_parameters.B0)
+  #define Bx (_comp->_parameters.Bx)
+  #define By (_comp->_parameters.By)
+  #define Bz (_comp->_parameters.Bz)
+  #define phase_fin (_comp->_parameters.phase_fin)
+  #define gamma (_comp->_parameters.gamma)
+  #define velocity (_comp->_parameters.velocity)
+  #define FI (_comp->_parameters.FI)
+  #define LG (_comp->_parameters.LG)
   #define phi (_comp->_parameters.phi)
   #define psi (_comp->_parameters.psi)
-  #define unpol (_comp->_parameters.unpol)
-  SIG_MESSAGE("[_MWP1_init] component MWP1=pol_MWP_FI_expansion_v2() INITIALISE [pol_MWP_FI_expansion_v2.comp:72]");
+  SIG_MESSAGE("[_MWP1_init] component MWP1=Pol_MWP_v3() INITIALISE [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\contrib\\Pol_MWP_v3.comp:71]");
 
-  gamma = -1.832471*pow(10,8); //neutron gyromagnetic ratio
+	gamma = -1.832471*pow(10,8); //neutron gyromagnetic ratio
   
-  a = 6*pow(10,-3);  //converted from mT to T
-  b = 6.2*pow(10,-3); 
-  c = 0.1*pow(10,-3);
-  d = -220*pow(10,-3);
-  
-  if((xwidth<=0) || (yheight<=0) || (zdepth<=0)) {
-     fprintf(stderr, "Pol_filter: %s: Null or negative volume! \n"
-	 "ERROR (xwidth, yheight, zdepth); exiting. \n",
-	 NAME_CURRENT_COMP);
-     exit(1);
-  }
-  if(B_inv !=0 && B_inv!=1) {
-     fprintf(stderr, "B_inv must be either 0 or 1! \n"
-	 "ERROR; exiting. \n",
-	 NAME_CURRENT_COMP);
-     exit(1);
-  }
-  if(Hyp_inv !=0 && Hyp_inv!=1) {
-     fprintf(stderr, "Hyp_inv must be either 0 or 1! \n"
-	 "ERROR; exiting. \n",
-	 NAME_CURRENT_COMP);
-     exit(1);
-  }
+	if((xwidth<=0) || (yheight<=0) || (zdepth<=0)) {
+		fprintf(stderr, "MWP: %s: Null or negative volume! \n"
+		"ERROR (xwidth, yheight, zdepth); exiting. \n",
+		NAME_CURRENT_COMP);
+		exit(1);
+	}
+	if(Hyp_inv !=0 && Hyp_inv!=1) {
+		fprintf(stderr, "MWP: %s: Hyp_inv must be either 0 or 1! \n"
+		"ERROR; exiting. \n",
+		NAME_CURRENT_COMP);
+		exit(1);
+	}
   #undef xwidth
   #undef yheight
   #undef zdepth
   #undef current
-  #undef B_inv
   #undef Hyp_inv
-  #undef phase_fin
-  #undef gamma
-  #undef velocity
-  #undef FI
+  #undef FI0
   #undef a
   #undef b
   #undef c
   #undef d
+  #undef B0
+  #undef Bx
+  #undef By
+  #undef Bz
+  #undef phase_fin
+  #undef gamma
+  #undef velocity
+  #undef FI
+  #undef LG
   #undef phi
   #undef psi
-  #undef unpol
   return(_comp);
-} /* class_pol_MWP_FI_expansion_v2_init */
+} /* class_Pol_MWP_v3_init */
 
 _class_PolAnalyser_ideal *class_PolAnalyser_ideal_init(_class_PolAnalyser_ideal *_comp
 ) {
@@ -9053,30 +8982,73 @@ if (mx==0 && my==0 && mz==0) {
   return(_comp);
 } /* class_PolAnalyser_ideal_init */
 
-_class_dfi_pattern *class_dfi_pattern_init(_class_dfi_pattern *_comp
+_class_grating_mask *class_grating_mask_init(_class_grating_mask *_comp
 ) {
-  #define xwidth (_comp->_parameters.xwidth)
-  #define yheight (_comp->_parameters.yheight)
-  #define sep (_comp->_parameters.sep)
-  #define xmin (_comp->_parameters.xmin)
-  #define xmax (_comp->_parameters.xmax)
-  #define ymin (_comp->_parameters.ymin)
+  #define outer (_comp->_parameters.outer)
+  #define inner (_comp->_parameters.inner)
+  #define Tr_len (_comp->_parameters.Tr_len)
+  #define Ab_len (_comp->_parameters.Ab_len)
+  #define offset (_comp->_parameters.offset)
+  #define slits (_comp->_parameters.slits)
   #define ymax (_comp->_parameters.ymax)
-  SIG_MESSAGE("[_pat_x_init] component pat_x=dfi_pattern() INITIALISE [dfi_pattern.comp:49]");
+  #define ymin (_comp->_parameters.ymin)
+  #define xmax (_comp->_parameters.xmax)
+  #define xmin (_comp->_parameters.xmin)
+  #define y_inner_max (_comp->_parameters.y_inner_max)
+  #define y_inner_min (_comp->_parameters.y_inner_min)
+  #define x_inner_max (_comp->_parameters.x_inner_max)
+  #define x_inner_min (_comp->_parameters.x_inner_min)
+  #define extra (_comp->_parameters.extra)
+  #define pass (_comp->_parameters.pass)
+  SIG_MESSAGE("[_sam_init] component sam=grating_mask() INITIALISE [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\contrib\\grating_mask.comp:57]");
 
-    xmin = -xwidth;
-	xmax = xwidth;
-	ymin = -yheight/2;
-	ymax = yheight/2;
-  #undef xwidth
-  #undef yheight
-  #undef sep
-  #undef xmin
-  #undef xmax
-  #undef ymin
+	ymax = outer/2;
+	ymin = -outer/2;
+	xmax = outer/2;
+	xmin = -outer/2;
+	y_inner_max = inner/2;
+	y_inner_min = -inner/2;
+	x_inner_max = inner/2;
+	extra = inner - (offset + slits*Tr_len + (slits - 1)*Ab_len); //extra absorbing material
+	
+	if (inner > outer)
+		{fprintf(stderr,"MASK: %s: Error: Inner mask dimension is larger than outer dimension!\n", NAME_CURRENT_COMP);
+		exit(-1);
+		}
+	if (Tr_len*slits > inner)
+		{fprintf(stderr,"MASK: %s: Error: Slits are too large!\n", NAME_CURRENT_COMP);
+		exit(-1);
+		}
+	if (Ab_len*(slits-1) > inner)
+		{fprintf(stderr,"MASK: %s: Error: Absorbers are too large!\n", NAME_CURRENT_COMP);
+		exit(-1);
+		}
+	if ((slits*Tr_len + (slits - 1)*Ab_len + offset) > inner)
+		{fprintf(stderr,"MASK: %s: Error: Too many slits for inner mask parameter!\n", NAME_CURRENT_COMP);
+		exit(-1);
+		}
+	if (extra < 0)
+		{fprintf(stderr,"MASK: %s: Error: Too many slits!\n", NAME_CURRENT_COMP);
+		exit(-1);
+		}
+  #undef outer
+  #undef inner
+  #undef Tr_len
+  #undef Ab_len
+  #undef offset
+  #undef slits
   #undef ymax
+  #undef ymin
+  #undef xmax
+  #undef xmin
+  #undef y_inner_max
+  #undef y_inner_min
+  #undef x_inner_max
+  #undef x_inner_min
+  #undef extra
+  #undef pass
   return(_comp);
-} /* class_dfi_pattern_init */
+} /* class_grating_mask_init */
 
 _class_PSD_monitor *class_PSD_monitor_init(_class_PSD_monitor *_comp
 ) {
@@ -9094,7 +9066,7 @@ _class_PSD_monitor *class_PSD_monitor_init(_class_PSD_monitor *_comp
   #define PSD_N (_comp->_parameters.PSD_N)
   #define PSD_p (_comp->_parameters.PSD_p)
   #define PSD_p2 (_comp->_parameters.PSD_p2)
-  SIG_MESSAGE("[_twoD_det_init] component twoD_det=PSD_monitor() INITIALISE [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\monitors\\PSD_monitor.comp:62]");
+  SIG_MESSAGE("[_det_init] component det=PSD_monitor() INITIALISE [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\monitors\\PSD_monitor.comp:62]");
 
   if (xwidth  > 0) { xmax = xwidth/2;  xmin = -xmax; }
   if (yheight > 0) { ymax = yheight/2; ymin = -ymax; }
@@ -9131,34 +9103,30 @@ _class_PSD_monitor *class_PSD_monitor_init(_class_PSD_monitor *_comp
 
 
 
-int init(void) { /* called by mccode_main for AER:INITIALISE */
+int init(void) { /* called by mccode_main for AER_HFIR_2023:INITIALISE */
   DEBUG_INSTR();
 
   /* code_main/parseoptions/readparams sets instrument parameters value */
-  stracpy(instrument->_name, "AER", 256);
+  stracpy(instrument->_name, "AER_HFIR_2023", 256);
 
-  /* Instrument 'AER' INITIALISE */
-  SIG_MESSAGE("[AER] INITIALISE [AER.instr:46]");
+  /* Instrument 'AER_HFIR_2023' INITIALISE */
+  SIG_MESSAGE("[AER_HFIR_2023] INITIALISE [AER_HFIR_2023.instr:44]");
   #define delta_lambda (instrument->_parameters.delta_lambda)
   #define low_count (instrument->_parameters.low_count)
   #define all_off (instrument->_parameters.all_off)
   #define cur1 (instrument->_parameters.cur1)
   #define cur2 (instrument->_parameters.cur2)
-  #define cur3 (instrument->_parameters.cur3)
-  #define cur4 (instrument->_parameters.cur4)
   #define polx (instrument->_parameters.polx)
   #define poly (instrument->_parameters.poly)
   #define polz (instrument->_parameters.polz)
 {
-// Start of initialize for generated AER
+// Start of initialize for generated AER_HFIR_2023
 }
   #undef delta_lambda
   #undef low_count
   #undef all_off
   #undef cur1
   #undef cur2
-  #undef cur3
-  #undef cur4
   #undef polx
   #undef poly
   #undef polz
@@ -9166,13 +9134,11 @@ int init(void) { /* called by mccode_main for AER:INITIALISE */
   _arm_setpos(); /* type Arm */
   _src_setpos(); /* type Source_sam */
   _pol_setpos(); /* type Set_pol */
-  _MWP1_setpos(); /* type pol_MWP_FI_expansion_v2 */
-  _MWP2_setpos(); /* type pol_MWP_FI_expansion_v2 */
-  _MWP3_setpos(); /* type pol_MWP_FI_expansion_v2 */
-  _MWP4_setpos(); /* type pol_MWP_FI_expansion_v2 */
+  _MWP1_setpos(); /* type Pol_MWP_v3 */
+  _MWP2_setpos(); /* type Pol_MWP_v3 */
   _ana_setpos(); /* type PolAnalyser_ideal */
-  _pat_x_setpos(); /* type dfi_pattern */
-  _twoD_det_setpos(); /* type PSD_monitor */
+  _sam_setpos(); /* type grating_mask */
+  _det_setpos(); /* type PSD_monitor */
 
   /* call iteratively all components INITIALISE */
   class_Progress_bar_init(&_origin_var);
@@ -9182,19 +9148,15 @@ int init(void) { /* called by mccode_main for AER:INITIALISE */
 
   class_Set_pol_init(&_pol_var);
 
-  class_pol_MWP_FI_expansion_v2_init(&_MWP1_var);
+  class_Pol_MWP_v3_init(&_MWP1_var);
 
-  class_pol_MWP_FI_expansion_v2_init(&_MWP2_var);
-
-  class_pol_MWP_FI_expansion_v2_init(&_MWP3_var);
-
-  class_pol_MWP_FI_expansion_v2_init(&_MWP4_var);
+  class_Pol_MWP_v3_init(&_MWP2_var);
 
   class_PolAnalyser_ideal_init(&_ana_var);
 
-  class_dfi_pattern_init(&_pat_x_var);
+  class_grating_mask_init(&_sam_var);
 
-  class_PSD_monitor_init(&_twoD_det_var);
+  class_PSD_monitor_init(&_det_var);
 
   if (mcdotrace) display();
   DEBUG_INSTR_END();
@@ -9207,11 +9169,9 @@ int init(void) { /* called by mccode_main for AER:INITIALISE */
 #pragma acc update device(_pol_var)
 #pragma acc update device(_MWP1_var)
 #pragma acc update device(_MWP2_var)
-#pragma acc update device(_MWP3_var)
-#pragma acc update device(_MWP4_var)
 #pragma acc update device(_ana_var)
-#pragma acc update device(_pat_x_var)
-#pragma acc update device(_twoD_det_var)
+#pragma acc update device(_sam_var)
+#pragma acc update device(_det_var)
 #pragma acc update device(_instrument_var)
 #endif
 
@@ -9396,7 +9356,7 @@ _class_Source_sam *class_Source_sam_trace(_class_Source_sam *_comp
   #define pTable_dxmax (_comp->_parameters.pTable_dxmax)
   #define pTable_dymin (_comp->_parameters.pTable_dymin)
   #define pTable_dymax (_comp->_parameters.pTable_dymax)
-  SIG_MESSAGE("[_src_trace] component src=Source_sam() TRACE [Source_sam.comp:482]");
+  SIG_MESSAGE("[_src_trace] component src=Source_sam() TRACE [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\contrib\\Source_sam.comp:482]");
 
   double dx=0,dy=0,xf,yf,rf,pdir,chi,v,r, lambda;
   double Maxwell;
@@ -9630,82 +9590,76 @@ _class_Set_pol *class_Set_pol_trace(_class_Set_pol *_comp
 } /* class_Set_pol_trace */
 
 #pragma acc routine
-_class_pol_MWP_FI_expansion_v2 *class_pol_MWP_FI_expansion_v2_trace(_class_pol_MWP_FI_expansion_v2 *_comp
+_class_Pol_MWP_v3 *class_Pol_MWP_v3_trace(_class_Pol_MWP_v3 *_comp
   , _class_particle *_particle) {
   ABSORBED=SCATTERED=RESTORE=0;
   #define xwidth (_comp->_parameters.xwidth)
   #define yheight (_comp->_parameters.yheight)
   #define zdepth (_comp->_parameters.zdepth)
   #define current (_comp->_parameters.current)
-  #define B_inv (_comp->_parameters.B_inv)
   #define Hyp_inv (_comp->_parameters.Hyp_inv)
-  #define phase_fin (_comp->_parameters.phase_fin)
-  #define gamma (_comp->_parameters.gamma)
-  #define velocity (_comp->_parameters.velocity)
-  #define FI (_comp->_parameters.FI)
+  #define FI0 (_comp->_parameters.FI0)
   #define a (_comp->_parameters.a)
   #define b (_comp->_parameters.b)
   #define c (_comp->_parameters.c)
   #define d (_comp->_parameters.d)
+  #define B0 (_comp->_parameters.B0)
+  #define Bx (_comp->_parameters.Bx)
+  #define By (_comp->_parameters.By)
+  #define Bz (_comp->_parameters.Bz)
+  #define phase_fin (_comp->_parameters.phase_fin)
+  #define gamma (_comp->_parameters.gamma)
+  #define velocity (_comp->_parameters.velocity)
+  #define FI (_comp->_parameters.FI)
+  #define LG (_comp->_parameters.LG)
   #define phi (_comp->_parameters.phi)
   #define psi (_comp->_parameters.psi)
-  #define unpol (_comp->_parameters.unpol)
-  SIG_MESSAGE("[_MWP1_trace] component MWP1=pol_MWP_FI_expansion_v2() TRACE [pol_MWP_FI_expansion_v2.comp:101]");
+  SIG_MESSAGE("[_MWP1_trace] component MWP1=Pol_MWP_v3() TRACE [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\contrib\\Pol_MWP_v3.comp:89]");
 
-  double sx_in = sx, sy_in = sy, sz_in = sz; //initial spin components
-  double phi_in = atan2(sz_in, sx_in);  //horizontal initial Larmor phase
-  double theta_in;  //vertical initial Larmor phase
-  if(sx_in == 0 && sy_in == 0 && sz_in == 0) {
-	unpol = 1; //beam is completely depolarized
-  }
-  else {
-	unpol = 0;
-	theta_in = acos(sy_in/(sx_in*sx_in + sy_in*sy_in + sz_in*sz_in));
-  }
-  double deltaT = zdepth/vz; //time spent inside prism
-  
-  PROP_Z0;  //propagate neutron to local coordinate system origin (front face)
-  
-  if (!inside_rectangle(x, y, xwidth, yheight)){  //defines front mask
-	 SCATTER;  //indicates interaction with device
-     ABSORB;
-  }
+	int unpol = 0;  //flags neutron as unpolarized
+	double sx_in = sx, sy_in = sy, sz_in = sz; //initial spin components
+	
+	double phi_in = atan2(sz_in, sx_in);  //horizontal initial Larmor phase
+	double theta_in;  //vertical initial Larmor phase
+	
+	if(sx_in == 0 && sy_in == 0 && sz_in == 0) 
+		{ unpol = 1; }  //neutron is completely depolarized
+	else {
+		theta_in = acos(sy_in/(sx_in*sx_in + sy_in*sy_in + sz_in*sz_in));
+	}
+	
+	double deltaT = zdepth/vz; //time spent inside prism
+	
+	if (!inside_rectangle(x, y, xwidth, yheight)) //defines front mask
+		{ ABSORB; }
 
-  if (!inside_rectangle(x+vx*deltaT, y+vy*deltaT, xwidth, yheight)) {  //defines walls and back mask
-	 SCATTER;  //indicates interaction with device
-     ABSORB;
-  }  
+	if (!inside_rectangle(x+vx*deltaT, y+vy*deltaT, xwidth, yheight)) //defines back mask
+		{ ABSORB; }  
+	
+	PROP_Z0;
+	PROP_DT(deltaT/2);  //propagate to center of device
+	
+	if (unpol == 0) {
+		velocity = sqrt(vx*vx+vy*vy+vz*vz);
+		phi = atan2(vx,vz); //horizontal plane angle
+		psi = atan2(vy,vz); //vertical plane angle
   
-  PROP_DT(deltaT/2);  //propagate to center of device
-  SCATTER;  //indicates interaction with device
+		if(Hyp_inv == 1) {  //inverted hypotenuse
+			a = -a, d = -d;
+			Bx = -Bx, Bz = -Bz;
+		}
+		
+		LG = zdepth*(B0 + Bx*x + By*y + Bz*z);  //linear gradient term
+		FI = FI0 + a*x + b*x*phi + c*y*psi + d*x*y*y + LG;
   
-  if unpol {
-	sx = 0, sy = 0, sz = 0;
-  }
-  else {
-  velocity = sqrt(vx*vx+vy*vy+vz*vz);
-  phi = atan2(vx,vz); //horizontal plane angle
-  psi = atan2(vy,vz); //vertical plane angle
+		phase_fin = gamma/velocity*current*FI + phi_in;  //precession about y-axis
+		sx = cos(phase_fin)*sin(theta_in);
+		sy = cos(theta_in);
+		sz = sin(phase_fin)*sin(theta_in);
+	}
   
-  FI = a*x + b*x*phi + c*y*psi + d*x*y*y;
-  
-  //Used when the hypotenuse of the prism is in the opposite sense
-  if(Hyp_inv == 1) {
-      FI = -a*x + b*x*phi + c*y*psi - d*x*y*y;
-  }
-  
-  //Used when the field directions of the prisms are switched
-  if(B_inv == 1) {
-      FI = -FI;
-  }
-  
-  phase_fin = gamma/velocity*current*FI + phi_in;  //precession about y-axis
-  sx = cos(phase_fin)*sin(theta_in);
-  sy = cos(theta_in);
-  sz = sin(phase_fin)*sin(theta_in);
-  }
-  
-  PROP_DT(deltaT/2);  //exits device
+	SCATTER;
+	PROP_DT(deltaT/2);
 #ifndef NOABSORB_INF_NAN
   /* Check for nan or inf particle parms */ 
   if(isnan(p)  ||  isinf(p)) ABSORB;
@@ -9730,21 +9684,25 @@ _class_pol_MWP_FI_expansion_v2 *class_pol_MWP_FI_expansion_v2_trace(_class_pol_M
   #undef yheight
   #undef zdepth
   #undef current
-  #undef B_inv
   #undef Hyp_inv
-  #undef phase_fin
-  #undef gamma
-  #undef velocity
-  #undef FI
+  #undef FI0
   #undef a
   #undef b
   #undef c
   #undef d
+  #undef B0
+  #undef Bx
+  #undef By
+  #undef Bz
+  #undef phase_fin
+  #undef gamma
+  #undef velocity
+  #undef FI
+  #undef LG
   #undef phi
   #undef psi
-  #undef unpol
   return(_comp);
-} /* class_pol_MWP_FI_expansion_v2_trace */
+} /* class_Pol_MWP_v3_trace */
 
 #pragma acc routine
 _class_PolAnalyser_ideal *class_PolAnalyser_ideal_trace(_class_PolAnalyser_ideal *_comp
@@ -9795,23 +9753,50 @@ _class_PolAnalyser_ideal *class_PolAnalyser_ideal_trace(_class_PolAnalyser_ideal
 } /* class_PolAnalyser_ideal_trace */
 
 #pragma acc routine
-_class_dfi_pattern *class_dfi_pattern_trace(_class_dfi_pattern *_comp
+_class_grating_mask *class_grating_mask_trace(_class_grating_mask *_comp
   , _class_particle *_particle) {
   ABSORBED=SCATTERED=RESTORE=0;
-  #define xwidth (_comp->_parameters.xwidth)
-  #define yheight (_comp->_parameters.yheight)
-  #define sep (_comp->_parameters.sep)
-  #define xmin (_comp->_parameters.xmin)
-  #define xmax (_comp->_parameters.xmax)
-  #define ymin (_comp->_parameters.ymin)
+  #define outer (_comp->_parameters.outer)
+  #define inner (_comp->_parameters.inner)
+  #define Tr_len (_comp->_parameters.Tr_len)
+  #define Ab_len (_comp->_parameters.Ab_len)
+  #define offset (_comp->_parameters.offset)
+  #define slits (_comp->_parameters.slits)
   #define ymax (_comp->_parameters.ymax)
-  SIG_MESSAGE("[_pat_x_trace] component pat_x=dfi_pattern() TRACE [dfi_pattern.comp:57]");
+  #define ymin (_comp->_parameters.ymin)
+  #define xmax (_comp->_parameters.xmax)
+  #define xmin (_comp->_parameters.xmin)
+  #define y_inner_max (_comp->_parameters.y_inner_max)
+  #define y_inner_min (_comp->_parameters.y_inner_min)
+  #define x_inner_max (_comp->_parameters.x_inner_max)
+  #define x_inner_min (_comp->_parameters.x_inner_min)
+  #define extra (_comp->_parameters.extra)
+  #define pass (_comp->_parameters.pass)
+  SIG_MESSAGE("[_sam_trace] component sam=grating_mask() TRACE [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\contrib\\grating_mask.comp:90]");
 
+	pass = 0;
     PROP_Z0;
-    if (x<(xmin - sep/2) || (x>-sep/2 && x<sep/2) || x>(xmax + sep/2) || y<ymin || y>ymax)
-      ABSORB;
-    else
-        SCATTER;
+	if (y > ymax || y < ymin || x > xmax || x < xmin)
+		{ SCATTER; } //Pass outside mask
+	else
+		{
+		if ((y < y_inner_max) && (y > y_inner_min))
+			{
+			for (int n = 1; n <= slits; ++n) //Checking slits from right to left (neutron pov)
+				{
+				if ((x > (x_inner_max - offset - (Tr_len + Ab_len)*(n - 1) - Tr_len)) && (x < (x_inner_max - offset - (Tr_len + Ab_len)*(n - 1))))
+					{ 
+					SCATTER; //Pass through one of the slits in the mask
+					pass += 1;
+					break;
+					} 
+				}
+			if (pass == 0)
+				{ ABSORB; }
+			}
+		else
+			{ ABSORB; }
+		}
 #ifndef NOABSORB_INF_NAN
   /* Check for nan or inf particle parms */ 
   if(isnan(p)  ||  isinf(p)) ABSORB;
@@ -9832,15 +9817,24 @@ _class_dfi_pattern *class_dfi_pattern_trace(_class_dfi_pattern *_comp
   if(isnan(y)  ||  isinf(y)) printf("NAN or INF found in y,  %s (particle %lld)\n",_comp->_name,_particle->_uid);
   if(isnan(z)  ||  isinf(z)) printf("NAN or INF found in z,  %s (particle %lld)\n",_comp->_name,_particle->_uid);
 #endif
-  #undef xwidth
-  #undef yheight
-  #undef sep
-  #undef xmin
-  #undef xmax
-  #undef ymin
+  #undef outer
+  #undef inner
+  #undef Tr_len
+  #undef Ab_len
+  #undef offset
+  #undef slits
   #undef ymax
+  #undef ymin
+  #undef xmax
+  #undef xmin
+  #undef y_inner_max
+  #undef y_inner_min
+  #undef x_inner_max
+  #undef x_inner_min
+  #undef extra
+  #undef pass
   return(_comp);
-} /* class_dfi_pattern_trace */
+} /* class_grating_mask_trace */
 
 #pragma acc routine
 _class_PSD_monitor *class_PSD_monitor_trace(_class_PSD_monitor *_comp
@@ -9860,7 +9854,7 @@ _class_PSD_monitor *class_PSD_monitor_trace(_class_PSD_monitor *_comp
   #define PSD_N (_comp->_parameters.PSD_N)
   #define PSD_p (_comp->_parameters.PSD_p)
   #define PSD_p2 (_comp->_parameters.PSD_p2)
-  SIG_MESSAGE("[_twoD_det_trace] component twoD_det=PSD_monitor() TRACE [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\monitors\\PSD_monitor.comp:82]");
+  SIG_MESSAGE("[_det_trace] component det=PSD_monitor() TRACE [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\monitors\\PSD_monitor.comp:82]");
 
   PROP_Z0;
   if (x>xmin && x<xmax && y>ymin && y<ymax){
@@ -9920,12 +9914,12 @@ _class_PSD_monitor *class_PSD_monitor_trace(_class_PSD_monitor *_comp
 } /* class_PSD_monitor_trace */
 
 /* *****************************************************************************
-* instrument 'AER' TRACE
+* instrument 'AER_HFIR_2023' TRACE
 ***************************************************************************** */
 
 #ifndef FUNNEL
 #pragma acc routine
-int raytrace(_class_particle* _particle) { /* single event propagation, called by mccode_main for AER:TRACE */
+int raytrace(_class_particle* _particle) { /* single event propagation, called by mccode_main for AER_HFIR_2023:TRACE */
 
   /* init variables and counters for TRACE */
   #undef ABSORB0
@@ -10007,7 +10001,7 @@ int raytrace(_class_particle* _particle) { /* single event propagation, called b
       _particle->_index++;
       if (!ABSORBED) { DEBUG_STATE(); }
     } /* end component pol [4] */
-    /* begin component MWP1=pol_MWP_FI_expansion_v2() [5] */
+    /* begin component MWP1=Pol_MWP_v3() [5] */
     if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
       if (_MWP1_var._rotation_is_identity) {
         if(!_MWP1_var._position_relative_is_zero) {
@@ -10022,13 +10016,13 @@ int raytrace(_class_particle* _particle) { /* single event propagation, called b
       _particle_save = *_particle;
       DEBUG_COMP(_MWP1_var._name);
       DEBUG_STATE();
-      class_pol_MWP_FI_expansion_v2_trace(&_MWP1_var, _particle);
+      class_Pol_MWP_v3_trace(&_MWP1_var, _particle);
       if (_particle->_restore)
         particle_restore(_particle, &_particle_save);
       _particle->_index++;
       if (!ABSORBED) { DEBUG_STATE(); }
     } /* end component MWP1 [5] */
-    /* begin component MWP2=pol_MWP_FI_expansion_v2() [6] */
+    /* begin component MWP2=Pol_MWP_v3() [6] */
     if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
       if (_MWP2_var._rotation_is_identity) {
         if(!_MWP2_var._position_relative_is_zero) {
@@ -10043,55 +10037,13 @@ int raytrace(_class_particle* _particle) { /* single event propagation, called b
       _particle_save = *_particle;
       DEBUG_COMP(_MWP2_var._name);
       DEBUG_STATE();
-      class_pol_MWP_FI_expansion_v2_trace(&_MWP2_var, _particle);
+      class_Pol_MWP_v3_trace(&_MWP2_var, _particle);
       if (_particle->_restore)
         particle_restore(_particle, &_particle_save);
       _particle->_index++;
       if (!ABSORBED) { DEBUG_STATE(); }
     } /* end component MWP2 [6] */
-    /* begin component MWP3=pol_MWP_FI_expansion_v2() [7] */
-    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
-      if (_MWP3_var._rotation_is_identity) {
-        if(!_MWP3_var._position_relative_is_zero) {
-          coords_get(coords_add(coords_set(x,y,z), _MWP3_var._position_relative),&x, &y, &z);
-        }
-      } else {
-          mccoordschange(_MWP3_var._position_relative, _MWP3_var._rotation_relative, _particle);
-      }
-    }
-    if (!ABSORBED && _particle->_index == 7) {
-      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
-      _particle_save = *_particle;
-      DEBUG_COMP(_MWP3_var._name);
-      DEBUG_STATE();
-      class_pol_MWP_FI_expansion_v2_trace(&_MWP3_var, _particle);
-      if (_particle->_restore)
-        particle_restore(_particle, &_particle_save);
-      _particle->_index++;
-      if (!ABSORBED) { DEBUG_STATE(); }
-    } /* end component MWP3 [7] */
-    /* begin component MWP4=pol_MWP_FI_expansion_v2() [8] */
-    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
-      if (_MWP4_var._rotation_is_identity) {
-        if(!_MWP4_var._position_relative_is_zero) {
-          coords_get(coords_add(coords_set(x,y,z), _MWP4_var._position_relative),&x, &y, &z);
-        }
-      } else {
-          mccoordschange(_MWP4_var._position_relative, _MWP4_var._rotation_relative, _particle);
-      }
-    }
-    if (!ABSORBED && _particle->_index == 8) {
-      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
-      _particle_save = *_particle;
-      DEBUG_COMP(_MWP4_var._name);
-      DEBUG_STATE();
-      class_pol_MWP_FI_expansion_v2_trace(&_MWP4_var, _particle);
-      if (_particle->_restore)
-        particle_restore(_particle, &_particle_save);
-      _particle->_index++;
-      if (!ABSORBED) { DEBUG_STATE(); }
-    } /* end component MWP4 [8] */
-    /* begin component ana=PolAnalyser_ideal() [9] */
+    /* begin component ana=PolAnalyser_ideal() [7] */
     if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
       if (_ana_var._rotation_is_identity) {
         if(!_ana_var._position_relative_is_zero) {
@@ -10101,7 +10053,7 @@ int raytrace(_class_particle* _particle) { /* single event propagation, called b
           mccoordschange(_ana_var._position_relative, _ana_var._rotation_relative, _particle);
       }
     }
-    if (!ABSORBED && _particle->_index == 9) {
+    if (!ABSORBED && _particle->_index == 7) {
       _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
       _particle_save = *_particle;
       DEBUG_COMP(_ana_var._name);
@@ -10111,50 +10063,50 @@ int raytrace(_class_particle* _particle) { /* single event propagation, called b
         particle_restore(_particle, &_particle_save);
       _particle->_index++;
       if (!ABSORBED) { DEBUG_STATE(); }
-    } /* end component ana [9] */
-    /* begin component pat_x=dfi_pattern() [10] */
+    } /* end component ana [7] */
+    /* begin component sam=grating_mask() [8] */
     if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
-      if (_pat_x_var._rotation_is_identity) {
-        if(!_pat_x_var._position_relative_is_zero) {
-          coords_get(coords_add(coords_set(x,y,z), _pat_x_var._position_relative),&x, &y, &z);
+      if (_sam_var._rotation_is_identity) {
+        if(!_sam_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _sam_var._position_relative),&x, &y, &z);
         }
       } else {
-          mccoordschange(_pat_x_var._position_relative, _pat_x_var._rotation_relative, _particle);
+          mccoordschange(_sam_var._position_relative, _sam_var._rotation_relative, _particle);
       }
     }
-    if (!ABSORBED && _particle->_index == 10) {
+    if (!ABSORBED && _particle->_index == 8) {
       _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
       _particle_save = *_particle;
-      DEBUG_COMP(_pat_x_var._name);
+      DEBUG_COMP(_sam_var._name);
       DEBUG_STATE();
-      class_dfi_pattern_trace(&_pat_x_var, _particle);
+      class_grating_mask_trace(&_sam_var, _particle);
       if (_particle->_restore)
         particle_restore(_particle, &_particle_save);
       _particle->_index++;
       if (!ABSORBED) { DEBUG_STATE(); }
-    } /* end component pat_x [10] */
-    /* begin component twoD_det=PSD_monitor() [11] */
+    } /* end component sam [8] */
+    /* begin component det=PSD_monitor() [9] */
     if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
-      if (_twoD_det_var._rotation_is_identity) {
-        if(!_twoD_det_var._position_relative_is_zero) {
-          coords_get(coords_add(coords_set(x,y,z), _twoD_det_var._position_relative),&x, &y, &z);
+      if (_det_var._rotation_is_identity) {
+        if(!_det_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _det_var._position_relative),&x, &y, &z);
         }
       } else {
-          mccoordschange(_twoD_det_var._position_relative, _twoD_det_var._rotation_relative, _particle);
+          mccoordschange(_det_var._position_relative, _det_var._rotation_relative, _particle);
       }
     }
-    if (!ABSORBED && _particle->_index == 11) {
+    if (!ABSORBED && _particle->_index == 9) {
       _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
       _particle_save = *_particle;
-      DEBUG_COMP(_twoD_det_var._name);
+      DEBUG_COMP(_det_var._name);
       DEBUG_STATE();
-      class_PSD_monitor_trace(&_twoD_det_var, _particle);
+      class_PSD_monitor_trace(&_det_var, _particle);
       if (_particle->_restore)
         particle_restore(_particle, &_particle_save);
       _particle->_index++;
       if (!ABSORBED) { DEBUG_STATE(); }
-    } /* end component twoD_det [11] */
-    if (_particle->_index > 11)
+    } /* end component det [9] */
+    if (_particle->_index > 9)
       ABSORBED++; /* absorbed when passed all components */
   } /* while !ABSORBED */
 
@@ -10340,7 +10292,7 @@ void raytrace_all_funnel(unsigned long long ncount, unsigned long seed) {
         else
           mccoordschange(_MWP1_var._position_relative, _MWP1_var._rotation_relative, _particle);
         _particle_save = *_particle;
-        class_pol_MWP_FI_expansion_v2_trace(&_MWP1_var, _particle);
+        class_Pol_MWP_v3_trace(&_MWP1_var, _particle);
         if (_particle->_restore)
         particle_restore(_particle, &_particle_save);
         _particle->_index++;
@@ -10353,40 +10305,14 @@ void raytrace_all_funnel(unsigned long long ncount, unsigned long seed) {
         else
           mccoordschange(_MWP2_var._position_relative, _MWP2_var._rotation_relative, _particle);
         _particle_save = *_particle;
-        class_pol_MWP_FI_expansion_v2_trace(&_MWP2_var, _particle);
-        if (_particle->_restore)
-        particle_restore(_particle, &_particle_save);
-        _particle->_index++;
-      }
-
-      // MWP3
-    if (!ABSORBED && _particle->_index == 7) {
-        if (_MWP3_var._rotation_is_identity)
-          coords_get(coords_add(coords_set(x,y,z), _MWP3_var._position_relative),&x, &y, &z);
-        else
-          mccoordschange(_MWP3_var._position_relative, _MWP3_var._rotation_relative, _particle);
-        _particle_save = *_particle;
-        class_pol_MWP_FI_expansion_v2_trace(&_MWP3_var, _particle);
-        if (_particle->_restore)
-        particle_restore(_particle, &_particle_save);
-        _particle->_index++;
-      }
-
-      // MWP4
-    if (!ABSORBED && _particle->_index == 8) {
-        if (_MWP4_var._rotation_is_identity)
-          coords_get(coords_add(coords_set(x,y,z), _MWP4_var._position_relative),&x, &y, &z);
-        else
-          mccoordschange(_MWP4_var._position_relative, _MWP4_var._rotation_relative, _particle);
-        _particle_save = *_particle;
-        class_pol_MWP_FI_expansion_v2_trace(&_MWP4_var, _particle);
+        class_Pol_MWP_v3_trace(&_MWP2_var, _particle);
         if (_particle->_restore)
         particle_restore(_particle, &_particle_save);
         _particle->_index++;
       }
 
       // ana
-    if (!ABSORBED && _particle->_index == 9) {
+    if (!ABSORBED && _particle->_index == 7) {
         if (_ana_var._rotation_is_identity)
           coords_get(coords_add(coords_set(x,y,z), _ana_var._position_relative),&x, &y, &z);
         else
@@ -10398,27 +10324,27 @@ void raytrace_all_funnel(unsigned long long ncount, unsigned long seed) {
         _particle->_index++;
       }
 
-      // pat_x
-    if (!ABSORBED && _particle->_index == 10) {
-        if (_pat_x_var._rotation_is_identity)
-          coords_get(coords_add(coords_set(x,y,z), _pat_x_var._position_relative),&x, &y, &z);
+      // sam
+    if (!ABSORBED && _particle->_index == 8) {
+        if (_sam_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _sam_var._position_relative),&x, &y, &z);
         else
-          mccoordschange(_pat_x_var._position_relative, _pat_x_var._rotation_relative, _particle);
+          mccoordschange(_sam_var._position_relative, _sam_var._rotation_relative, _particle);
         _particle_save = *_particle;
-        class_dfi_pattern_trace(&_pat_x_var, _particle);
+        class_grating_mask_trace(&_sam_var, _particle);
         if (_particle->_restore)
         particle_restore(_particle, &_particle_save);
         _particle->_index++;
       }
 
-      // twoD_det
-    if (!ABSORBED && _particle->_index == 11) {
-        if (_twoD_det_var._rotation_is_identity)
-          coords_get(coords_add(coords_set(x,y,z), _twoD_det_var._position_relative),&x, &y, &z);
+      // det
+    if (!ABSORBED && _particle->_index == 9) {
+        if (_det_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _det_var._position_relative),&x, &y, &z);
         else
-          mccoordschange(_twoD_det_var._position_relative, _twoD_det_var._rotation_relative, _particle);
+          mccoordschange(_det_var._position_relative, _det_var._rotation_relative, _particle);
         _particle_save = *_particle;
-        class_PSD_monitor_trace(&_twoD_det_var, _particle);
+        class_PSD_monitor_trace(&_det_var, _particle);
         if (_particle->_restore)
         particle_restore(_particle, &_particle_save);
         _particle->_index++;
@@ -10469,7 +10395,7 @@ void raytrace_all_funnel(unsigned long long ncount, unsigned long seed) {
 #undef ABSORB
 #undef ABSORB0
 /* *****************************************************************************
-* instrument 'AER' and components SAVE
+* instrument 'AER_HFIR_2023' and components SAVE
 ***************************************************************************** */
 
 _class_Progress_bar *class_Progress_bar_save(_class_Progress_bar *_comp
@@ -10525,7 +10451,7 @@ _class_PSD_monitor *class_PSD_monitor_save(_class_PSD_monitor *_comp
   #define PSD_N (_comp->_parameters.PSD_N)
   #define PSD_p (_comp->_parameters.PSD_p)
   #define PSD_p2 (_comp->_parameters.PSD_p2)
-  SIG_MESSAGE("[_twoD_det_save] component twoD_det=PSD_monitor() SAVE [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\monitors\\PSD_monitor.comp:106]");
+  SIG_MESSAGE("[_det_save] component det=PSD_monitor() SAVE [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\monitors\\PSD_monitor.comp:106]");
 
     if (!nowritefile) {
       DETECTOR_OUT_2D(
@@ -10556,7 +10482,7 @@ _class_PSD_monitor *class_PSD_monitor_save(_class_PSD_monitor *_comp
 
 
 
-int save(FILE *handle) { /* called by mccode_main for AER:SAVE */
+int save(FILE *handle) { /* called by mccode_main for AER_HFIR_2023:SAVE */
   if (!handle) siminfo_init(NULL);
 
   /* call iteratively all components SAVE */
@@ -10569,9 +10495,7 @@ int save(FILE *handle) { /* called by mccode_main for AER:SAVE */
 
 
 
-
-
-  class_PSD_monitor_save(&_twoD_det_var);
+  class_PSD_monitor_save(&_det_var);
 
   if (!handle) siminfo_close(); 
 
@@ -10579,7 +10503,7 @@ int save(FILE *handle) { /* called by mccode_main for AER:SAVE */
 } /* save */
 
 /* *****************************************************************************
-* instrument 'AER' and components FINALLY
+* instrument 'AER_HFIR_2023' and components FINALLY
 ***************************************************************************** */
 
 _class_Progress_bar *class_Progress_bar_finally(_class_Progress_bar *_comp
@@ -10666,7 +10590,7 @@ _class_Source_sam *class_Source_sam_finally(_class_Source_sam *_comp
   #define pTable_dxmax (_comp->_parameters.pTable_dxmax)
   #define pTable_dymin (_comp->_parameters.pTable_dymin)
   #define pTable_dymax (_comp->_parameters.pTable_dymax)
-  SIG_MESSAGE("[_src_finally] component src=Source_sam() FINALLY [Source_sam.comp:578]");
+  SIG_MESSAGE("[_src_finally] component src=Source_sam() FINALLY [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\contrib\\Source_sam.comp:578]");
 
   Table_Free(&pTable);
   Table_Free(&pTable_x);
@@ -10739,7 +10663,7 @@ _class_PSD_monitor *class_PSD_monitor_finally(_class_PSD_monitor *_comp
   #define PSD_N (_comp->_parameters.PSD_N)
   #define PSD_p (_comp->_parameters.PSD_p)
   #define PSD_p2 (_comp->_parameters.PSD_p2)
-  SIG_MESSAGE("[_twoD_det_finally] component twoD_det=PSD_monitor() FINALLY [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\monitors\\PSD_monitor.comp:119]");
+  SIG_MESSAGE("[_det_finally] component det=PSD_monitor() FINALLY [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\monitors\\PSD_monitor.comp:119]");
 
   destroy_darr2d(PSD_N);
   destroy_darr2d(PSD_p);
@@ -10763,45 +10687,39 @@ _class_PSD_monitor *class_PSD_monitor_finally(_class_PSD_monitor *_comp
 
 
 
-int finally(void) { /* called by mccode_main for AER:FINALLY */
+int finally(void) { /* called by mccode_main for AER_HFIR_2023:FINALLY */
 #pragma acc update host(_origin_var)
 #pragma acc update host(_arm_var)
 #pragma acc update host(_src_var)
 #pragma acc update host(_pol_var)
 #pragma acc update host(_MWP1_var)
 #pragma acc update host(_MWP2_var)
-#pragma acc update host(_MWP3_var)
-#pragma acc update host(_MWP4_var)
 #pragma acc update host(_ana_var)
-#pragma acc update host(_pat_x_var)
-#pragma acc update host(_twoD_det_var)
+#pragma acc update host(_sam_var)
+#pragma acc update host(_det_var)
 #pragma acc update host(_instrument_var)
 
   siminfo_init(NULL);
   save(siminfo_file); /* save data when simulation ends */
 
-  /* Instrument 'AER' FINALLY */
-  SIG_MESSAGE("[AER] FINALLY [AER.instr:110]");
+  /* Instrument 'AER_HFIR_2023' FINALLY */
+  SIG_MESSAGE("[AER_HFIR_2023] FINALLY [AER_HFIR_2023.instr:95]");
   #define delta_lambda (instrument->_parameters.delta_lambda)
   #define low_count (instrument->_parameters.low_count)
   #define all_off (instrument->_parameters.all_off)
   #define cur1 (instrument->_parameters.cur1)
   #define cur2 (instrument->_parameters.cur2)
-  #define cur3 (instrument->_parameters.cur3)
-  #define cur4 (instrument->_parameters.cur4)
   #define polx (instrument->_parameters.polx)
   #define poly (instrument->_parameters.poly)
   #define polz (instrument->_parameters.polz)
 {
-// Start of finally for generated AER
+// Start of finally for generated AER_HFIR_2023
 }
   #undef delta_lambda
   #undef low_count
   #undef all_off
   #undef cur1
   #undef cur2
-  #undef cur3
-  #undef cur4
   #undef polx
   #undef poly
   #undef polz
@@ -10816,9 +10734,7 @@ int finally(void) { /* called by mccode_main for AER:FINALLY */
 
 
 
-
-
-  class_PSD_monitor_finally(&_twoD_det_var);
+  class_PSD_monitor_finally(&_det_var);
 
   siminfo_close(); 
 
@@ -10826,7 +10742,7 @@ int finally(void) { /* called by mccode_main for AER:FINALLY */
 } /* finally */
 
 /* *****************************************************************************
-* instrument 'AER' and components DISPLAY
+* instrument 'AER_HFIR_2023' and components DISPLAY
 ***************************************************************************** */
 
   #define magnify     mcdis_magnify
@@ -10927,7 +10843,7 @@ _class_Source_sam *class_Source_sam_display(_class_Source_sam *_comp
   #define pTable_dxmax (_comp->_parameters.pTable_dxmax)
   #define pTable_dymin (_comp->_parameters.pTable_dymin)
   #define pTable_dymax (_comp->_parameters.pTable_dymax)
-  SIG_MESSAGE("[_src_display] component src=Source_sam() DISPLAY [Source_sam.comp:585]");
+  SIG_MESSAGE("[_src_display] component src=Source_sam() DISPLAY [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\contrib\\Source_sam.comp:585]");
 
   printf("MCDISPLAY: component %s\n", _comp->_name);
   double xmin;
@@ -11051,48 +10967,56 @@ _class_Set_pol *class_Set_pol_display(_class_Set_pol *_comp
   return(_comp);
 } /* class_Set_pol_display */
 
-_class_pol_MWP_FI_expansion_v2 *class_pol_MWP_FI_expansion_v2_display(_class_pol_MWP_FI_expansion_v2 *_comp
+_class_Pol_MWP_v3 *class_Pol_MWP_v3_display(_class_Pol_MWP_v3 *_comp
 ) {
   #define xwidth (_comp->_parameters.xwidth)
   #define yheight (_comp->_parameters.yheight)
   #define zdepth (_comp->_parameters.zdepth)
   #define current (_comp->_parameters.current)
-  #define B_inv (_comp->_parameters.B_inv)
   #define Hyp_inv (_comp->_parameters.Hyp_inv)
-  #define phase_fin (_comp->_parameters.phase_fin)
-  #define gamma (_comp->_parameters.gamma)
-  #define velocity (_comp->_parameters.velocity)
-  #define FI (_comp->_parameters.FI)
+  #define FI0 (_comp->_parameters.FI0)
   #define a (_comp->_parameters.a)
   #define b (_comp->_parameters.b)
   #define c (_comp->_parameters.c)
   #define d (_comp->_parameters.d)
+  #define B0 (_comp->_parameters.B0)
+  #define Bx (_comp->_parameters.Bx)
+  #define By (_comp->_parameters.By)
+  #define Bz (_comp->_parameters.Bz)
+  #define phase_fin (_comp->_parameters.phase_fin)
+  #define gamma (_comp->_parameters.gamma)
+  #define velocity (_comp->_parameters.velocity)
+  #define FI (_comp->_parameters.FI)
+  #define LG (_comp->_parameters.LG)
   #define phi (_comp->_parameters.phi)
   #define psi (_comp->_parameters.psi)
-  #define unpol (_comp->_parameters.unpol)
-  SIG_MESSAGE("[_MWP1_display] component MWP1=pol_MWP_FI_expansion_v2() DISPLAY [pol_MWP_FI_expansion_v2.comp:159]");
+  SIG_MESSAGE("[_MWP1_display] component MWP1=Pol_MWP_v3() DISPLAY [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\contrib\\Pol_MWP_v3.comp:137]");
 
   printf("MCDISPLAY: component %s\n", _comp->_name);
-  box(0, 0, zdepth/2.0, xwidth, yheight, zdepth);
+	box(0, 0, zdepth/2.0, xwidth, yheight, zdepth);
   #undef xwidth
   #undef yheight
   #undef zdepth
   #undef current
-  #undef B_inv
   #undef Hyp_inv
-  #undef phase_fin
-  #undef gamma
-  #undef velocity
-  #undef FI
+  #undef FI0
   #undef a
   #undef b
   #undef c
   #undef d
+  #undef B0
+  #undef Bx
+  #undef By
+  #undef Bz
+  #undef phase_fin
+  #undef gamma
+  #undef velocity
+  #undef FI
+  #undef LG
   #undef phi
   #undef psi
-  #undef unpol
   return(_comp);
-} /* class_pol_MWP_FI_expansion_v2_display */
+} /* class_Pol_MWP_v3_display */
 
 _class_PolAnalyser_ideal *class_PolAnalyser_ideal_display(_class_PolAnalyser_ideal *_comp
 ) {
@@ -11126,43 +11050,46 @@ _class_PolAnalyser_ideal *class_PolAnalyser_ideal_display(_class_PolAnalyser_ide
   return(_comp);
 } /* class_PolAnalyser_ideal_display */
 
-_class_dfi_pattern *class_dfi_pattern_display(_class_dfi_pattern *_comp
+_class_grating_mask *class_grating_mask_display(_class_grating_mask *_comp
 ) {
-  #define xwidth (_comp->_parameters.xwidth)
-  #define yheight (_comp->_parameters.yheight)
-  #define sep (_comp->_parameters.sep)
-  #define xmin (_comp->_parameters.xmin)
-  #define xmax (_comp->_parameters.xmax)
-  #define ymin (_comp->_parameters.ymin)
+  #define outer (_comp->_parameters.outer)
+  #define inner (_comp->_parameters.inner)
+  #define Tr_len (_comp->_parameters.Tr_len)
+  #define Ab_len (_comp->_parameters.Ab_len)
+  #define offset (_comp->_parameters.offset)
+  #define slits (_comp->_parameters.slits)
   #define ymax (_comp->_parameters.ymax)
-  SIG_MESSAGE("[_pat_x_display] component pat_x=dfi_pattern() DISPLAY [dfi_pattern.comp:66]");
+  #define ymin (_comp->_parameters.ymin)
+  #define xmax (_comp->_parameters.xmax)
+  #define xmin (_comp->_parameters.xmin)
+  #define y_inner_max (_comp->_parameters.y_inner_max)
+  #define y_inner_min (_comp->_parameters.y_inner_min)
+  #define x_inner_max (_comp->_parameters.x_inner_max)
+  #define x_inner_min (_comp->_parameters.x_inner_min)
+  #define extra (_comp->_parameters.extra)
+  #define pass (_comp->_parameters.pass)
+  SIG_MESSAGE("[_sam_display] component sam=grating_mask() DISPLAY [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\contrib\\grating_mask.comp:117]");
 
   printf("MCDISPLAY: component %s\n", _comp->_name);
-/* Fix this section later to show two slits.*/
-    double xw, yh;
-    xw = (xmax - xmin)/2.0;
-    yh = (ymax - ymin)/2.0;
-    multiline(3, xmin-xw, (double)ymax, 0.0,
-              (double)xmin, (double)ymax, 0.0,
-              (double)xmin, ymax+yh, 0.0);
-    multiline(3, xmax+xw, (double)ymax, 0.0,
-              (double)xmax, (double)ymax, 0.0,
-              (double)xmax, ymax+yh, 0.0);
-    multiline(3, xmin-xw, (double)ymin, 0.0,
-              (double)xmin, (double)ymin, 0.0,
-              (double)xmin, ymin-yh, 0.0);
-    multiline(3, xmax+xw, (double)ymin, 0.0,
-              (double)xmax, (double)ymin, 0.0,
-              (double)xmax, ymin-yh, 0.0);
-  #undef xwidth
-  #undef yheight
-  #undef sep
-  #undef xmin
-  #undef xmax
-  #undef ymin
+/* Draw outer and inner square */
+  #undef outer
+  #undef inner
+  #undef Tr_len
+  #undef Ab_len
+  #undef offset
+  #undef slits
   #undef ymax
+  #undef ymin
+  #undef xmax
+  #undef xmin
+  #undef y_inner_max
+  #undef y_inner_min
+  #undef x_inner_max
+  #undef x_inner_min
+  #undef extra
+  #undef pass
   return(_comp);
-} /* class_dfi_pattern_display */
+} /* class_grating_mask_display */
 
 _class_PSD_monitor *class_PSD_monitor_display(_class_PSD_monitor *_comp
 ) {
@@ -11180,7 +11107,7 @@ _class_PSD_monitor *class_PSD_monitor_display(_class_PSD_monitor *_comp
   #define PSD_N (_comp->_parameters.PSD_N)
   #define PSD_p (_comp->_parameters.PSD_p)
   #define PSD_p2 (_comp->_parameters.PSD_p2)
-  SIG_MESSAGE("[_twoD_det_display] component twoD_det=PSD_monitor() DISPLAY [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\monitors\\PSD_monitor.comp:126]");
+  SIG_MESSAGE("[_det_display] component det=PSD_monitor() DISPLAY [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\monitors\\PSD_monitor.comp:126]");
 
   printf("MCDISPLAY: component %s\n", _comp->_name);
   
@@ -11217,7 +11144,7 @@ _class_PSD_monitor *class_PSD_monitor_display(_class_PSD_monitor *_comp
   #undef cylinder
   #undef sphere
 
-int display(void) { /* called by mccode_main for AER:DISPLAY */
+int display(void) { /* called by mccode_main for AER_HFIR_2023:DISPLAY */
   printf("MCDISPLAY: start\n");
 
   /* call iteratively all components DISPLAY */
@@ -11229,19 +11156,15 @@ int display(void) { /* called by mccode_main for AER:DISPLAY */
 
   class_Set_pol_display(&_pol_var);
 
-  class_pol_MWP_FI_expansion_v2_display(&_MWP1_var);
+  class_Pol_MWP_v3_display(&_MWP1_var);
 
-  class_pol_MWP_FI_expansion_v2_display(&_MWP2_var);
-
-  class_pol_MWP_FI_expansion_v2_display(&_MWP3_var);
-
-  class_pol_MWP_FI_expansion_v2_display(&_MWP4_var);
+  class_Pol_MWP_v3_display(&_MWP2_var);
 
   class_PolAnalyser_ideal_display(&_ana_var);
 
-  class_dfi_pattern_display(&_pat_x_var);
+  class_grating_mask_display(&_sam_var);
 
-  class_PSD_monitor_display(&_twoD_det_var);
+  class_PSD_monitor_display(&_det_var);
 
   printf("MCDISPLAY: end\n");
 
@@ -11260,11 +11183,9 @@ void* _getvar_parameters(char* compname)
   if (!strcmp(compname, "pol")) return (void *) &(_pol_var._parameters);
   if (!strcmp(compname, "MWP1")) return (void *) &(_MWP1_var._parameters);
   if (!strcmp(compname, "MWP2")) return (void *) &(_MWP2_var._parameters);
-  if (!strcmp(compname, "MWP3")) return (void *) &(_MWP3_var._parameters);
-  if (!strcmp(compname, "MWP4")) return (void *) &(_MWP4_var._parameters);
   if (!strcmp(compname, "ana")) return (void *) &(_ana_var._parameters);
-  if (!strcmp(compname, "pat_x")) return (void *) &(_pat_x_var._parameters);
-  if (!strcmp(compname, "twoD_det")) return (void *) &(_twoD_det_var._parameters);
+  if (!strcmp(compname, "sam")) return (void *) &(_sam_var._parameters);
+  if (!strcmp(compname, "det")) return (void *) &(_det_var._parameters);
   return 0;
 }
 
@@ -11284,11 +11205,9 @@ int _getcomp_index(char* compname)
   if (!strcmp(compname, "pol")) return 4;
   if (!strcmp(compname, "MWP1")) return 5;
   if (!strcmp(compname, "MWP2")) return 6;
-  if (!strcmp(compname, "MWP3")) return 7;
-  if (!strcmp(compname, "MWP4")) return 8;
-  if (!strcmp(compname, "ana")) return 9;
-  if (!strcmp(compname, "pat_x")) return 10;
-  if (!strcmp(compname, "twoD_det")) return 11;
+  if (!strcmp(compname, "ana")) return 7;
+  if (!strcmp(compname, "sam")) return 8;
+  if (!strcmp(compname, "det")) return 9;
   return -1;
 }
 
@@ -11485,4 +11404,4 @@ int mccode_main(int argc, char *argv[])
 } /* mccode_main */
 /* End of file "mccode_main.c". */
 
-/* end of generated C code AER.c */
+/* end of generated C code AER_HFIR_2023.c */
