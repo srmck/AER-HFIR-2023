@@ -15,7 +15,7 @@
 * 
 * %Identification
 * Written by: Sam McKay
-* Date: 18:40:49 on January 30, 2023
+* Date: 18:39:22 on January 30, 2023
 * Origin: Indiana University
 * %INSTRUMENT_SITE: Generated_instruments
 * 
@@ -27,10 +27,10 @@
 
 DEFINE INSTRUMENT AER_HFIR_2023 (
 double delta_lambda = 0.055, // Wavelength spread [AA]
-int low_count = 1, // if true flips analyzer direction [N/A]
+int low_count = 0, // if true flips analyzer direction [N/A]
 int all_off = 0, // if true turns off all MWPs [N/A]
-double cur1 = 20.5522, // MWP1 current [Amps]
-double cur2 = -20.5522, // MWP2 current [Amps]
+double cur1 = 16.4418, // MWP1 current [Amps]
+double cur2 = -16.4418, // MWP2 current [Amps]
 double polx = 1, // x-component of polarizer [N/A]
 double poly = 0, // y-component of polarizer [N/A]
 double polz = 0 // z-component of polarizer [N/A]
