@@ -2,7 +2,7 @@
  * Format:     ANSI C source code
  * Creator:    McStas <http://www.mcstas.org>
  * Instrument: AER_HFIR_2023.instr (AER_HFIR_2023)
- * Date:       Tue Jan 31 13:43:42 2023
+ * Date:       Tue Jan 31 17:07:12 2023
  * File:       AER_HFIR_2023.c
  * CFLAGS=
  */
@@ -8111,7 +8111,7 @@ int _src_setpos(void)
   _src_var._parameters.dE = 0;
   _src_var._parameters.lambda0 = 5.5;
   _src_var._parameters.dlambda = _instrument_var._parameters.delta_lambda;
-  _src_var._parameters.I1 = 1E+10;
+  _src_var._parameters.I1 = 1E+18;
   _src_var._parameters.yheight = 0.1;
   _src_var._parameters.xwidth = 0.1;
   _src_var._parameters.verbose = 0;
@@ -8359,11 +8359,11 @@ int _sam_setpos(void)
   stracpy(_sam_var._name, "sam", 16384);
   stracpy(_sam_var._type, "grating_mask", 16384);
   _sam_var._index=8;
-  _sam_var._parameters.outer = 40;
-  _sam_var._parameters.inner = 22;
-  _sam_var._parameters.Tr_len = 1;
-  _sam_var._parameters.Ab_len = 1;
-  _sam_var._parameters.offset = 0.5;
+  _sam_var._parameters.outer = 0.04;
+  _sam_var._parameters.inner = 0.022;
+  _sam_var._parameters.Tr_len = 0.001;
+  _sam_var._parameters.Ab_len = 0.001;
+  _sam_var._parameters.offset = 0.0005;
   _sam_var._parameters.slits = 11;
 
 
@@ -8404,8 +8404,8 @@ int _det_setpos(void)
   stracpy(_det_var._name, "det", 16384);
   stracpy(_det_var._type, "PSD_monitor", 16384);
   _det_var._index=9;
-  _det_var._parameters.nx = 128;
-  _det_var._parameters.ny = 128;
+  _det_var._parameters.nx = 120;
+  _det_var._parameters.ny = 120;
   if("AER_2D.dat" && strlen("AER_2D.dat"))
     stracpy(_det_var._parameters.filename, "AER_2D.dat" ? "AER_2D.dat" : "", 16384);
   else 
