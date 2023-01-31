@@ -15,7 +15,7 @@
 * 
 * %Identification
 * Written by: Sam McKay
-* Date: 18:37:37 on January 30, 2023
+* Date: 13:39:54 on January 31, 2023
 * Origin: Indiana University
 * %INSTRUMENT_SITE: Generated_instruments
 * 
@@ -54,7 +54,7 @@ AT (0,0,0) RELATIVE origin
 
 COMPONENT src = Source_sam(
  radius = 0.0075, dist = 2.5,
- focus_xw = 0.075, focus_yh = 0.075,
+ focus_xw = 0.0075, focus_yh = 0.0075,
  lambda0 = 5.5, dlambda = delta_lambda,
  I1 = 1E+10)
 AT (0,0,0) RELATIVE origin
@@ -86,9 +86,9 @@ COMPONENT sam = grating_mask(
 AT (0.0,0.0,1.25) RELATIVE origin
 
 COMPONENT det = PSD_monitor(
- nx = 76, ny = 76,
- filename = "AER_2D.dat", xwidth = 0.075,
- yheight = 0.075)
+ nx = 128, ny = 128,
+ filename = "AER_2D.dat", xwidth = 0.0075,
+ yheight = 0.0075)
 AT (0,0,2.5) RELATIVE origin
 
 FINALLY 

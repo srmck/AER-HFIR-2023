@@ -2,7 +2,7 @@
  * Format:     ANSI C source code
  * Creator:    McStas <http://www.mcstas.org>
  * Instrument: AER_HFIR_2023.instr (AER_HFIR_2023)
- * Date:       Mon Jan 30 18:40:49 2023
+ * Date:       Tue Jan 31 13:43:42 2023
  * File:       AER_HFIR_2023.c
  * CFLAGS=
  */
@@ -8103,8 +8103,8 @@ int _src_setpos(void)
   _src_var._parameters.ydiv_file[0]='\0';
   _src_var._parameters.radius = 0.0075;
   _src_var._parameters.dist = 2.5;
-  _src_var._parameters.focus_xw = 0.075;
-  _src_var._parameters.focus_yh = 0.075;
+  _src_var._parameters.focus_xw = 0.0075;
+  _src_var._parameters.focus_yh = 0.0075;
   _src_var._parameters.focus_aw = 0;
   _src_var._parameters.focus_ah = 0;
   _src_var._parameters.E0 = 0;
@@ -8404,8 +8404,8 @@ int _det_setpos(void)
   stracpy(_det_var._name, "det", 16384);
   stracpy(_det_var._type, "PSD_monitor", 16384);
   _det_var._index=9;
-  _det_var._parameters.nx = 76;
-  _det_var._parameters.ny = 76;
+  _det_var._parameters.nx = 128;
+  _det_var._parameters.ny = 128;
   if("AER_2D.dat" && strlen("AER_2D.dat"))
     stracpy(_det_var._parameters.filename, "AER_2D.dat" ? "AER_2D.dat" : "", 16384);
   else 
@@ -8414,8 +8414,8 @@ int _det_setpos(void)
   _det_var._parameters.xmax = 0.05;
   _det_var._parameters.ymin = -0.05;
   _det_var._parameters.ymax = 0.05;
-  _det_var._parameters.xwidth = 0.075;
-  _det_var._parameters.yheight = 0.075;
+  _det_var._parameters.xwidth = 0.0075;
+  _det_var._parameters.yheight = 0.0075;
   _det_var._parameters.restore_neutron = 0;
   _det_var._parameters.nowritefile = 0;
 

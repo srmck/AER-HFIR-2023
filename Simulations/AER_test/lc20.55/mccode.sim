@@ -1,5 +1,5 @@
 McStas simulation description file for AER_HFIR_2023.
-Date:    Mon Jan 30 18:40:53 2023
+Date:    Tue Jan 31 13:43:46 2023
 Program: 
 
 begin instrument: AER_HFIR_2023
@@ -19,7 +19,7 @@ begin simulation: C:\Users\xsm\Documents\GitHub\AER-HFIR-1-23\Simulations\AER_te
   Ncount: 10000000
   Trace: no
   Gravitation: no
-  Seed: -1091644303
+  Seed: -1237643740
   Directory: C:\Users\xsm\Documents\GitHub\AER-HFIR-1-23\Simulations\AER_test\lc20.55
   Param: delta_lambda=0.055
   Param: low_count=1
@@ -32,23 +32,23 @@ begin simulation: C:\Users\xsm\Documents\GitHub\AER-HFIR-1-23\Simulations\AER_te
 end simulation
 
 begin data
-  Date: Mon Jan 30 18:41:06 2023 (1675122066)
-  type: array_2d(76, 76)
+  Date: Tue Jan 31 13:44:02 2023 (1675190642)
+  type: array_2d(128, 128)
   Source: AER_HFIR_2023 (AER_HFIR_2023.instr)
   component: det
   position: 0 0 2.5
   title: PSD monitor
   Ncount: 20000000
   filename: AER_2D.dat
-  statistics: X0=-0.00124357; dX=1.91718; Y0=-9.14341e-005; dY=1.91766;
-  signal: Min=18.395; Max=167.351; Mean=105.978;
-  values: 612129 283.378 6.99928e+006
+  statistics: X0=8.70217e-005; dX=0.216538; Y0=0.000123958; dY=0.21652;
+  signal: Min=0.42256; Max=0.643367; Mean=0.533925;
+  values: 8747.84 3.3879 1e+007
   xvar: X 
   yvar: Y 
   xlabel: X position [cm]
   ylabel: Y position [cm]
   zvar: I
   zlabel: Signal per bin
-  xylimits: -3.75 3.75 -3.75 3.75
+  xylimits: -0.375 0.375 -0.375 0.375
   variables: I I_err N
 end data
