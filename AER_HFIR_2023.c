@@ -2,7 +2,7 @@
  * Format:     ANSI C source code
  * Creator:    McStas <http://www.mcstas.org>
  * Instrument: AER_HFIR_2023.instr (AER_HFIR_2023)
- * Date:       Tue Jan 31 17:07:12 2023
+ * Date:       Wed Feb 01 16:04:12 2023
  * File:       AER_HFIR_2023.c
  * CFLAGS=
  */
@@ -8375,13 +8375,13 @@ int _sam_setpos(void)
     Rotation tr1;
     rot_set_rotation(tr1,0,0,0);
     rot_set_rotation(tr1,
-      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+      (0)*DEG2RAD, (0)*DEG2RAD, (0.0)*DEG2RAD);
     rot_mul(tr1, _origin_var._rotation_absolute, _sam_var._rotation_absolute);
     rot_transpose(_ana_var._rotation_absolute, tr1);
     rot_mul(_sam_var._rotation_absolute, tr1, _sam_var._rotation_relative);
     _sam_var._rotation_is_identity =  rot_test_identity(_sam_var._rotation_relative);
     tc1 = coords_set(
-      0.0, 0.0, 1.25);
+      0.0, 0, 1.5);
     rot_transpose(_origin_var._rotation_absolute, tr1);
     tc2 = rot_apply(tr1, tc1);
     _sam_var._position_absolute = coords_add(_origin_var._position_absolute, tc2);
@@ -10703,7 +10703,7 @@ int finally(void) { /* called by mccode_main for AER_HFIR_2023:FINALLY */
   save(siminfo_file); /* save data when simulation ends */
 
   /* Instrument 'AER_HFIR_2023' FINALLY */
-  SIG_MESSAGE("[AER_HFIR_2023] FINALLY [AER_HFIR_2023.instr:95]");
+  SIG_MESSAGE("[AER_HFIR_2023] FINALLY [AER_HFIR_2023.instr:96]");
   #define delta_lambda (instrument->_parameters.delta_lambda)
   #define low_count (instrument->_parameters.low_count)
   #define all_off (instrument->_parameters.all_off)

@@ -1,5 +1,5 @@
 McStas simulation description file for AER_HFIR_2023.
-Date:    Tue Jan 31 16:55:21 2023
+Date:    Wed Feb 01 15:06:23 2023
 Program: 
 
 begin instrument: AER_HFIR_2023
@@ -16,10 +16,10 @@ begin simulation: C:\Users\xsm\Documents\GitHub\AER-HFIR-1-23\Simulations\AER_gr
   URL: http://www.mccode.org
   Creator: 
   Instrument: AER_HFIR_2023.instr
-  Ncount: 50000000
+  Ncount: 10000000
   Trace: no
   Gravitation: no
-  Seed: 1667265353
+  Seed: -74669388
   Directory: C:\Users\xsm\Documents\GitHub\AER-HFIR-1-23\Simulations\AER_grating\hc12.33
   Param: delta_lambda=0.055
   Param: low_count=0
@@ -32,17 +32,17 @@ begin simulation: C:\Users\xsm\Documents\GitHub\AER-HFIR-1-23\Simulations\AER_gr
 end simulation
 
 begin data
-  Date: Tue Jan 31 16:56:37 2023 (1675202197)
+  Date: Wed Feb 01 15:06:38 2023 (1675281998)
   type: array_2d(120, 120)
   Source: AER_HFIR_2023 (AER_HFIR_2023.instr)
   component: det
   position: 0 0 2.5
   title: PSD monitor
-  Ncount: 100000000
+  Ncount: 20000000
   filename: AER_2D.dat
-  statistics: X0=3.79275e-005; dX=0.216347; Y0=-5.10059e-005; dY=0.216471;
-  signal: Min=2.63864e+007; Max=3.53559e+007; Mean=3.0477e+007;
-  values: 4.38869e+011 1.07316e+008 2.50863e+007
+  statistics: X0=0.000113061; dX=0.218114; Y0=1.03726e-005; dY=0.216495;
+  signal: Min=2.18563e+007; Max=4.05563e+007; Mean=3.05248e+007;
+  values: 4.39557e+011 2.40241e+008 5.02236e+006
   xvar: X 
   yvar: Y 
   xlabel: X position [cm]
