@@ -2,7 +2,7 @@
  * Format:     ANSI C source code
  * Creator:    McStas <http://www.mcstas.org>
  * Instrument: AER_HFIR_2023.instr (AER_HFIR_2023)
- * Date:       Wed Feb 01 16:04:12 2023
+ * Date:       Fri Feb 03 12:28:08 2023
  * File:       AER_HFIR_2023.c
  * CFLAGS=
  */
@@ -6131,8 +6131,8 @@ struct mcinputtable_struct mcinputtable[] = {
   "delta_lambda", &(_instrument_var._parameters.delta_lambda), instr_type_double, "0.055", 
   "low_count", &(_instrument_var._parameters.low_count), instr_type_int, "1", 
   "all_off", &(_instrument_var._parameters.all_off), instr_type_int, "0", 
-  "cur1", &(_instrument_var._parameters.cur1), instr_type_double, "20.5522", 
-  "cur2", &(_instrument_var._parameters.cur2), instr_type_double, "-20.5522", 
+  "cur1", &(_instrument_var._parameters.cur1), instr_type_double, "43.1597", 
+  "cur2", &(_instrument_var._parameters.cur2), instr_type_double, "-43.1597", 
   "polx", &(_instrument_var._parameters.polx), instr_type_double, "1", 
   "poly", &(_instrument_var._parameters.poly), instr_type_double, "0", 
   "polz", &(_instrument_var._parameters.polz), instr_type_double, "0", 
@@ -8101,17 +8101,17 @@ int _src_setpos(void)
     stracpy(_src_var._parameters.ydiv_file, "NULL" ? "NULL" : "", 16384);
   else 
   _src_var._parameters.ydiv_file[0]='\0';
-  _src_var._parameters.radius = 0.0075;
+  _src_var._parameters.radius = 0.0025;
   _src_var._parameters.dist = 2.5;
-  _src_var._parameters.focus_xw = 0.0075;
-  _src_var._parameters.focus_yh = 0.0075;
+  _src_var._parameters.focus_xw = 0.0025;
+  _src_var._parameters.focus_yh = 0.0025;
   _src_var._parameters.focus_aw = 0;
   _src_var._parameters.focus_ah = 0;
   _src_var._parameters.E0 = 0;
   _src_var._parameters.dE = 0;
   _src_var._parameters.lambda0 = 5.5;
   _src_var._parameters.dlambda = _instrument_var._parameters.delta_lambda;
-  _src_var._parameters.I1 = 1E+18;
+  _src_var._parameters.I1 = 1E+15;
   _src_var._parameters.yheight = 0.1;
   _src_var._parameters.xwidth = 0.1;
   _src_var._parameters.verbose = 0;
@@ -8218,8 +8218,8 @@ int _MWP1_setpos(void)
   _MWP1_var._parameters.current = _instrument_var._parameters.cur1 * ( 1 - _instrument_var._parameters.all_off );
   _MWP1_var._parameters.Hyp_inv = 0;
   _MWP1_var._parameters.FI0 = .0;
-  _MWP1_var._parameters.a = .006;
-  _MWP1_var._parameters.b = .0062;
+  _MWP1_var._parameters.a = 0.005;
+  _MWP1_var._parameters.b = 0.005;
   _MWP1_var._parameters.c = .0001;
   _MWP1_var._parameters.d = -.22;
   _MWP1_var._parameters.B0 = .0;
@@ -8271,8 +8271,8 @@ int _MWP2_setpos(void)
   _MWP2_var._parameters.current = _instrument_var._parameters.cur2 * ( 1 - _instrument_var._parameters.all_off );
   _MWP2_var._parameters.Hyp_inv = 0;
   _MWP2_var._parameters.FI0 = .0;
-  _MWP2_var._parameters.a = .006;
-  _MWP2_var._parameters.b = .0062;
+  _MWP2_var._parameters.a = 0.005;
+  _MWP2_var._parameters.b = 0.005;
   _MWP2_var._parameters.c = .0001;
   _MWP2_var._parameters.d = -.22;
   _MWP2_var._parameters.B0 = .0;
@@ -8381,7 +8381,7 @@ int _sam_setpos(void)
     rot_mul(_sam_var._rotation_absolute, tr1, _sam_var._rotation_relative);
     _sam_var._rotation_is_identity =  rot_test_identity(_sam_var._rotation_relative);
     tc1 = coords_set(
-      0.0, 0, 1.5);
+      0.0, 0, 1.25);
     rot_transpose(_origin_var._rotation_absolute, tr1);
     tc2 = rot_apply(tr1, tc1);
     _sam_var._position_absolute = coords_add(_origin_var._position_absolute, tc2);
@@ -8404,8 +8404,8 @@ int _det_setpos(void)
   stracpy(_det_var._name, "det", 16384);
   stracpy(_det_var._type, "PSD_monitor", 16384);
   _det_var._index=9;
-  _det_var._parameters.nx = 120;
-  _det_var._parameters.ny = 120;
+  _det_var._parameters.nx = 100;
+  _det_var._parameters.ny = 100;
   if("AER_2D.dat" && strlen("AER_2D.dat"))
     stracpy(_det_var._parameters.filename, "AER_2D.dat" ? "AER_2D.dat" : "", 16384);
   else 
@@ -8414,8 +8414,8 @@ int _det_setpos(void)
   _det_var._parameters.xmax = 0.05;
   _det_var._parameters.ymin = -0.05;
   _det_var._parameters.ymax = 0.05;
-  _det_var._parameters.xwidth = 0.0075;
-  _det_var._parameters.yheight = 0.0075;
+  _det_var._parameters.xwidth = 0.0025;
+  _det_var._parameters.yheight = 0.0025;
   _det_var._parameters.restore_neutron = 0;
   _det_var._parameters.nowritefile = 0;
 
@@ -10703,7 +10703,7 @@ int finally(void) { /* called by mccode_main for AER_HFIR_2023:FINALLY */
   save(siminfo_file); /* save data when simulation ends */
 
   /* Instrument 'AER_HFIR_2023' FINALLY */
-  SIG_MESSAGE("[AER_HFIR_2023] FINALLY [AER_HFIR_2023.instr:96]");
+  SIG_MESSAGE("[AER_HFIR_2023] FINALLY [AER_HFIR_2023.instr:98]");
   #define delta_lambda (instrument->_parameters.delta_lambda)
   #define low_count (instrument->_parameters.low_count)
   #define all_off (instrument->_parameters.all_off)

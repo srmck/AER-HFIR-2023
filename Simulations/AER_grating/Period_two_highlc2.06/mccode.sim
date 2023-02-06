@@ -1,0 +1,31 @@
+McStas simulation description file for AER_HFIR_2023.
+Date:    Fri Feb 03 11:32:40 2023
+Program: 
+
+begin instrument: AER_HFIR_2023
+  File: C:\Users\xsm\Documents\GitHub\AER-HFIR-1-23\Simulations\AER_grating\Period_two_highlc2.06/mccode
+  Source: AER_HFIR_2023.instr
+  Parameters:  delta_lambda(double) low_count(int) all_off(int) cur1(double) cur2(double) polx(double) poly(double) polz(double)
+  Trace_enabled: yes
+  Default_main: yes
+  Embedded_runtime: yes
+end instrument
+
+begin simulation: C:\Users\xsm\Documents\GitHub\AER-HFIR-1-23\Simulations\AER_grating\Period_two_highlc2.06
+  Format: McCode with text headers
+  URL: http://www.mccode.org
+  Creator: 
+  Instrument: AER_HFIR_2023.instr
+  Ncount: 20000000
+  Trace: no
+  Gravitation: no
+  Seed: 988387062
+  Directory: C:\Users\xsm\Documents\GitHub\AER-HFIR-1-23\Simulations\AER_grating\Period_two_highlc2.06
+  Param: delta_lambda=0.055
+  Param: low_count=1
+  Param: all_off=0
+  Param: cur1=2.05522
+  Param: cur2=-2.05522
+  Param: polx=1
+  Param: poly=0
+  Param: polz=0
