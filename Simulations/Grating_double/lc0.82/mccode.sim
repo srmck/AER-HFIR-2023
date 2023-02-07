@@ -1,0 +1,58 @@
+McStas simulation description file for AER_HFIR_2023.
+Date:    Tue Feb 07 13:44:52 2023
+Program: 
+
+begin instrument: AER_HFIR_2023
+  File: C:\Users\xsm\Documents\GitHub\AER-HFIR-1-23\Simulations\Grating_double\lc0.82/mccode
+  Source: AER_HFIR_2023.instr
+  Parameters:  delta_lambda(double) low_count(int) all_off(int) cur1(double) cur2(double) cur3(double) cur4(double) BCG1(double) BCG2(double) polx(double) poly(double) polz(double)
+  Trace_enabled: yes
+  Default_main: yes
+  Embedded_runtime: yes
+end instrument
+
+begin simulation: C:\Users\xsm\Documents\GitHub\AER-HFIR-1-23\Simulations\Grating_double\lc0.82
+  Format: McCode with text headers
+  URL: http://www.mccode.org
+  Creator: 
+  Instrument: AER_HFIR_2023.instr
+  Ncount: 20000000
+  Trace: no
+  Gravitation: no
+  Seed: -1961789377
+  Directory: C:\Users\xsm\Documents\GitHub\AER-HFIR-1-23\Simulations\Grating_double\lc0.82
+  Param: delta_lambda=0.055
+  Param: low_count=1
+  Param: all_off=0
+  Param: cur1=0.822089
+  Param: cur2=-0.822089
+  Param: cur3=-0
+  Param: cur4=-0
+  Param: BCG1=50
+  Param: BCG2=-50
+  Param: polx=1
+  Param: poly=0
+  Param: polz=0
+end simulation
+
+begin data
+  Date: Tue Feb 07 13:45:53 2023 (1675795553)
+  type: array_2d(100, 100)
+  Source: AER_HFIR_2023 (AER_HFIR_2023.instr)
+  component: det
+  position: 0 0 3
+  title: PSD monitor
+  Ncount: 40000000
+  filename: AER_2D.dat
+  statistics: X0=0.000755693; dX=0.249857; Y0=2.41936e-006; dY=0.216505;
+  signal: Min=753.477; Max=12960.8; Mean=5608.45;
+  values: 5.60845e+007 26085 1.00019e+007
+  xvar: X 
+  yvar: Y 
+  xlabel: X position [cm]
+  ylabel: Y position [cm]
+  zvar: I
+  zlabel: Signal per bin
+  xylimits: -0.375 0.375 -0.375 0.375
+  variables: I I_err N
+end data
