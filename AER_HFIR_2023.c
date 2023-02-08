@@ -2,7 +2,7 @@
  * Format:     ANSI C source code
  * Creator:    McStas <http://www.mcstas.org>
  * Instrument: AER_HFIR_2023.instr (AER_HFIR_2023)
- * Date:       Tue Feb 07 18:25:45 2023
+ * Date:       Wed Feb 08 10:12:10 2023
  * File:       AER_HFIR_2023.c
  * CFLAGS=
  */
@@ -6132,8 +6132,8 @@ struct mcinputtable_struct mcinputtable[] = {
   "delta_lambda", &(_instrument_var._parameters.delta_lambda), instr_type_double, "0.055", 
   "low_count", &(_instrument_var._parameters.low_count), instr_type_int, "1", 
   "all_off", &(_instrument_var._parameters.all_off), instr_type_int, "0", 
-  "cur1", &(_instrument_var._parameters.cur1), instr_type_double, "61.6566", 
-  "cur2", &(_instrument_var._parameters.cur2), instr_type_double, "-61.6566", 
+  "cur1", &(_instrument_var._parameters.cur1), instr_type_double, "30.8283", 
+  "cur2", &(_instrument_var._parameters.cur2), instr_type_double, "-30.8283", 
   "BCG", &(_instrument_var._parameters.BCG), instr_type_double, "0", 
   "polx", &(_instrument_var._parameters.polx), instr_type_double, "1", 
   "poly", &(_instrument_var._parameters.poly), instr_type_double, "0", 
@@ -8147,10 +8147,10 @@ int _src_setpos(void)
     stracpy(_src_var._parameters.ydiv_file, "NULL" ? "NULL" : "", 16384);
   else 
   _src_var._parameters.ydiv_file[0]='\0';
-  _src_var._parameters.radius = 0.0025;
+  _src_var._parameters.radius = 0.005;
   _src_var._parameters.dist = 2.5;
-  _src_var._parameters.focus_xw = 0.0025;
-  _src_var._parameters.focus_yh = 0.0025;
+  _src_var._parameters.focus_xw = 0.005;
+  _src_var._parameters.focus_yh = 0.005;
   _src_var._parameters.focus_aw = 0;
   _src_var._parameters.focus_ah = 0;
   _src_var._parameters.E0 = 0;
@@ -8254,7 +8254,7 @@ int _pol_setpos(void)
 /* component MWP1=Pol_MWP_v3() SETTING, POSITION/ROTATION */
 int _MWP1_setpos(void)
 { /* sets initial component parameters, position and rotation */
-  SIG_MESSAGE("[_MWP1_setpos] component MWP1=Pol_MWP_v3() SETTING [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\contrib\\Pol_MWP_v3.comp:71]");
+  SIG_MESSAGE("[_MWP1_setpos] component MWP1=Pol_MWP_v3() SETTING [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\contrib\\Pol_MWP_v3.comp:74]");
   stracpy(_MWP1_var._name, "MWP1", 16384);
   stracpy(_MWP1_var._type, "Pol_MWP_v3", 16384);
   _MWP1_var._index=5;
@@ -8352,7 +8352,7 @@ int _CG_setpos(void)
 /* component MWP2=Pol_MWP_v3() SETTING, POSITION/ROTATION */
 int _MWP2_setpos(void)
 { /* sets initial component parameters, position and rotation */
-  SIG_MESSAGE("[_MWP2_setpos] component MWP2=Pol_MWP_v3() SETTING [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\contrib\\Pol_MWP_v3.comp:71]");
+  SIG_MESSAGE("[_MWP2_setpos] component MWP2=Pol_MWP_v3() SETTING [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\contrib\\Pol_MWP_v3.comp:74]");
   stracpy(_MWP2_var._name, "MWP2", 16384);
   stracpy(_MWP2_var._type, "Pol_MWP_v3", 16384);
   _MWP2_var._index=7;
@@ -8505,8 +8505,8 @@ int _det_setpos(void)
   _det_var._parameters.xmax = 0.05;
   _det_var._parameters.ymin = -0.05;
   _det_var._parameters.ymax = 0.05;
-  _det_var._parameters.xwidth = 0.0025;
-  _det_var._parameters.yheight = 0.0025;
+  _det_var._parameters.xwidth = 0.005;
+  _det_var._parameters.yheight = 0.005;
   _det_var._parameters.restore_neutron = 0;
   _det_var._parameters.nowritefile = 0;
 
@@ -9005,7 +9005,7 @@ _class_Pol_MWP_v3 *class_Pol_MWP_v3_init(_class_Pol_MWP_v3 *_comp
   #define LG (_comp->_parameters.LG)
   #define phi (_comp->_parameters.phi)
   #define psi (_comp->_parameters.psi)
-  SIG_MESSAGE("[_MWP1_init] component MWP1=Pol_MWP_v3() INITIALISE [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\contrib\\Pol_MWP_v3.comp:71]");
+  SIG_MESSAGE("[_MWP1_init] component MWP1=Pol_MWP_v3() INITIALISE [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\contrib\\Pol_MWP_v3.comp:74]");
 
 	gamma = -1.832471*pow(10,8); //neutron gyromagnetic ratio
   
@@ -9760,7 +9760,7 @@ _class_Pol_MWP_v3 *class_Pol_MWP_v3_trace(_class_Pol_MWP_v3 *_comp
   #define LG (_comp->_parameters.LG)
   #define phi (_comp->_parameters.phi)
   #define psi (_comp->_parameters.psi)
-  SIG_MESSAGE("[_MWP1_trace] component MWP1=Pol_MWP_v3() TRACE [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\contrib\\Pol_MWP_v3.comp:89]");
+  SIG_MESSAGE("[_MWP1_trace] component MWP1=Pol_MWP_v3() TRACE [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\contrib\\Pol_MWP_v3.comp:92]");
 
 	int unpol = 0;  //flags neutron as unpolarized
 	double sx_in = sx, sy_in = sy, sz_in = sz; //initial spin components
@@ -11259,7 +11259,7 @@ _class_Pol_MWP_v3 *class_Pol_MWP_v3_display(_class_Pol_MWP_v3 *_comp
   #define LG (_comp->_parameters.LG)
   #define phi (_comp->_parameters.phi)
   #define psi (_comp->_parameters.psi)
-  SIG_MESSAGE("[_MWP1_display] component MWP1=Pol_MWP_v3() DISPLAY [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\contrib\\Pol_MWP_v3.comp:137]");
+  SIG_MESSAGE("[_MWP1_display] component MWP1=Pol_MWP_v3() DISPLAY [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\contrib\\Pol_MWP_v3.comp:140]");
 
   printf("MCDISPLAY: component %s\n", _comp->_name);
 	box(0, 0, zdepth/2.0, xwidth, yheight, zdepth);

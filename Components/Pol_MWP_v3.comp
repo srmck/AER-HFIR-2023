@@ -18,6 +18,9 @@
 * %D
 * Rectangular box that approximates the action of an MWP. A neutron hitting outside of 
 * the opening square or the walls is absorbed. Precession only occurs in the z-x plane.
+* Default parameters are from experimental data (Fankang Li 2014).
+* More realsitic parameters are 2.5 mT/amp, which means each parameter should be scaled by 5/6.
+* Includes option for linear magnetic field gradients from aberrations in pole pieces.
 *
 * This component does NOT take gravity into account.
 *
@@ -25,20 +28,20 @@
 *
 * %P
 * INPUT PARAMETERS:
-* xwidth:   [m]   	Width of opening 
-* yheight:  [m]   	Height of opening
-* zdepth:   [m]   	Length of field region
-* current:  [A]	  	Current in each triangular field region
-* Hyp_inv:  [N/A] 	(0 or 1) determines the hypotenuse orientation
-* FI0:		[T m] 	Constant field integral term
-* a:		[T/m^2]
-* b:		[T/m^2]	
-* c:		[T/m^2]	
-* d:		[T/m^2]	
-* B0:		[T]	Constant field (depends on length)
-* Bx:		[T/m]	x field gradient (depends on length, independent of current)
-* By:		[T/m]	y field gradient (depends on length, independent of current)
-* Bz:		[T/m]	z field gradient (depends on length, independent of current)
+* xwidth:   [m]   		Width of opening 
+* yheight:  [m]   		Height of opening
+* zdepth:   [m]   		Length of field region
+* current:  [A]	  		Current in each triangular field region
+* Hyp_inv:  [N/A] 		(0 or 1) determines the hypotenuse orientation
+* FI0:		[T m] 		Constant field integral term
+* a:		[T/amp] 	FI = current*(FI0 + a*x + b*x*phi + c*y*psi + d*x*y*y)
+* b:		[T/rad/amp]	FI = current*(FI0 + a*x + b*x*phi + c*y*psi + d*x*y*y)
+* c:		[T/rad/amp]	FI = current*(FI0 + a*x + b*x*phi + c*y*psi + d*x*y*y)
+* d:		[T/m^2/amp]	FI = current*(FI0 + a*x + b*x*phi + c*y*psi + d*x*y*y)
+* B0:		[T]			Constant field (depends on length)
+* Bx:		[T/m]		x field gradient (depends on length, independent of current)
+* By:		[T/m]		y field gradient (depends on length, independent of current)
+* Bz:		[T/m]		z field gradient (depends on length, independent of current)
 *
 * OUTPUT PARAMETERS:
 *
@@ -120,10 +123,10 @@ TRACE
 			Bx = -Bx, Bz = -Bz;
 		}
 		
-		LG = zdepth*(B0 + Bx*x + By*y + Bz*z);  //linear gradient term
-		FI = FI0 + a*x + b*x*phi + c*y*psi + d*x*y*y + LG;
+		LG = zdepth*(B0 + Bx*x + By*y + Bz*zdepth/2)*(1 + phi*phi/2 + psi*psi/2);  //linear gradient term
+		FI = FI0 + a*x + b*x*phi + c*y*psi + d*x*y*y;
   
-		phase_fin = gamma/velocity*current*FI + phi_in;  //precession about y-axis
+		phase_fin = gamma/velocity*(current*FI + LG) + phi_in;  //precession about y-axis
 		sx = cos(phase_fin)*sin(theta_in);
 		sy = cos(theta_in);
 		sz = sin(phase_fin)*sin(theta_in);
