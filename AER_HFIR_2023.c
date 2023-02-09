@@ -2,7 +2,7 @@
  * Format:     ANSI C source code
  * Creator:    McStas <http://www.mcstas.org>
  * Instrument: AER_HFIR_2023.instr (AER_HFIR_2023)
- * Date:       Wed Feb 08 10:12:10 2023
+ * Date:       Wed Feb 08 18:48:51 2023
  * File:       AER_HFIR_2023.c
  * CFLAGS=
  */
@@ -6132,8 +6132,8 @@ struct mcinputtable_struct mcinputtable[] = {
   "delta_lambda", &(_instrument_var._parameters.delta_lambda), instr_type_double, "0.055", 
   "low_count", &(_instrument_var._parameters.low_count), instr_type_int, "1", 
   "all_off", &(_instrument_var._parameters.all_off), instr_type_int, "0", 
-  "cur1", &(_instrument_var._parameters.cur1), instr_type_double, "30.8283", 
-  "cur2", &(_instrument_var._parameters.cur2), instr_type_double, "-30.8283", 
+  "cur1", &(_instrument_var._parameters.cur1), instr_type_double, "20.5522", 
+  "cur2", &(_instrument_var._parameters.cur2), instr_type_double, "-20.5522", 
   "BCG", &(_instrument_var._parameters.BCG), instr_type_double, "0", 
   "polx", &(_instrument_var._parameters.polx), instr_type_double, "1", 
   "poly", &(_instrument_var._parameters.poly), instr_type_double, "0", 
@@ -8147,10 +8147,10 @@ int _src_setpos(void)
     stracpy(_src_var._parameters.ydiv_file, "NULL" ? "NULL" : "", 16384);
   else 
   _src_var._parameters.ydiv_file[0]='\0';
-  _src_var._parameters.radius = 0.005;
+  _src_var._parameters.radius = 0.0075;
   _src_var._parameters.dist = 2.5;
-  _src_var._parameters.focus_xw = 0.005;
-  _src_var._parameters.focus_yh = 0.005;
+  _src_var._parameters.focus_xw = 0.0075;
+  _src_var._parameters.focus_yh = 0.0075;
   _src_var._parameters.focus_aw = 0;
   _src_var._parameters.focus_ah = 0;
   _src_var._parameters.E0 = 0;
@@ -8505,8 +8505,8 @@ int _det_setpos(void)
   _det_var._parameters.xmax = 0.05;
   _det_var._parameters.ymin = -0.05;
   _det_var._parameters.ymax = 0.05;
-  _det_var._parameters.xwidth = 0.005;
-  _det_var._parameters.yheight = 0.005;
+  _det_var._parameters.xwidth = 0.0075;
+  _det_var._parameters.yheight = 0.0075;
   _det_var._parameters.restore_neutron = 0;
   _det_var._parameters.nowritefile = 0;
 
@@ -9795,10 +9795,10 @@ _class_Pol_MWP_v3 *class_Pol_MWP_v3_trace(_class_Pol_MWP_v3 *_comp
 			Bx = -Bx, Bz = -Bz;
 		}
 		
-		LG = zdepth*(B0 + Bx*x + By*y + Bz*z);  //linear gradient term
-		FI = FI0 + a*x + b*x*phi + c*y*psi + d*x*y*y + LG;
+		LG = zdepth*(B0 + Bx*x + By*y + Bz*zdepth/2)*(1 + phi*phi/2 + psi*psi/2);  //linear gradient term
+		FI = FI0 + a*x + b*x*phi + c*y*psi + d*x*y*y;
   
-		phase_fin = gamma/velocity*current*FI + phi_in;  //precession about y-axis
+		phase_fin = gamma/velocity*(current*FI + LG) + phi_in;  //precession about y-axis
 		sx = cos(phase_fin)*sin(theta_in);
 		sy = cos(theta_in);
 		sz = sin(phase_fin)*sin(theta_in);
