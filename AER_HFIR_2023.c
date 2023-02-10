@@ -2,7 +2,7 @@
  * Format:     ANSI C source code
  * Creator:    McStas <http://www.mcstas.org>
  * Instrument: AER_HFIR_2023.instr (AER_HFIR_2023)
- * Date:       Wed Feb 08 18:48:51 2023
+ * Date:       Fri Feb 10 16:28:26 2023
  * File:       AER_HFIR_2023.c
  * CFLAGS=
  */
@@ -6129,7 +6129,7 @@ struct _instrument_struct *instrument = & _instrument_var;
 
 int numipar = 9;
 struct mcinputtable_struct mcinputtable[] = {
-  "delta_lambda", &(_instrument_var._parameters.delta_lambda), instr_type_double, "0.055", 
+  "delta_lambda", &(_instrument_var._parameters.delta_lambda), instr_type_double, "5.5E-08", 
   "low_count", &(_instrument_var._parameters.low_count), instr_type_int, "1", 
   "all_off", &(_instrument_var._parameters.all_off), instr_type_int, "0", 
   "cur1", &(_instrument_var._parameters.cur1), instr_type_double, "20.5522", 
@@ -8265,7 +8265,7 @@ int _MWP1_setpos(void)
   _MWP1_var._parameters.Hyp_inv = 0;
   _MWP1_var._parameters.FI0 = .0;
   _MWP1_var._parameters.a = 0.005;
-  _MWP1_var._parameters.b = 0.005;
+  _MWP1_var._parameters.b = 0;
   _MWP1_var._parameters.c = .0001;
   _MWP1_var._parameters.d = -.22;
   _MWP1_var._parameters.B0 = .0;
@@ -8363,7 +8363,7 @@ int _MWP2_setpos(void)
   _MWP2_var._parameters.Hyp_inv = 0;
   _MWP2_var._parameters.FI0 = .0;
   _MWP2_var._parameters.a = 0.005;
-  _MWP2_var._parameters.b = 0.005;
+  _MWP2_var._parameters.b = 0;
   _MWP2_var._parameters.c = .0001;
   _MWP2_var._parameters.d = -.22;
   _MWP2_var._parameters.B0 = .0;
