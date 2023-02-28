@@ -15,7 +15,7 @@
 * 
 * %Identification
 * Written by: Sam McKay
-* Date: 16:28:26 on February 10, 2023
+* Date: 15:28:00 on February 28, 2023
 * Origin: Indiana University
 * %INSTRUMENT_SITE: Generated_instruments
 * 
@@ -26,11 +26,11 @@
 ********************************************************************************/
 
 DEFINE INSTRUMENT AER_HFIR_2023 (
-double delta_lambda = 5.5E-08, // Wavelength spread [AA]
+double delta_lambda = 0.055, // Wavelength spread [AA]
 int low_count = 1, // if true flips analyzer direction [N/A]
 int all_off = 0, // if true turns off all MWPs [N/A]
-double cur1 = 20.5522, // MWP1 current [Amps]
-double cur2 = -20.5522, // MWP2 current [Amps]
+double cur1 = 15.4142, // MWP1 current [Amps]
+double cur2 = -15.4142, // MWP2 current [Amps]
 double BCG = 0, // Center guide field [Gauss]
 double polx = 1, // x-component of polarizer [N/A]
 double poly = 0, // y-component of polarizer [N/A]
@@ -54,8 +54,8 @@ COMPONENT arm = Arm()
 AT (0,0,0) RELATIVE origin
 
 COMPONENT src = Source_sam(
- radius = 0.0075, dist = 2.5,
- focus_xw = 0.0075, focus_yh = 0.0075,
+ radius = 0.01, dist = 2.5,
+ focus_xw = 0.01, focus_yh = 0.01,
  lambda0 = 5.5, dlambda = delta_lambda,
  I1 = 1E+15)
 AT (0,0,0) RELATIVE origin
@@ -96,8 +96,8 @@ ROTATED (0,0,0.0) RELATIVE origin
 
 COMPONENT det = PSD_monitor(
  nx = 100, ny = 100,
- filename = "AER_2D.dat", xwidth = 0.0075,
- yheight = 0.0075)
+ filename = "AER_2D.dat", xwidth = 0.01,
+ yheight = 0.01)
 AT (0,0,2.5) RELATIVE origin
 
 FINALLY 
