@@ -2,7 +2,7 @@
  * Format:     ANSI C source code
  * Creator:    McStas <http://www.mcstas.org>
  * Instrument: AER_HFIR_2023.instr (AER_HFIR_2023)
- * Date:       Tue Feb 28 15:28:00 2023
+ * Date:       Mon Mar 06 17:08:13 2023
  * File:       AER_HFIR_2023.c
  * CFLAGS=
  */
@@ -6132,9 +6132,9 @@ struct mcinputtable_struct mcinputtable[] = {
   "delta_lambda", &(_instrument_var._parameters.delta_lambda), instr_type_double, "0.055", 
   "low_count", &(_instrument_var._parameters.low_count), instr_type_int, "1", 
   "all_off", &(_instrument_var._parameters.all_off), instr_type_int, "0", 
-  "cur1", &(_instrument_var._parameters.cur1), instr_type_double, "15.4142", 
-  "cur2", &(_instrument_var._parameters.cur2), instr_type_double, "-15.4142", 
-  "BCG", &(_instrument_var._parameters.BCG), instr_type_double, "0", 
+  "cur1", &(_instrument_var._parameters.cur1), instr_type_double, "6.16566", 
+  "cur2", &(_instrument_var._parameters.cur2), instr_type_double, "-6.16566", 
+  "BCG", &(_instrument_var._parameters.BCG), instr_type_double, "50.25", 
   "polx", &(_instrument_var._parameters.polx), instr_type_double, "1", 
   "poly", &(_instrument_var._parameters.poly), instr_type_double, "0", 
   "polz", &(_instrument_var._parameters.polz), instr_type_double, "0", 
@@ -8265,7 +8265,7 @@ int _MWP1_setpos(void)
   _MWP1_var._parameters.Hyp_inv = 0;
   _MWP1_var._parameters.FI0 = .0;
   _MWP1_var._parameters.a = 0.005;
-  _MWP1_var._parameters.b = 0;
+  _MWP1_var._parameters.b = 0.005;
   _MWP1_var._parameters.c = .0001;
   _MWP1_var._parameters.d = -.22;
   _MWP1_var._parameters.B0 = .0;
@@ -8363,7 +8363,7 @@ int _MWP2_setpos(void)
   _MWP2_var._parameters.Hyp_inv = 0;
   _MWP2_var._parameters.FI0 = .0;
   _MWP2_var._parameters.a = 0.005;
-  _MWP2_var._parameters.b = 0;
+  _MWP2_var._parameters.b = 0.005;
   _MWP2_var._parameters.c = .0001;
   _MWP2_var._parameters.d = -.22;
   _MWP2_var._parameters.B0 = .0;
@@ -8466,7 +8466,7 @@ int _sam_setpos(void)
     Rotation tr1;
     rot_set_rotation(tr1,0,0,0);
     rot_set_rotation(tr1,
-      (0)*DEG2RAD, (0)*DEG2RAD, (0.0)*DEG2RAD);
+      (0)*DEG2RAD, (0.0)*DEG2RAD, (0)*DEG2RAD);
     rot_mul(tr1, _origin_var._rotation_absolute, _sam_var._rotation_absolute);
     rot_transpose(_ana_var._rotation_absolute, tr1);
     rot_mul(_sam_var._rotation_absolute, tr1, _sam_var._rotation_relative);

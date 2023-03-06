@@ -15,7 +15,7 @@
 * 
 * %Identification
 * Written by: Sam McKay
-* Date: 15:28:00 on February 28, 2023
+* Date: 17:08:13 on March 06, 2023
 * Origin: Indiana University
 * %INSTRUMENT_SITE: Generated_instruments
 * 
@@ -29,9 +29,9 @@ DEFINE INSTRUMENT AER_HFIR_2023 (
 double delta_lambda = 0.055, // Wavelength spread [AA]
 int low_count = 1, // if true flips analyzer direction [N/A]
 int all_off = 0, // if true turns off all MWPs [N/A]
-double cur1 = 15.4142, // MWP1 current [Amps]
-double cur2 = -15.4142, // MWP2 current [Amps]
-double BCG = 0, // Center guide field [Gauss]
+double cur1 = 6.16566, // MWP1 current [Amps]
+double cur2 = -6.16566, // MWP2 current [Amps]
+double BCG = 50.25, // Center guide field [Gauss]
 double polx = 1, // x-component of polarizer [N/A]
 double poly = 0, // y-component of polarizer [N/A]
 double polz = 0 // z-component of polarizer [N/A]
@@ -68,7 +68,7 @@ AT (0,0,1e-06) RELATIVE origin
 COMPONENT MWP1 = Pol_MWP_v3(
  xwidth = 0.02, yheight = 0.02,
  zdepth = 0.1, current = cur1*(1-all_off),
- a = 0.005, b = 0)
+ a = 0.005, b = 0.005)
 AT (0,0,0.55) RELATIVE origin
 
 COMPONENT CG = Pol_constBfield(
@@ -79,7 +79,7 @@ AT (0,0,0.65) RELATIVE origin
 COMPONENT MWP2 = Pol_MWP_v3(
  xwidth = 0.02, yheight = 0.02,
  zdepth = 0.1, current = cur2*(1-all_off),
- a = 0.005, b = 0)
+ a = 0.005, b = 0.005)
 AT (0,0,0.95) RELATIVE origin
 
 COMPONENT ana = PolAnalyser_ideal(
@@ -92,7 +92,7 @@ COMPONENT sam = grating_mask(
  Tr_len = 0.001, Ab_len = 0.001,
  offset = 0.0005, slits = 11)
 AT (0.0,0,1.5) RELATIVE origin
-ROTATED (0,0,0.0) RELATIVE origin
+ROTATED (0,0.0,0) RELATIVE origin
 
 COMPONENT det = PSD_monitor(
  nx = 100, ny = 100,
