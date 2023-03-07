@@ -15,7 +15,7 @@
 * 
 * %Identification
 * Written by: Sam McKay
-* Date: 16:48:17 on March 06, 2023
+* Date: 17:26:29 on March 07, 2023
 * Origin: Indiana University
 * %INSTRUMENT_SITE: Generated_instruments
 * 
@@ -26,12 +26,12 @@
 ********************************************************************************/
 
 DEFINE INSTRUMENT AER_HFIR_2023 (
-double delta_lambda = 0.055, // Wavelength spread [AA]
+double delta_lambda = 0.0055, // Wavelength spread [AA]
 int low_count = 0, // if true flips analyzer direction [N/A]
 int all_off = 0, // if true turns off all MWPs [N/A]
 double cur1 = 6.16566, // MWP1 current [Amps]
 double cur2 = -6.16566, // MWP2 current [Amps]
-double BCG = 50.1429, // Center guide field [Gauss]
+double BCG = 25.5556, // Center guide field [Gauss]
 double polx = 1, // x-component of polarizer [N/A]
 double poly = 0, // y-component of polarizer [N/A]
 double polz = 0 // z-component of polarizer [N/A]
