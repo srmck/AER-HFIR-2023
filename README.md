@@ -1,13 +1,15 @@
 # AER-HFIR-cycle-502
 
 Simulations for the angle-encoded radiography experiment on the CG-4B beamline. Experiment scheduled for second half of cycle 502, which starts March 28th 2023.
+The cycle may be delayed for 2 weeks.
 
-The sample will be a borated aluminum diffraction grating which is currently at ISIS.
+The sample will either be a 1mm borated aluminum diffraction grating or a Borated 3D printed 4mm or 2mm mask..
 
-### To do list before experiment:
+### Top priority:
 
-1. The tuning prodecure needs to be ironed out: SESANS tuning should get the field integral equal between the arms, but how can we ensure true angle encoding? How accurate does the encoding have to be? 
-2. For beam line polarization, we will have a translation stage to measure the empty beam polarization, as we suspect that the beamline polarization will be a function of current in the MWPs.
-3. Normalization would be nice to figure out analytically. Maybe look into literature?
-4. Need to ship the diffraction grating from Delft (Steven Parnell).
-5. Try to automate image reconstruction algorithm. Try to fit the polarization even with the sample factor issue?
+1. The tuning prodecure needs to be ironed out: can we scan each MWP independently?
+2. What's the best way of measuring beam polarization?
+3. Image reconstruction and normalization is done.
+4. Try to automate image reconstruction algorithm. Try to fit the polarization even with the sample factor issue?
+
+More details can be found at [AER Notes](https://docs.google.com/document/d/1wOUABEid8K96Qhme4a_Ta9n2TfiXdon4B7LQnB_AXkk/edit?usp=sharing).
