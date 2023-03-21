@@ -2,7 +2,7 @@
  * Format:     ANSI C source code
  * Creator:    McStas <http://www.mcstas.org>
  * Instrument: AER_HFIR_2023.instr (AER_HFIR_2023)
- * Date:       Mon Mar 20 18:00:53 2023
+ * Date:       Tue Mar 21 15:55:47 2023
  * File:       AER_HFIR_2023.c
  * CFLAGS=
  */
@@ -6132,9 +6132,9 @@ struct mcinputtable_struct mcinputtable[] = {
   "delta_lambda", &(_instrument_var._parameters.delta_lambda), instr_type_double, "0.01375", 
   "low_count", &(_instrument_var._parameters.low_count), instr_type_int, "1", 
   "all_off", &(_instrument_var._parameters.all_off), instr_type_int, "0", 
-  "cur1", &(_instrument_var._parameters.cur1), instr_type_double, "14.7976", 
-  "cur2", &(_instrument_var._parameters.cur2), instr_type_double, "-14.7976", 
-  "BCG", &(_instrument_var._parameters.BCG), instr_type_double, "0", 
+  "cur1", &(_instrument_var._parameters.cur1), instr_type_double, "6.10401", 
+  "cur2", &(_instrument_var._parameters.cur2), instr_type_double, "-6.10401", 
+  "BCG", &(_instrument_var._parameters.BCG), instr_type_double, "25.1627", 
   "polx", &(_instrument_var._parameters.polx), instr_type_double, "1", 
   "poly", &(_instrument_var._parameters.poly), instr_type_double, "0", 
   "polz", &(_instrument_var._parameters.polz), instr_type_double, "0", 
@@ -8201,7 +8201,7 @@ int _src_setpos(void)
   else 
   _src_var._parameters.ydiv_file[0]='\0';
   _src_var._parameters.radius = 0.0;
-  _src_var._parameters.dist = 4;
+  _src_var._parameters.dist = 3.3;
   _src_var._parameters.focus_xw = 0.01;
   _src_var._parameters.focus_yh = 0.01;
   _src_var._parameters.focus_aw = 0;
@@ -8280,7 +8280,7 @@ int _div1_setpos(void)
   _div1_var._parameters.ymax = 0.05;
   _div1_var._parameters.xwidth = 0.01;
   _div1_var._parameters.yheight = 0.01;
-  _div1_var._parameters.maxdiv = 0.214859;
+  _div1_var._parameters.maxdiv = 0.260435;
   _div1_var._parameters.restore_neutron = 0;
   _div1_var._parameters.nx = 0;
   _div1_var._parameters.ny = 0;
@@ -8399,7 +8399,7 @@ int _MWP1_setpos(void)
     rot_mul(_MWP1_var._rotation_absolute, tr1, _MWP1_var._rotation_relative);
     _MWP1_var._rotation_is_identity =  rot_test_identity(_MWP1_var._rotation_relative);
     tc1 = coords_set(
-      0, 0, 0.25);
+      0, 0, 0.35);
     rot_transpose(_origin_var._rotation_absolute, tr1);
     tc2 = rot_apply(tr1, tc1);
     _MWP1_var._position_absolute = coords_add(_origin_var._position_absolute, tc2);
@@ -8444,7 +8444,7 @@ int _CG_setpos(void)
     rot_mul(_CG_var._rotation_absolute, tr1, _CG_var._rotation_relative);
     _CG_var._rotation_is_identity =  rot_test_identity(_CG_var._rotation_relative);
     tc1 = coords_set(
-      0, 0, 0.35);
+      0, 0, 0.45);
     rot_transpose(_origin_var._rotation_absolute, tr1);
     tc2 = rot_apply(tr1, tc1);
     _CG_var._position_absolute = coords_add(_origin_var._position_absolute, tc2);
@@ -8497,7 +8497,7 @@ int _MWP2_setpos(void)
     rot_mul(_MWP2_var._rotation_absolute, tr1, _MWP2_var._rotation_relative);
     _MWP2_var._rotation_is_identity =  rot_test_identity(_MWP2_var._rotation_relative);
     tc1 = coords_set(
-      0, 0, 0.65);
+      0, 0, 0.75);
     rot_transpose(_origin_var._rotation_absolute, tr1);
     tc2 = rot_apply(tr1, tc1);
     _MWP2_var._position_absolute = coords_add(_origin_var._position_absolute, tc2);
@@ -8538,7 +8538,7 @@ int _ana_setpos(void)
     rot_mul(_ana_var._rotation_absolute, tr1, _ana_var._rotation_relative);
     _ana_var._rotation_is_identity =  rot_test_identity(_ana_var._rotation_relative);
     tc1 = coords_set(
-      0, 0, 0.85);
+      0, 0, 0.95);
     rot_transpose(_origin_var._rotation_absolute, tr1);
     tc2 = rot_apply(tr1, tc1);
     _ana_var._position_absolute = coords_add(_origin_var._position_absolute, tc2);
@@ -8573,7 +8573,7 @@ int _div2_setpos(void)
   _div2_var._parameters.ymax = 0.05;
   _div2_var._parameters.xwidth = 0.01;
   _div2_var._parameters.yheight = 0.01;
-  _div2_var._parameters.maxdiv = 0.214859;
+  _div2_var._parameters.maxdiv = 0.260435;
   _div2_var._parameters.restore_neutron = 0;
   _div2_var._parameters.nx = 0;
   _div2_var._parameters.ny = 0;
@@ -8596,7 +8596,7 @@ int _div2_setpos(void)
     rot_mul(_div2_var._rotation_absolute, tr1, _div2_var._rotation_relative);
     _div2_var._rotation_is_identity =  rot_test_identity(_div2_var._rotation_relative);
     tc1 = coords_set(
-      0, 0, 2.499999);
+      0, 0, 1.399999);
     rot_transpose(_origin_var._rotation_absolute, tr1);
     tc2 = rot_apply(tr1, tc1);
     _div2_var._position_absolute = coords_add(_origin_var._position_absolute, tc2);
@@ -8620,11 +8620,11 @@ int _sam_setpos(void)
   stracpy(_sam_var._type, "grating_mask", 16384);
   _sam_var._index=11;
   _sam_var._parameters.outer = 0.04;
-  _sam_var._parameters.inner = 0.022;
-  _sam_var._parameters.Tr_len = 0.001;
-  _sam_var._parameters.Ab_len = 0.001;
-  _sam_var._parameters.offset = 0.0005;
-  _sam_var._parameters.slits = 11;
+  _sam_var._parameters.inner = 0.02;
+  _sam_var._parameters.Tr_len = 0.002;
+  _sam_var._parameters.Ab_len = 0.002;
+  _sam_var._parameters.offset = 0.001;
+  _sam_var._parameters.slits = 5;
 
 
   /* component sam=grating_mask() AT ROTATED */
@@ -8641,7 +8641,7 @@ int _sam_setpos(void)
     rot_mul(_sam_var._rotation_absolute, tr1, _sam_var._rotation_relative);
     _sam_var._rotation_is_identity =  rot_test_identity(_sam_var._rotation_relative);
     tc1 = coords_set(
-      0.0, 0.0, 2.5);
+      0.0, 0.0, 1.4);
     rot_transpose(_origin_var._rotation_absolute, tr1);
     tc2 = rot_apply(tr1, tc1);
     _sam_var._position_absolute = coords_add(_origin_var._position_absolute, tc2);
@@ -8676,7 +8676,7 @@ int _div2b_setpos(void)
   _div2b_var._parameters.ymax = 0.05;
   _div2b_var._parameters.xwidth = 0.01;
   _div2b_var._parameters.yheight = 0.01;
-  _div2b_var._parameters.maxdiv = 0.214859;
+  _div2b_var._parameters.maxdiv = 0.260435;
   _div2b_var._parameters.restore_neutron = 0;
   _div2b_var._parameters.nx = 0;
   _div2b_var._parameters.ny = 0;
@@ -8699,7 +8699,7 @@ int _div2b_setpos(void)
     rot_mul(_div2b_var._rotation_absolute, tr1, _div2b_var._rotation_relative);
     _div2b_var._rotation_is_identity =  rot_test_identity(_div2b_var._rotation_relative);
     tc1 = coords_set(
-      0, 0, 2.500001);
+      0, 0, 1.4000009999999998);
     rot_transpose(_origin_var._rotation_absolute, tr1);
     tc2 = rot_apply(tr1, tc1);
     _div2b_var._position_absolute = coords_add(_origin_var._position_absolute, tc2);
@@ -8734,7 +8734,7 @@ int _div3_setpos(void)
   _div3_var._parameters.ymax = 0.05;
   _div3_var._parameters.xwidth = 0.01;
   _div3_var._parameters.yheight = 0.01;
-  _div3_var._parameters.maxdiv = 0.214859;
+  _div3_var._parameters.maxdiv = 0.260435;
   _div3_var._parameters.restore_neutron = 0;
   _div3_var._parameters.nx = 0;
   _div3_var._parameters.ny = 0;
@@ -8757,7 +8757,7 @@ int _div3_setpos(void)
     rot_mul(_div3_var._rotation_absolute, tr1, _div3_var._rotation_relative);
     _div3_var._rotation_is_identity =  rot_test_identity(_div3_var._rotation_relative);
     tc1 = coords_set(
-      0, 0, 3.999999);
+      0, 0, 3.2999989999999997);
     rot_transpose(_origin_var._rotation_absolute, tr1);
     tc2 = rot_apply(tr1, tc1);
     _div3_var._position_absolute = coords_add(_origin_var._position_absolute, tc2);
@@ -8810,7 +8810,7 @@ int _det_setpos(void)
     rot_mul(_det_var._rotation_absolute, tr1, _det_var._rotation_relative);
     _det_var._rotation_is_identity =  rot_test_identity(_det_var._rotation_relative);
     tc1 = coords_set(
-      0, 0, 4.0);
+      0, 0, 3.3);
     rot_transpose(_origin_var._rotation_absolute, tr1);
     tc2 = rot_apply(tr1, tc1);
     _det_var._position_absolute = coords_add(_origin_var._position_absolute, tc2);
