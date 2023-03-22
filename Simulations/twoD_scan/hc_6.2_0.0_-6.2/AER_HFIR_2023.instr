@@ -15,7 +15,7 @@
 * 
 * %Identification
 * Written by: Sam McKay
-* Date: 17:33:54 on March 21, 2023
+* Date: 10:23:19 on March 22, 2023
 * Origin: Indiana University
 * %INSTRUMENT_SITE: Generated_instruments
 * 
@@ -26,7 +26,7 @@
 ********************************************************************************/
 
 DEFINE INSTRUMENT AER_HFIR_2023 (
-double delta_lambda = 1, // Wavelength spread [AA]
+double delta_lambda = 0.01375, // Wavelength spread [AA]
 int low_count = 0, // if true flips analyzer direction [N/A]
 int all_off = 0, // if true turns off all MWPs [N/A]
 double cur1 = 6.20401, // MWP1 current [Amps]

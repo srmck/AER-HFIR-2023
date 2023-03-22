@@ -1,5 +1,5 @@
 McStas simulation description file for AER_HFIR_2023.
-Date:    Tue Mar 21 17:32:03 2023
+Date:    Wed Mar 22 10:21:28 2023
 Program: 
 
 begin instrument: AER_HFIR_2023
@@ -19,9 +19,9 @@ begin simulation: C:\Users\xsm\Documents\GitHub\AER-HFIR-1-23\Simulations\twoD_s
   Ncount: 10000000
   Trace: no
   Gravitation: no
-  Seed: -968115011
+  Seed: -533133540
   Directory: C:\Users\xsm\Documents\GitHub\AER-HFIR-1-23\Simulations\twoD_scan\lc_6.2_0.0_-5.9
-  Param: delta_lambda=1
+  Param: delta_lambda=0.01375
   Param: low_count=1
   Param: all_off=0
   Param: cur1=6.20401
@@ -33,7 +33,7 @@ begin simulation: C:\Users\xsm\Documents\GitHub\AER-HFIR-1-23\Simulations\twoD_s
 end simulation
 
 begin data
-  Date: Tue Mar 21 17:32:22 2023 (1679434342)
+  Date: Wed Mar 22 10:21:47 2023 (1679494907)
   type: array_2d(100, 100)
   Source: AER_HFIR_2023 (AER_HFIR_2023.instr)
   component: div1
@@ -41,9 +41,9 @@ begin data
   title: Position-divergence monitor
   Ncount: 20000000
   filename: acc_source.dat
-  statistics: X0=-2.72677e-007; dX=0.00288535; Y0=-2.37929e-005; dY=0.070868;
-  signal: Min=0; Max=6.24424e+006; Mean=1.83726e+006;
-  values: 1.83726e+010 1.16176e+007 2.50099e+006
+  statistics: X0=1.25827e-006; dX=0.00288821; Y0=-1.52368e-005; dY=0.0709013;
+  signal: Min=0; Max=86968; Mean=25251.8;
+  values: 2.52518e+008 159708 2.49995e+006
   xvar: po
   yvar: di
   xlabel: pos [m]
@@ -55,7 +55,7 @@ begin data
 end data
 
 begin data
-  Date: Tue Mar 21 17:32:22 2023 (1679434342)
+  Date: Wed Mar 22 10:21:47 2023 (1679494907)
   type: array_2d(100, 100)
   Source: AER_HFIR_2023 (AER_HFIR_2023.instr)
   component: div2
@@ -63,9 +63,9 @@ begin data
   title: Position-divergence monitor
   Ncount: 20000000
   filename: acc_sample.dat
-  statistics: X0=-2.21713e-008; dX=0.00278924; Y0=2.76032e-005; dY=0.112731;
-  signal: Min=0; Max=9.51639e+006; Mean=2.52962e+006;
-  values: 2.52962e+010 1.18022e+007 6.89272e+006
+  statistics: X0=-5.14809e-006; dX=0.00278273; Y0=0.00027578; dY=0.112984;
+  signal: Min=0; Max=133872; Mean=34660.4;
+  values: 3.46604e+008 161896 6.89476e+006
   xvar: po
   yvar: di
   xlabel: pos [m]
@@ -77,7 +77,7 @@ begin data
 end data
 
 begin data
-  Date: Tue Mar 21 17:32:22 2023 (1679434342)
+  Date: Wed Mar 22 10:21:47 2023 (1679494907)
   type: array_2d(100, 100)
   Source: AER_HFIR_2023 (AER_HFIR_2023.instr)
   component: div2b
@@ -85,9 +85,9 @@ begin data
   title: Position-divergence monitor
   Ncount: 20000000
   filename: acc_post_sample.dat
-  statistics: X0=-4.9698e-007; dX=0.00322333; Y0=8.54491e-005; dY=0.11716;
-  signal: Min=0; Max=9.50988e+006; Mean=1.44838e+006;
-  values: 1.44838e+010 8.90644e+006 4.00833e+006
+  statistics: X0=-8.82519e-006; dX=0.00321183; Y0=0.000550921; dY=0.11964;
+  signal: Min=0; Max=133872; Mean=19980.1;
+  values: 1.99801e+008 122833 4.01093e+006
   xvar: po
   yvar: di
   xlabel: pos [m]
@@ -99,7 +99,7 @@ begin data
 end data
 
 begin data
-  Date: Tue Mar 21 17:32:22 2023 (1679434342)
+  Date: Wed Mar 22 10:21:47 2023 (1679494907)
   type: array_2d(100, 100)
   Source: AER_HFIR_2023 (AER_HFIR_2023.instr)
   component: div3
@@ -107,9 +107,9 @@ begin data
   title: Position-divergence monitor
   Ncount: 20000000
   filename: acc_det.dat
-  statistics: X0=1.30213e-006; dX=0.0027966; Y0=8.80409e-005; dY=0.116455;
-  signal: Min=0; Max=1.13388e+007; Mean=1.80765e+006;
-  values: 1.80765e+010 9.95329e+006 4.98586e+006
+  statistics: X0=7.55762e-006; dX=0.00285722; Y0=0.000565609; dY=0.118835;
+  signal: Min=0; Max=161328; Mean=24997.1;
+  values: 2.49971e+008 137350 4.9878e+006
   xvar: po
   yvar: di
   xlabel: pos [m]
@@ -121,7 +121,7 @@ begin data
 end data
 
 begin data
-  Date: Tue Mar 21 17:32:22 2023 (1679434342)
+  Date: Wed Mar 22 10:21:47 2023 (1679494907)
   type: array_2d(100, 100)
   Source: AER_HFIR_2023 (AER_HFIR_2023.instr)
   component: det
@@ -129,9 +129,9 @@ begin data
   title: PSD monitor
   Ncount: 20000000
   filename: AER_2D.dat
-  statistics: X0=0.00013014; dX=0.27966; Y0=-2.77735e-005; dY=0.288702;
-  signal: Min=1.2708e+006; Max=2.33429e+006; Mean=1.80765e+006;
-  values: 1.80765e+010 9.95329e+006 4.98586e+006
+  statistics: X0=0.000755739; dX=0.285722; Y0=6.50672e-005; dY=0.288789;
+  signal: Min=18850.8; Max=32213.7; Mean=24997.1;
+  values: 2.49971e+008 137350 4.9878e+006
   xvar: X 
   yvar: Y 
   xlabel: X position [cm]
