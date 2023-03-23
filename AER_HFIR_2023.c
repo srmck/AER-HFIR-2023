@@ -2,7 +2,7 @@
  * Format:     ANSI C source code
  * Creator:    McStas <http://www.mcstas.org>
  * Instrument: AER_HFIR_2023.instr (AER_HFIR_2023)
- * Date:       Wed Mar 22 12:31:15 2023
+ * Date:       Thu Mar 23 13:31:01 2023
  * File:       AER_HFIR_2023.c
  * CFLAGS=
  */
@@ -6132,8 +6132,8 @@ struct mcinputtable_struct mcinputtable[] = {
   "delta_lambda", &(_instrument_var._parameters.delta_lambda), instr_type_double, "0.01375", 
   "low_count", &(_instrument_var._parameters.low_count), instr_type_int, "1", 
   "all_off", &(_instrument_var._parameters.all_off), instr_type_int, "0", 
-  "cur1", &(_instrument_var._parameters.cur1), instr_type_double, "8.13868", 
-  "cur2", &(_instrument_var._parameters.cur2), instr_type_double, "-8.13868", 
+  "cur1", &(_instrument_var._parameters.cur1), instr_type_double, "10.1733", 
+  "cur2", &(_instrument_var._parameters.cur2), instr_type_double, "-10.1733", 
   "BCG", &(_instrument_var._parameters.BCG), instr_type_double, "0", 
   "polx", &(_instrument_var._parameters.polx), instr_type_double, "1", 
   "poly", &(_instrument_var._parameters.poly), instr_type_double, "0", 
@@ -8641,7 +8641,7 @@ int _sam_setpos(void)
     rot_mul(_sam_var._rotation_absolute, tr1, _sam_var._rotation_relative);
     _sam_var._rotation_is_identity =  rot_test_identity(_sam_var._rotation_relative);
     tc1 = coords_set(
-      0.0, 0.0, 1.4);
+      1.0, 0.0, 1.4);
     rot_transpose(_origin_var._rotation_absolute, tr1);
     tc2 = rot_apply(tr1, tc1);
     _sam_var._position_absolute = coords_add(_origin_var._position_absolute, tc2);
