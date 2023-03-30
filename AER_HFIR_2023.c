@@ -2,7 +2,7 @@
  * Format:     ANSI C source code
  * Creator:    McStas <http://www.mcstas.org>
  * Instrument: AER_HFIR_2023.instr (AER_HFIR_2023)
- * Date:       Thu Mar 23 13:31:01 2023
+ * Date:       Thu Mar 30 11:49:12 2023
  * File:       AER_HFIR_2023.c
  * CFLAGS=
  */
@@ -6132,8 +6132,8 @@ struct mcinputtable_struct mcinputtable[] = {
   "delta_lambda", &(_instrument_var._parameters.delta_lambda), instr_type_double, "0.01375", 
   "low_count", &(_instrument_var._parameters.low_count), instr_type_int, "1", 
   "all_off", &(_instrument_var._parameters.all_off), instr_type_int, "0", 
-  "cur1", &(_instrument_var._parameters.cur1), instr_type_double, "10.1733", 
-  "cur2", &(_instrument_var._parameters.cur2), instr_type_double, "-10.1733", 
+  "cur1", &(_instrument_var._parameters.cur1), instr_type_double, "5.928", 
+  "cur2", &(_instrument_var._parameters.cur2), instr_type_double, "-5.928", 
   "BCG", &(_instrument_var._parameters.BCG), instr_type_double, "0", 
   "polx", &(_instrument_var._parameters.polx), instr_type_double, "1", 
   "poly", &(_instrument_var._parameters.poly), instr_type_double, "0", 
