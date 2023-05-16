@@ -1,0 +1,132 @@
+/********************************************************************************
+* 
+* McStas, neutron ray-tracing package
+*         Copyright (C) 1997-2008, All rights reserved
+*         Risoe National Laboratory, Roskilde, Denmark
+*         Institut Laue Langevin, Grenoble, France
+* 
+* This file was written by McStasScript, which is a 
+* python based McStas instrument generator written by 
+* Mads Bertelsen in 2019 while employed at the 
+* European Spallation Source Data Management and 
+* Software Centre
+* 
+* Instrument AER_HFIR_2023
+* 
+* %Identification
+* Written by: Sam McKay
+* Date: 15:14:11 on May 15, 2023
+* Origin: Indiana University
+* %INSTRUMENT_SITE: Generated_instruments
+* 
+* 
+* %Parameters
+* 
+* %End 
+********************************************************************************/
+
+DEFINE INSTRUMENT AER_HFIR_2023 (
+double delta_lambda = 0.01375, // Wavelength spread [AA]
+int low_count = 1, // if true flips analyzer direction [N/A]
+int all_off = 0, // if true turns off all MWPs [N/A]
+double cur1 = 5.08667, // MWP1 current [Amps]
+double cur2 = -5.08667, // MWP2 current [Amps]
+double BCG = 24.6627, // Center guide field [Gauss]
+double polx = 1, // x-component of polarizer [N/A]
+double poly = 0, // y-component of polarizer [N/A]
+double polz = 0 // z-component of polarizer [N/A]
+)
+
+DECLARE 
+%{
+%}
+
+INITIALIZE 
+%{
+// Start of initialize for generated AER_HFIR_2023
+%}
+
+TRACE 
+COMPONENT origin = Progress_bar()
+AT (0,0,0) ABSOLUTE
+
+COMPONENT arm = Arm()
+AT (0,0,0) RELATIVE origin
+
+COMPONENT src = Source_sam(
+ dist = 3.3, focus_xw = 0.01,
+ focus_yh = 0.01, lambda0 = 5.5,
+ dlambda = delta_lambda, I1 = 1E+15,
+ yheight = 0.02, xwidth = 0.02)
+AT (0,0,0) RELATIVE origin
+
+COMPONENT div1 = DivPos_monitor(
+ nb = 100, ndiv = 100,
+ filename = "acc_source.dat", xwidth = 0.01,
+ yheight = 0.01, maxdiv = 0.260435)
+AT (0,0,1e-06) RELATIVE origin
+
+COMPONENT pol = Set_pol(
+ px = polx, py = poly,
+ pz = polz)
+AT (0,0,2e-06) RELATIVE origin
+
+COMPONENT MWP1 = Pol_MWP_v3(
+ xwidth = 0.02, yheight = 0.02,
+ zdepth = 0.1, current = cur1*(1-all_off),
+ a = 0.005, b = 0.005)
+AT (0,0,0.35) RELATIVE origin
+
+COMPONENT CG = Pol_constBfield(
+ xwidth = 0.02, yheight = 0.02,
+ zdepth = 0.3, B = BCG*(1-all_off))
+AT (0,0,0.45) RELATIVE origin
+
+COMPONENT MWP2 = Pol_MWP_v3(
+ xwidth = 0.02, yheight = 0.02,
+ zdepth = 0.1, current = cur2*(1-all_off),
+ a = 0.005, b = 0.005)
+AT (0,0,0.75) RELATIVE origin
+
+COMPONENT ana = PolAnalyser_ideal(
+ mx = polx*(1-2*low_count), my = poly*(1-2*low_count),
+ mz = polz*(1-2*low_count))
+AT (0,0,0.95) RELATIVE origin
+
+COMPONENT div2 = DivPos_monitor(
+ nb = 100, ndiv = 100,
+ filename = "acc_sample.dat", xwidth = 0.01,
+ yheight = 0.01, maxdiv = 0.260435)
+AT (0,0,1.399999) RELATIVE origin
+
+COMPONENT sam = grating_mask(
+ outer = 0.04, inner = 0.02,
+ Tr_len = 0.002, Ab_len = 0.002,
+ offset = 0.001, slits = 5)
+AT (0.0,0.0,1.4) RELATIVE origin
+ROTATED (0.0,0.0,0.0) RELATIVE origin
+
+COMPONENT div2b = DivPos_monitor(
+ nb = 100, ndiv = 100,
+ filename = "acc_post_sample.dat", xwidth = 0.01,
+ yheight = 0.01, maxdiv = 0.260435)
+AT (0,0,1.4000009999999998) RELATIVE origin
+
+COMPONENT div3 = DivPos_monitor(
+ nb = 100, ndiv = 100,
+ filename = "acc_det.dat", xwidth = 0.01,
+ yheight = 0.01, maxdiv = 0.260435)
+AT (0,0,3.2999989999999997) RELATIVE origin
+
+COMPONENT det = PSD_monitor(
+ nx = 100, ny = 100,
+ filename = "AER_2D.dat", xwidth = 0.01,
+ yheight = 0.01)
+AT (0,0,3.3) RELATIVE origin
+
+FINALLY 
+%{
+// Start of finally for generated AER_HFIR_2023
+%}
+
+END
