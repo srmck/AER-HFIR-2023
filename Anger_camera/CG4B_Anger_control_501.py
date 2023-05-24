@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Written by Rick, Fankang, and Sam
 
+import gclib
 import socket
 import struct
 import time
@@ -28,7 +29,7 @@ global Log_file
 Data_path='C://Users//Larmor//Desktop//AngerCamera//AER_501//'  #check this
 SIPM_data_path='C://Users//Larmor//Desktop//AngerCamera//AER_501_SIPM//'
 Log_file=open(Data_path+'logfile.txt','a')
-qtCreatorFile = "C:/Users/Larmor/Dropbox/AngerCamera/lowleveltest_rf.ui" # Enter file here.
+qtCreatorFile = "none"  #file path + name for GUI
  
 Ui_MainWindow, QtBaseClass = uic.loadUiType(qtCreatorFile)
 
@@ -57,7 +58,6 @@ global triggerHz
 global finebins
 
 #-----------------------------------------------------------#
-
 #below is for 1mm no grease
 #gaussvar= lambda p,x: p[0]*(0.8*numpy.exp(-0.044*(x-p[1])**2)+0.2*numpy.exp(-0.003*(x-p[1])**2))
 #below is for 2mm no grease
@@ -381,8 +381,7 @@ class streamthread (threading.Thread):
                 self.rawfile.close()
                 print('raw write file closed')
             self.saveraw=0
-        
-        
+
     def handledata(self,payload,header_unpacked):
         #currently this only works with short_pid header and raw data.
         #tbd in normal mode.
@@ -727,7 +726,7 @@ class MyPSControl:
         self.inst.timeout=200
 
     def getcurrent(self):
-        #cs=self.inst.query('SETI?')  #old code
+        #cs=self.inst.query('SETI?')  #old code, gets setpoint
         cs=self.inst.query('RDGI?') #gets actual current from the lakeshore powersupply
         return float(cs)
     
@@ -745,7 +744,7 @@ class MyFGControl:
         self.inst.timeout=200
         self.command='SOURce'+str(ch)
         self.inst.write(self.command+':FUNCtion Sinusoid')
-#        self.on()
+        #self.on()
     def amp(self,value):
         self.inst.write(self.command+':VOLTage '+str(value))
     def fre(self,value):
@@ -760,7 +759,6 @@ class MyFGControl:
         self.inst.close()
 
 #################################################
-
 class MySiPMComm:
     def __init__(self,messagebox):
         cmdserver_addr=('192.168.10.19',9119)
@@ -838,10 +836,10 @@ class MySiPMComm:
             try:
                 rsp=self.cmdsock1.recv(24)
                 ival=struct.unpack('6I',rsp)
-#                return ival[4:5]
+                #return ival[4:5]
             except socket.timeout:
                 print('offset timeout k=%d,dacnum=%d' % (k,dacnum))
- #           time.sleep(.02)
+                #time.sleep(.02)
         
     def setdac(self,dacnum,addr,chan,value):
         ivalue=(int)(value)
@@ -852,11 +850,10 @@ class MySiPMComm:
         try:
             rsp=self.cmdsock1.recv(24)
             ival=struct.unpack('6I',rsp)
-#            return ival[4:5]
+            #return ival[4:5]
         except socket.timeout:
             print('timeout in setdac')
             
-        
     def readdisc(self):
         cmd=12
         numbytes=0
@@ -882,13 +879,12 @@ class MySiPMComm:
         self.cmdsock1.send(data)
         rsp=self.cmdsock1.recv(24)
         ival=struct.unpack('6I',rsp)
-#        return ival[4]
+        #return ival[4]
         if ival[4] & 0x2000:  # means negitive temp.
             tempvalue=((ival[4] & 0x1FFF)- 8192)/32.0
         else:
             tempvalue=ival[4]/32.0
         return tempvalue
-
 
     def readadcstatus(self):  #this also reads the counts status
         cmd=20
@@ -998,8 +994,8 @@ class MySiPMComm:
             rsp=self.cmdsock1.recv(24)
             ival=struct.unpack('6I',rsp)
             plbytes=int(ival[3])
-#            print('read parms bytes' , plbytes)
-#            print ('read params payload size=%d' % plbytes)
+            #print('read parms bytes' , plbytes)
+            #print ('read params payload size=%d' % plbytes)
             rsp=self.cmdsock1.recv(plbytes)
             inbytes=len(rsp)
             while inbytes < plbytes:
@@ -1024,7 +1020,8 @@ class MySiPMComm:
             return ival[4:5]
         except socket.timeout:  #make an aditional retry here
             print('no ack/nack on writeparams')
-#to use remove comments and return -1  and restore global firstten....          
+            
+#to use remove comments and return -1  and restore global firstten.          
     def caltest(self,index):
         return -1
 #        global firstten
@@ -1048,9 +1045,6 @@ class MySiPMComm:
 #        except socket.timeout:  #make an aditional retry here
 #            print('en ADC intr error')
 #            return -2
-        
-        
-        
         
     def enADCintr(self,value):
         cmd=25
@@ -1131,9 +1125,7 @@ class MySiPMComm:
             return struct.unpack('16I',rsp)
         except socket.timeout:  #make an aditional retry here
             print('response timeout in readparams')
-        
 
-        
     def killthread(self):
         cmd=100
         numbytes=0
@@ -1146,7 +1138,6 @@ class MySiPMComm:
         except socket.timeout:  #make an aditional retry here
             print('en kill thread error')
             
-        
 #############read values for all tube at given int time...
     def startaquire(self,fake,inttime):
         self.clrstatuscounts()
@@ -1384,7 +1375,7 @@ class MySiPMComm:
         self.setoffsets(dacnum,offsets)
         self.setzeros(dacnum,zerovalues)
         self.setinttime(orgint_time)
-    #    s=raw_input('offsets=8000 hit a key')
+        #s=raw_input('offsets=8000 hit a key')
         
         return offsets
 
@@ -2770,12 +2761,24 @@ def nextrun():
     return 'CG4B'+str(max(list(map(int,files)))+1)+'.dat'
 
 #--------------------------------------------------#
+#Galil translation stage
+def tran_stage(name,pulse_per_mm=2500,dist=60,sample='in'):
+    """Moves the sample translation stage by 60 mm."""
+    if sample=='out':
+        dis = dis*-1
+    pulsenum=co*dis
+    print(name.GCommand('SHB')) #use current motor position as command position
+    print(name.GCommand('RPB'))  #return commanded reference position
+    print(name.GCommand('LDB=3'))  #disable both limit switches
+    name.GCommand('PRB='+str(pulsenum))  #set number of pulses to move
+    name.GCommand('BGB')  #perform move
+
+#--------------------------------------------------#
 #Anger Camera Script:
 if __name__ == "__main__":
     debugon=0
     myfile=None
-    #triggerHz=2400
-    triggerHz=60
+    triggerHz=60  #2400
     fileopen=0
     printonce=0
     zero_histos=0
@@ -2807,7 +2810,7 @@ if __name__ == "__main__":
     ad_histoy=numpy.zeros((500,8,4),dtype=numpy.uint32) 
     app = QtWidgets.QApplication(sys.argv)
     window = MyApp()
-    #window.show()
+    #window.show()  #no GUI
     
     #--------------------------------------------------#
     #Power supply setup:
@@ -2816,7 +2819,11 @@ if __name__ == "__main__":
     nu_post=MyPSControl(12)
     CG=MyPSControl(13)
     MWP=MyPSControl(14)
-    ##add galil stage here
+    
+    galil_controller=gclib.py()
+    galil_controller.GOpen('192.168.10.4')
+    print('Galil info:')
+    print(galil_controller.GInfo())
 
     #--------------------------------------------------#
     #General scan template:
@@ -2849,18 +2856,21 @@ if __name__ == "__main__":
                     time.sleep(10)
                     print("*Nu_pre current: "+str(nu_pre_I*nu_sign)+"*")
                     
-                    for sample_in in [True,False]:
-                        if sample_in:
+                    for sample in ['in','out']:
+                        if sample=='in':
+                            tran_stage(galil_controller,sample=sample)
                             time.sleep(20)  #need to time stage 
                             run_description =  run_description + ", sample IN, "
                             print("Sample IN")
-                        if sample_in:
+                        if sample=='out':
+                            tran_stage(galil_controller,sample=sample)
                             time.sleep(20)
                             run_description =  run_description + ", sample OUT, "
                             print("Sample OUT")
-                        if sample_in=='pass':
+                        else:
                             time.sleep(1)
-                            run_description =  run_description + ", No sample, "
+                            run_description =  run_description + ", NO sample, "
+                            print("NO sample")
                             
                         for n in range(subscan_number):             
                             Run_num=nextrun()
