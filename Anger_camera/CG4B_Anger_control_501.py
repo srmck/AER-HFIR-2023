@@ -2764,13 +2764,19 @@ def nextrun():
 #Galil translation stage
 def tran_stage(name,pulse_per_mm=2500,dist=60,sample='in'):
     """Moves the sample translation stage by 60 mm."""
+    sample_out_range = 0,1
+    sample_in_range = 5,6
     if sample=='out':
         dis = dis*-1
+    if sample=='in':
+        dis = dis*-1
+    else:
+        dis=0
     pulsenum=co*dis
-    print(name.GCommand('SHB')) #use current motor position as command position
-    print(name.GCommand('RPB'))  #return commanded reference position
-    print(name.GCommand('LDB=3'))  #disable both limit switches
-    name.GCommand('PRB='+str(pulsenum))  #set number of pulses to move
+    pulse_string = 'PRB='+str(pulsenum)
+    print('Current position:')
+    print(name.GCommand('RPB'))  #return current position in pulse number
+    name.GCommand(pulse_string)  #set number of pulses to move
     name.GCommand('BGB')  #perform move
 
 #--------------------------------------------------#
@@ -2824,6 +2830,8 @@ if __name__ == "__main__":
     galil_controller.GOpen('192.168.10.4')
     print('Galil info:')
     print(galil_controller.GInfo())
+    galil_controller.GCommand('SHB')  #enable channel
+    galil_controller.GCommand('LDB=3')  #disable both limit switches
 
     #--------------------------------------------------#
     #General scan template:
