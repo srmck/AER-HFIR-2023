@@ -1,0 +1,143 @@
+McStas simulation description file for AER_HFIR_2023.
+Date:    Sat Jun 03 19:05:19 2023
+Program: McStas 3.1 - Nov. 24, 2021
+
+begin instrument: AER_HFIR_2023
+  File: C:\Users\samck\Documents\GitHub\AER-HFIR-2023\Simulations\beamline\testing\lc_4.93_0.51_-4.93/mccode
+  Source: AER_HFIR_2023.instr
+  Parameters:  delta_lambda(double) low_count(int) all_off(int) cur1(double) cur2(double) BCG(double) polx(double) poly(double) polz(double)
+  Trace_enabled: yes
+  Default_main: yes
+  Embedded_runtime: yes
+end instrument
+
+begin simulation: C:\Users\samck\Documents\GitHub\AER-HFIR-2023\Simulations\beamline\testing\lc_4.93_0.51_-4.93
+  Format: McCode with text headers
+  URL: http://www.mccode.org
+  Creator: McStas 3.1 - Nov. 24, 2021
+  Instrument: AER_HFIR_2023.instr
+  Ncount: 10000000
+  Trace: no
+  Gravitation: no
+  Seed: -1274087955
+  Directory: C:\Users\samck\Documents\GitHub\AER-HFIR-2023\Simulations\beamline\testing\lc_4.93_0.51_-4.93
+  Param: delta_lambda=1e-009
+  Param: low_count=1
+  Param: all_off=0
+  Param: cur1=4.92857
+  Param: cur2=-4.92857
+  Param: BCG=14.025
+  Param: polx=1
+  Param: poly=0
+  Param: polz=0
+end simulation
+
+begin data
+  Date: Sat Jun 03 19:05:36 2023 (1685833536)
+  type: array_2d(128, 100)
+  Source: AER_HFIR_2023 (AER_HFIR_2023.instr)
+  component: div1
+  position: 0 0 1e-006
+  title: Position-divergence monitor
+  Ncount: 20000000
+  filename: acc_source.dat
+  statistics: X0=-1.68719e-006; dX=0.00548529; Y0=-1.55602e-005; dY=0.243045;
+  signal: Min=0; Max=0.232204; Mean=0.0851663;
+  values: 1090.13 0.344729 1e+007
+  xvar: po
+  yvar: di
+  xlabel: pos [m]
+  ylabel: divergence [deg]
+  zvar: I
+  zlabel: Signal per bin
+  xylimits: -0.0145 0.0145 -0.582669 0.582669
+  variables: I I_err N
+end data
+
+begin data
+  Date: Sat Jun 03 19:05:36 2023 (1685833536)
+  type: array_2d(128, 100)
+  Source: AER_HFIR_2023 (AER_HFIR_2023.instr)
+  component: div2
+  position: 0 0 1.56
+  title: Position-divergence monitor
+  Ncount: 20000000
+  filename: acc_sample.dat
+  statistics: X0=7.45508e-006; dX=0.00572143; Y0=3.71133e-005; dY=0.242931;
+  signal: Min=0; Max=0.223623; Mean=0.0413846;
+  values: 529.723 0.208012 9.73535e+006
+  xvar: po
+  yvar: di
+  xlabel: pos [m]
+  ylabel: divergence [deg]
+  zvar: I
+  zlabel: Signal per bin
+  xylimits: -0.0145 0.0145 -0.582669 0.582669
+  variables: I I_err N
+end data
+
+begin data
+  Date: Sat Jun 03 19:05:36 2023 (1685833536)
+  type: array_2d(128, 100)
+  Source: AER_HFIR_2023 (AER_HFIR_2023.instr)
+  component: div2b
+  position: 0 0 1.56
+  title: Position-divergence monitor
+  Ncount: 20000000
+  filename: acc_post_sample.dat
+  statistics: X0=7.45496e-006; dX=0.00572143; Y0=3.71133e-005; dY=0.242931;
+  signal: Min=0; Max=0.223623; Mean=0.0413846;
+  values: 529.723 0.208012 9.73535e+006
+  xvar: po
+  yvar: di
+  xlabel: pos [m]
+  ylabel: divergence [deg]
+  zvar: I
+  zlabel: Signal per bin
+  xylimits: -0.0145 0.0145 -0.582669 0.582669
+  variables: I I_err N
+end data
+
+begin data
+  Date: Sat Jun 03 19:05:36 2023 (1685833536)
+  type: array_2d(128, 100)
+  Source: AER_HFIR_2023 (AER_HFIR_2023.instr)
+  component: div3
+  position: 0 0 2.36
+  title: Position-divergence monitor
+  Ncount: 20000000
+  filename: acc_det.dat
+  statistics: X0=7.95892e-006; dX=0.00827234; Y0=3.71133e-005; dY=0.242931;
+  signal: Min=0; Max=0.226554; Mean=0.0413846;
+  values: 529.723 0.208012 9.73535e+006
+  xvar: po
+  yvar: di
+  xlabel: pos [m]
+  ylabel: divergence [deg]
+  zvar: I
+  zlabel: Signal per bin
+  xylimits: -0.0145 0.0145 -0.582669 0.582669
+  variables: I I_err N
+end data
+
+begin data
+  Date: Sat Jun 03 19:05:36 2023 (1685833536)
+  type: array_2d(128, 128)
+  Source: AER_HFIR_2023 (AER_HFIR_2023.instr)
+  component: det
+  position: 0 0 2.36
+  title: PSD monitor
+  Ncount: 20000000
+  filename: AER_2D.dat
+  statistics: X0=0.000795916; dX=0.827235; Y0=0.000519575; dY=0.828328;
+  signal: Min=0.0226437; Max=0.0424603; Mean=0.0323318;
+  values: 529.723 0.208012 9.73535e+006
+  xvar: X 
+  yvar: Y 
+  xlabel: X position [cm]
+  ylabel: Y position [cm]
+  zvar: I
+  zlabel: Signal per bin
+  xylimits: -1.45 1.45 -1.45 1.45
+  variables: I I_err N
+end data

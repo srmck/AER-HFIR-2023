@@ -2,12 +2,12 @@
  * Format:     ANSI C source code
  * Creator:    McStas <http://www.mcstas.org>
  * Instrument: AER_HFIR_2023.instr (AER_HFIR_2023)
- * Date:       Mon May 15 23:45:00 2023
+ * Date:       Sat Jun 03 19:08:45 2023
  * File:       AER_HFIR_2023.c
  * CFLAGS=
  */
 
-#define MCCODE_STRING ""
+#define MCCODE_STRING "McStas 3.1 - Nov. 24, 2021"
 #define FLAVOR        "mcstas"
 #define FLAVOR_UPPER  "MCSTAS"
 
@@ -15,6 +15,24 @@
 #define MC_TRACE_ENABLED
 
 #include <string.h>
+
+#define PI 3.14159265358979323846
+#ifndef M_PI
+#define M_PI PI
+#endif
+#ifndef M_2_PI
+#define M_2_PI 0.63661977236758134308
+#endif
+#ifndef M_PI_2
+#define M_PI_2 1.57079632679489661923  /* pi/2 */
+#endif
+#ifndef M_SQRT2
+#define M_SQRT2 1.4142135623730951  /* sqrt(2) */
+#endif
+
+#ifdef DISABLE_TRACE
+#undef MC_TRACE_ENABLED
+#endif
 
 typedef double MCNUM;
 typedef struct {MCNUM x, y, z;} Coords;
@@ -48,7 +66,7 @@ struct _struct_particle {
   long _absorbed;  /* flag set to TRUE when this event is to be removed/ignored */
   long _scattered; /* flag set to TRUE when this event has interacted with the last component instance */
   long _restore;   /* set to true if neutron event must be restored */
-  long flag_nocoordschange;   /* set to true if particle is jumping */
+  long flag_nocoordschange;   /* set to true if neutron is jumping */
   struct particle_logic_struct _logic;
 };
 typedef struct _struct_particle _class_particle;
@@ -103,79 +121,6 @@ double particle_getvar(_class_particle *p, char *name, int *suc){
 }
 
 #pragma acc routine
-void* particle_getvar_void(_class_particle *p, char *name, int *suc);
-
-#ifdef OPENACC
-#pragma acc routine
-int str_comp(char *str1, char *str2);
-#endif
-
-void* particle_getvar_void(_class_particle *p, char *name, int *suc){
-#ifndef OPENACC
-#define str_comp strcmp
-#endif
-  int s=1;
-  void* rval=0;
-  if(!str_comp("x",name)) {rval=(void*)&(p->x); s=0;}
-  if(!str_comp("y",name)) {rval=(void*)&(p->y); s=0;}
-  if(!str_comp("z",name)) {rval=(void*)&(p->z); s=0;}
-  if(!str_comp("vx",name)){rval=(void*)&(p->vx);s=0;}
-  if(!str_comp("vy",name)){rval=(void*)&(p->vy);s=0;}
-  if(!str_comp("vz",name)){rval=(void*)&(p->vz);s=0;}
-  if(!str_comp("sx",name)){rval=(void*)&(p->sx);s=0;}
-  if(!str_comp("sy",name)){rval=(void*)&(p->sy);s=0;}
-  if(!str_comp("sz",name)){rval=(void*)&(p->sz);s=0;}
-  if(!str_comp("t",name)) {rval=(void*)&(p->t); s=0;}
-  if(!str_comp("p",name)) {rval=(void*)&(p->p); s=0;}
-  if (suc!=0x0) {*suc=s;}
-  return rval;
-}
-
-#pragma acc routine
-int particle_setvar_void(_class_particle *, char *, void*);
-
-int particle_setvar_void(_class_particle *p, char *name, void* value){
-#ifndef OPENACC
-#define str_comp strcmp
-#endif
-  int rval=1;
-  if(!str_comp("x",name)) {memcpy(&(p->x),  value, sizeof(double)); rval=0;}
-  if(!str_comp("y",name)) {memcpy(&(p->y),  value, sizeof(double)); rval=0;}
-  if(!str_comp("z",name)) {memcpy(&(p->z),  value, sizeof(double)); rval=0;}
-  if(!str_comp("vx",name)){memcpy(&(p->vx), value, sizeof(double)); rval=0;}
-  if(!str_comp("vy",name)){memcpy(&(p->vy), value, sizeof(double)); rval=0;}
-  if(!str_comp("vz",name)){memcpy(&(p->vz), value, sizeof(double)); rval=0;}
-  if(!str_comp("sx",name)){memcpy(&(p->sx), value, sizeof(double)); rval=0;}
-  if(!str_comp("sy",name)){memcpy(&(p->sy), value, sizeof(double)); rval=0;}
-  if(!str_comp("sz",name)){memcpy(&(p->sz), value, sizeof(double)); rval=0;}
-  if(!str_comp("p",name)) {memcpy(&(p->p),  value, sizeof(double)); rval=0;}
-  if(!str_comp("t",name)) {memcpy(&(p->t),  value, sizeof(double)); rval=0;}
-  return rval;
-}
-
-#pragma acc routine
-int particle_setvar_void_array(_class_particle *, char *, void*, int);
-
-int particle_setvar_void_array(_class_particle *p, char *name, void* value, int elements){
-#ifndef OPENACC
-#define str_comp strcmp
-#endif
-  int rval=1;
-  return rval;
-}
-
-#pragma acc routine
-void particle_restore(_class_particle *p, _class_particle *p0);
-
-void particle_restore(_class_particle *p, _class_particle *p0) {
-  p->x  = p0->x;  p->y  = p0->y;  p->z  = p0->z;
-  p->vx = p0->vx; p->vy = p0->vy; p->vz = p0->vz;
-  p->sx = p0->sx; p->sy = p0->sy; p->sz = p0->sz;
-  p->t = p0->t;  p->p  = p0->p;
-  p->_absorbed=0; p->_restore=0;
-}
-
-#pragma acc routine
 double particle_getuservar_byid(_class_particle *p, int id, int *suc){
   int s=1;
   double rval=0;
@@ -204,7 +149,7 @@ void particle_uservar_init(_class_particle *p){
 * %Identification
 * Written by: KN
 * Date:    Aug 29, 1997
-* Release: McStas 3.2
+* Release: McStas 3.1
 * Version: $Revision$
 *
 * Runtime system header for McStas/McXtrace.
@@ -297,15 +242,15 @@ size_t str_len(const char *s);
 
 /* the version string is replaced when building distribution with mkdist */
 #ifndef MCCODE_STRING
-#  define MCCODE_STRING "McStas 3.2 - Dec. 12, 2022"
+#  define MCCODE_STRING "McStas 3.1 - Nov. 24, 2021"
 #endif
 
 #ifndef MCCODE_DATE
-#  define MCCODE_DATE "Dec. 12, 2022"
+#  define MCCODE_DATE "Nov. 24, 2021"
 #endif
 
 #ifndef MCCODE_VERSION
-#  define MCCODE_VERSION "3.2"
+#  define MCCODE_VERSION "3.1"
 #endif
 
 #ifndef MCCODE_NAME
@@ -412,18 +357,6 @@ extern int traceenabled, defaultmain;
 
 
 /* SECTION: Dynamic Arrays */
-typedef int* IArray1d;
-IArray1d create_iarr1d(int n);
-void destroy_iarr1d(IArray1d a);
-
-typedef int** IArray2d;
-IArray2d create_iarr2d(int nx, int ny);
-void destroy_iarr2d(IArray2d a);
-
-typedef int*** IArray3d;
-IArray3d create_iarr3d(int nx, int ny, int nz);
-void destroy_iarr3d(IArray3d a);
-
 typedef double* DArray1d;
 DArray1d create_darr1d(int n);
 void destroy_darr1d(DArray1d a);
@@ -489,6 +422,11 @@ void   mcset_ncount(unsigned long long count);    /* wrapper to get mcncount */
 unsigned long long int mcget_ncount(void);            /* wrapper to set mcncount */
 unsigned long long mcget_run_num(void);           /* wrapper to get mcrun_num=0:mcncount-1 */
 
+#pragma acc routine
+_class_particle mcgetstate(_class_particle mcneutron, double *x, double *y, double *z,
+                           double *vx, double *vy, double *vz, double *t,
+                           double *sx, double *sy, double *sz, double *p);
+
 /* Following part is only embedded when not redundant with mccode.h ========= */
 
 #ifndef MCCODE_H
@@ -522,49 +460,22 @@ char  *mcsig_message;
 #define SIGN(x) (((x)>0.0)?(1):(-1))
 #endif
 
-
-#  ifndef M_E
-#    define M_E        2.71828182845904523536  // e
-#  endif
-#  ifndef M_LOG2E
-#    define M_LOG2E    1.44269504088896340736  //  log2(e)
-#  endif
-#  ifndef M_LOG10E
-#    define M_LOG10E   0.434294481903251827651 //  log10(e)
-#  endif
-#  ifndef M_LN2
-#    define M_LN2      0.693147180559945309417 //  ln(2)
-#  endif
-#  ifndef M_LN10
-#    define M_LN10     2.30258509299404568402  //  ln(10)
-#  endif
-#  ifndef M_PI
-#    define M_PI       3.14159265358979323846  //  pi
-#  endif
-#  ifndef PI
-#    define PI       M_PI                      //  pi - also used in some places
-#  endif
-#  ifndef M_PI_2
-#    define M_PI_2     1.57079632679489661923  //  pi/2
-#  endif
-#  ifndef M_PI_4
-#    define M_PI_4     0.785398163397448309616 //  pi/4
-#  endif
-#  ifndef M_1_PI
-#    define M_1_PI     0.318309886183790671538 //  1/pi
-#  endif
-#  ifndef M_2_PI
-#    define M_2_PI     0.636619772367581343076 //  2/pi
-#  endif
-#  ifndef M_2_SQRTPI
-#    define M_2_SQRTPI 1.12837916709551257390  //  2/sqrt(pi)
-#  endif
-#  ifndef M_SQRT2
-#    define M_SQRT2    1.41421356237309504880  //  sqrt(2)
-#  endif
-#  ifndef M_SQRT1_2
-#    define M_SQRT1_2  0.707106781186547524401 //  1/sqrt(2)
-#  endif
+#ifndef PI
+# ifdef M_PI
+#  define PI M_PI
+# else
+/* When using c99 in the CFLAGS, some of these consts
+   are lost... Perhaps we should in fact include everything from
+   https://www.gnu.org/software/libc/manual/html_node/Mathematical-Constants.html
+*/
+#  define PI 3.14159265358979323846
+#  define M_PI PI
+#  define M_PI_2 M_PI/2.0
+#  define M_PI_4 M_PI/4.0
+#  define M_1_PI 1.0/M_PI
+#  define M_2_PI 2*M_1_PI
+# endif
+#endif
 
 #define RAD2MIN  ((180*60)/PI)
 #define MIN2RAD  (PI/(180*60))
@@ -578,17 +489,6 @@ char  *mcsig_message;
 #define NA       6.02214179e23     /* [#atoms/g .mole] Avogadro's number*/
 
 
-#define UNSET nan("0x6E6F74736574")
-int nans_match(double, double);
-int is_unset(double);
-int is_valid(double);
-int is_set(double);
-int all_unset(int n, ...);
-int all_set(int n, ...);
-int any_unset(int n, ...);
-int any_set(int n, ...);
-
-
 /* wrapper to get absolute and relative position of comp */
 /* mccomp_posa and mccomp_posr are defined in McStas generated C code */
 #define POS_A_COMP_INDEX(index) (instrument->_position_absolute[index])
@@ -600,8 +500,6 @@ int any_set(int n, ...);
     &( ((_class_ ## type ##_parameters *) _getvar_parameters(compname))->par )
 /* the body of this function depends on component instances, and is cogen'd */
 void* _getvar_parameters(char* compname);
-
-int _getcomp_index(char* compname);
 
 /* Note: The two-stage approach to COMP_GETPAR is NOT redundant; without it,
 * after #define C sample, COMP_GETPAR(C,x) would refer to component C, not to
@@ -1109,7 +1007,7 @@ NXhandle nxhandle;
 #ifndef MCSTAS_R_H
 #define MCSTAS_R_H "$Revision$"
 
-/* Following part is only embedded when not redundent with mcstas.h */
+/* Following part is only embedded when not redundent with mcstas.h ========= */
 
 #ifndef MCCODE_H
 
@@ -1384,10 +1282,6 @@ mcstatic unsigned long long int mcrun_num            = 0;
 #include "mcstas-globals.h"
 #endif /* !DANSE */
 
-#ifndef NX_COMPRESION
-#define NX_COMPRESSION NX_COMP_NONE
-#endif
-
 /* String nullification on GPU and other replacements */
 #ifdef OPENACC
 int noprintf() {
@@ -1418,113 +1312,8 @@ size_t str_len(const char *s)
 
 #endif
 
-/* SECTION: Predefine (component) parameters ================================= */
-
-int nans_match(double a, double b){
-  return (*(uint64_t*)&a == *(uint64_t*)&b);
-}
-int is_unset(double x){
-  return nans_match(x, UNSET);
-}
-int is_set(double x){
-  return !nans_match(x, UNSET);
-}
-int is_valid(double x){
-  return !isnan(x)||is_unset(x);
-}
-int all_unset(int n, ...){
-  va_list ptr;
-  va_start(ptr, n);
-  int ret=1;
-  for (int i=0; i<n; ++i) if(is_set(va_arg(ptr, double))) ret=0;
-  va_end(ptr);
-  return ret;
-}
-int all_set(int n, ...){
-  va_list ptr;
-  va_start(ptr, n);
-  int ret=1;
-  for (int i=0; i<n; ++i) if(is_unset(va_arg(ptr, double))) ret=0;
-  va_end(ptr);
-  return ret;
-}
-int any_unset(int n, ...){
-  va_list ptr;
-  va_start(ptr, n);
-  int ret=0;
-  for (int i=0; i<n; ++i) if(is_unset(va_arg(ptr, double))) ret=1;
-  va_end(ptr);
-  return ret;
-}
-int any_set(int n, ...){
-  va_list ptr;
-  va_start(ptr, n);
-  int ret=0;
-  for (int i=0; i<n; ++i) if(is_set(va_arg(ptr, double))) ret=1;
-  va_end(ptr);
-  return ret;
-}
-
 
 /* SECTION: Dynamic Arrays ================================================== */
-IArray1d create_iarr1d(int n){
-  IArray1d arr2d;
-  arr2d = calloc(n, sizeof(int));
-  return arr2d;
-}
-void destroy_iarr1d(IArray1d a){
-  free(a);
-}
-
-IArray2d create_iarr2d(int nx, int ny){
-  IArray2d arr2d;
-  arr2d = calloc(nx, sizeof(int *));
-
-  int *p1;
-  p1 = calloc(nx*ny, sizeof(int));
-
-  int i;
-  for (i=0; i<nx; i++){
-    arr2d[i] = &(p1[i*ny]);
-  }
-  return arr2d;
-}
-void destroy_iarr2d(IArray2d a){
-  free(a[0]);
-  free(a);
-}
-
-IArray3d create_iarr3d(int nx, int ny, int nz){
-  IArray3d arr3d;
-  int i, j;
-
-  // 1d
-  arr3d = calloc(nx, sizeof(int **));
-
-  // d2
-  int **p1;
-  p1 = calloc(nx*ny, sizeof(int *));
-
-  for (i=0; i<nx; i++){
-    arr3d[i] = &(p1[i*ny]);
-  }
-
-  // 3d
-  int *p2;
-  p2 = calloc(nx*ny*nz, sizeof(int));
-  for (i=0; i<nx; i++){
-    for (j=0; j<ny; j++){
-      arr3d[i][j] = &(p2[(i*ny+j)*nz]);
-    }
-  }
-  return arr3d;
-}
-
-void destroy_iarr3d(IArray3d a){
-  free(a[0][0]);
-  free(a[0]);
-  free(a);
-}
 
 DArray1d create_darr1d(int n){
   DArray1d arr2d;
@@ -2043,7 +1832,7 @@ MCDETECTOR mcdetector_statistics(
   MCDETECTOR detector)
 {
 
-  if (!detector.p1 || !detector.m)
+  if (!detector.p1 || !detector.m || !detector.filename)
     return(detector);
 
   /* compute statistics and update MCDETECTOR structure ===================== */
@@ -2250,7 +2039,7 @@ MCDETECTOR detector_import(
     }
   }
 
-  m=labs(m); n=labs(n); p=labs(p); /* make sure dimensions are positive */
+  m=abs(m); n=abs(n); p=abs(p); /* make sure dimensions are positive */
   detector.istransposed = istransposed;
 
   /* determine detector rank (dimensionality) */
@@ -3069,7 +2858,7 @@ int mcdetector_out_axis_nexus(NXhandle f, char *label, char *var, int rank, long
       axis[i] = min+(max-min)*(i+0.5)/length;
     /* create the data set */
     strcpy_valid(valid, label);
-    NXcompmakedata(f, valid, NX_FLOAT64, 1, &dim, NX_COMPRESSION, &dim);
+    NXcompmakedata(f, valid, NX_FLOAT64, 1, &dim, NX_COMP_LZW, &dim);
     /* open it */
     if (NXopendata(f, valid) != NX_OK) {
       fprintf(stderr, "Warning: could not open axis rank %i '%s' (NeXus)\n",
@@ -3097,7 +2886,6 @@ int mcdetector_out_array_nexus(NXhandle f, char *part, double *data, MCDETECTOR 
 {
 
   int dims[3]={detector.m,detector.n,detector.p};  /* number of elements to write */
-  int fulldims[3]={detector.m,detector.n,detector.p};
   int signal=1;
   int exists=0;
   int current_dims[3]={0,0,0};
@@ -3106,11 +2894,15 @@ int mcdetector_out_array_nexus(NXhandle f, char *part, double *data, MCDETECTOR 
   if (!f || !data || !detector.m || mcdisable_output_files) return(NX_OK);
 
   /* when this is a list, we set 1st dimension to NX_UNLIMITED for creation */
-  if (strcasestr(detector.format, "list")) fulldims[0] = NX_UNLIMITED;
+  if (strcasestr(detector.format, "list")) dims[0] = NX_UNLIMITED;
 
   /* create the data set in NXdata group */
   NXMDisableErrorReporting(); /* unactivate NeXus error messages, as creation may fail */
-  ret = NXcompmakedata(f, part, NX_FLOAT64, detector.rank, fulldims, NX_COMPRESSION, dims);
+  /* NXcompmakedata fails with NX_UNLIMITED */
+  if (strcasestr(detector.format, "list"))
+    ret = NXmakedata(    f, part, NX_FLOAT64, detector.rank, dims);
+  else
+    ret = NXcompmakedata(f, part, NX_FLOAT64, detector.rank, dims, NX_COMP_LZW, dims);
   if (ret != NX_OK) {
     /* failed: data set already exists */
     int datatype=0;
@@ -3122,6 +2914,7 @@ int mcdetector_out_array_nexus(NXhandle f, char *part, double *data, MCDETECTOR 
     NXclosedata(f);
   }
   NXMEnableErrorReporting();  /* re-enable NeXus error messages */
+  dims[0] = detector.m; /* restore actual dimension from data writing */
 
   /* open the data set */
   if (NXopendata(f, part) == NX_ERROR) {
@@ -3135,9 +2928,6 @@ int mcdetector_out_array_nexus(NXhandle f, char *part, double *data, MCDETECTOR 
     if (!exists)
       printf("Events:   \"%s\"\n",
         strlen(detector.filename) ? detector.filename : detector.component);
-    else
-      printf("Append:   \"%s\"\n",
-	     strlen(detector.filename) ? detector.filename : detector.component);
   } else {
     NXputdata (f, data);
   }
@@ -3538,7 +3328,7 @@ MCDETECTOR mcdetector_out_2D(char *t, char *xl, char *yl,
   MCDETECTOR detector;
 
   /* import and perform basic detector analysis (and handle MPI_Reduce) */
-  if (labs(m) == 1) {/* n>1 on Y, m==1 on X: 1D, no X axis*/
+  if (abs(m) == 1) {/* n>1 on Y, m==1 on X: 1D, no X axis*/
     detector = detector_import(mcformat,
       c, (t ? t : MCCODE_STRING " 1D data"),
       n, 1, 1,
@@ -3546,7 +3336,7 @@ MCDETECTOR mcdetector_out_2D(char *t, char *xl, char *yl,
       yvar, "(I,Ierr)", "I",
       y1, y2, x1, x2, 0, 0, f,
       p0, p1, p2, posa); /* write Detector: line */
-  } else if (labs(n)==1) {/* m>1 on X, n==1 on Y: 1D, no Y axis*/
+  } else if (abs(n)==1) {/* m>1 on X, n==1 on Y: 1D, no Y axis*/
     detector = detector_import(mcformat,
       c, (t ? t : MCCODE_STRING " 1D data"),
       m, 1, 1,
@@ -3594,7 +3384,7 @@ MCDETECTOR mcdetector_out_list(char *t, char *xl, char *yl,
   mcformat = format_new;
 
   detector = mcdetector_out_2D(t, xl, yl,
-                  1,labs(m),1,labs(n),
+                  1,abs(m),1,abs(n),
                   m,n,
                   NULL, p1, NULL, f,
                   c, posa);
@@ -6083,7 +5873,7 @@ int traceenabled = 1;
 #else
 int traceenabled = 0;
 #endif
-#define MCSTAS "C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\"
+#define MCSTAS "C:\\mcstas-3.1\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\"
 int   defaultmain         = 1;
 char  instrument_name[]   = "AER_HFIR_2023";
 char  instrument_source[] = "AER_HFIR_2023.instr";
@@ -6129,12 +5919,12 @@ struct _instrument_struct *instrument = & _instrument_var;
 
 int numipar = 9;
 struct mcinputtable_struct mcinputtable[] = {
-  "delta_lambda", &(_instrument_var._parameters.delta_lambda), instr_type_double, "0.01375", 
+  "delta_lambda", &(_instrument_var._parameters.delta_lambda), instr_type_double, "1E-09", 
   "low_count", &(_instrument_var._parameters.low_count), instr_type_int, "1", 
   "all_off", &(_instrument_var._parameters.all_off), instr_type_int, "0", 
-  "cur1", &(_instrument_var._parameters.cur1), instr_type_double, "8.13868", 
-  "cur2", &(_instrument_var._parameters.cur2), instr_type_double, "-8.13868", 
-  "BCG", &(_instrument_var._parameters.BCG), instr_type_double, "25.1627", 
+  "cur1", &(_instrument_var._parameters.cur1), instr_type_double, "6", 
+  "cur2", &(_instrument_var._parameters.cur2), instr_type_double, "-6", 
+  "BCG", &(_instrument_var._parameters.BCG), instr_type_double, "14.025", 
   "polx", &(_instrument_var._parameters.polx), instr_type_double, "1", 
   "poly", &(_instrument_var._parameters.poly), instr_type_double, "0", 
   "polz", &(_instrument_var._parameters.polz), instr_type_double, "0", 
@@ -6229,7 +6019,6 @@ struct mcinputtable_struct mcinputtable[] = {
     char    monotonic;     /* true when 1st column/vector data is monotonic */
     char    constantstep;  /* true when 1st column/vector data has constant step */
     char    method[32];    /* interpolation method: nearest, linear */
-    char    quiet;   /*output level for messages to the console 0: print all messages, 1:only print some/including errors, 2: never print anything.*/
   } t_Table;
 
 /*maximum number of rows to rebin a table = 1M*/
@@ -6587,11 +6376,8 @@ void *Table_File_List_store(t_Table *tab){
     t_Table *tab_p= Table_File_List_find(name,block_number,begin);
     if ( tab_p!=NULL ){
         /*table was found in the Table_File_List*/
+        // printf("Reusing input file '%s' (Table_Read_Offset)\n", name);
         *Table=*tab_p;
-        MPI_MASTER(
-            if(Table->quiet<1)
-              printf("Reusing input file '%s' (Table_Read_Offset)\n", name);
-            );
         return Table->rows*Table->columns;
     }
 
@@ -6600,9 +6386,8 @@ void *Table_File_List_store(t_Table *tab){
     if (!hfile) return(-1);
     else {
       MPI_MASTER(
-          if(Table->quiet<1)
-            printf("Opening input file '%s' (Table_Read_Offset)\n", path);
-          );
+      printf("Opening input file '%s' (Table_Read_Offset)\n", path);
+      );
     }
     
     /* read file state */
@@ -6661,8 +6446,7 @@ void *Table_File_List_store(t_Table *tab){
     if (!hfile) return(-1);
     else {
       MPI_MASTER(
-          if(Table->quiet<1)
-            printf("Opening input file '%s' (Table_Read, Binary)\n", path);
+      printf("Opening input file '%s' (Table_Read, Binary)\n", path);
       );
     }
     
@@ -6682,16 +6466,14 @@ void *Table_File_List_store(t_Table *tab){
     if (!nelements || filesize <= *offset) return(0);
     data    = (double*)malloc(nelements*sizeofelement);
     if (!data) {
-      if(!(Table->quiet>1))
-        fprintf(stderr,"Error: allocating %ld elements for %s file '%s'. Too big (Table_Read_Offset_Binary).\n", nelements, type, File);
+      fprintf(stderr,"Error: allocating %ld elements for %s file '%s'. Too big (Table_Read_Offset_Binary).\n", nelements, type, File);
       exit(-1);
     }
     nelements = fread(data, sizeofelement, nelements, hfile);
 
     if (!data || !nelements)
     {
-      if(!(Table->quiet>1))
-        fprintf(stderr,"Error: reading %ld elements from %s file '%s' (Table_Read_Offset_Binary)\n", nelements, type, File);
+      fprintf(stderr,"Error: reading %ld elements from %s file '%s' (Table_Read_Offset_Binary)\n", nelements, type, File);
       exit(-1);
     }
     Table->begin   = begin;
@@ -7221,7 +7003,7 @@ double Table_Value2d(t_Table Table, double X, double Y)
     if (!Table.block_number) strcpy(buffer, "catenated");
     else sprintf(buffer, "block %li", Table.block_number);
     printf("Table from file '%s' (%s)",
-        Table.filename[0] != '\0' ? Table.filename : "", buffer);
+      Table.filename[0] != '\0' ? Table.filename : "", buffer);
     if ((Table.data != NULL) && (Table.rows*Table.columns))
     {
       printf(" is %li x %li ", Table.rows, Table.columns);
@@ -7284,9 +7066,8 @@ long Table_Init(t_Table *Table, long rows, long columns)
     data    = (double*)malloc(rows*columns*sizeof(double));
     if (data) for (i=0; i < rows*columns; data[i++]=0);
     else {
-      if(Table->quiet<2)
-        fprintf(stderr,"Error: allocating %ld double elements."
-            "Too big (Table_Init).\n", rows*columns);
+      fprintf(stderr,"Error: allocating %ld double elements."
+                     "Too big (Table_Init).\n", rows*columns);
       rows = columns = 0;
     }
   }
@@ -8106,7 +7887,7 @@ int mcNUMCOMP = 14;
 /* component origin=Progress_bar() SETTING, POSITION/ROTATION */
 int _origin_setpos(void)
 { /* sets initial component parameters, position and rotation */
-  SIG_MESSAGE("[_origin_setpos] component origin=Progress_bar() SETTING [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\misc\\Progress_bar.comp:57]");
+  SIG_MESSAGE("[_origin_setpos] component origin=Progress_bar() SETTING [C:\\mcstas-3.1\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\misc\\Progress_bar.comp:57]");
   stracpy(_origin_var._name, "origin", 16384);
   stracpy(_origin_var._type, "Progress_bar", 16384);
   _origin_var._index=1;
@@ -8122,10 +7903,7 @@ int _origin_setpos(void)
   /* component origin=Progress_bar() AT ROTATED */
   {
     Coords tc1, tc2;
-    tc1 = coords_set(0,0,0);
-    tc2 = coords_set(0,0,0);
     Rotation tr1;
-    rot_set_rotation(tr1,0,0,0);
     rot_set_rotation(_origin_var._rotation_absolute,
       (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
     rot_copy(_origin_var._rotation_relative, _origin_var._rotation_absolute);
@@ -8154,10 +7932,7 @@ int _arm_setpos(void)
   /* component arm=Arm() AT ROTATED */
   {
     Coords tc1, tc2;
-    tc1 = coords_set(0,0,0);
-    tc2 = coords_set(0,0,0);
     Rotation tr1;
-    rot_set_rotation(tr1,0,0,0);
     rot_set_rotation(tr1,
       (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
     rot_mul(tr1, _origin_var._rotation_absolute, _arm_var._rotation_absolute);
@@ -8184,7 +7959,7 @@ int _arm_setpos(void)
 /* component src=Source_sam() SETTING, POSITION/ROTATION */
 int _src_setpos(void)
 { /* sets initial component parameters, position and rotation */
-  SIG_MESSAGE("[_src_setpos] component src=Source_sam() SETTING [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\contrib\\Source_sam.comp:209]");
+  SIG_MESSAGE("[_src_setpos] component src=Source_sam() SETTING [C:\\mcstas-3.1\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\contrib\\Source_sam.comp:209]");
   stracpy(_src_var._name, "src", 16384);
   stracpy(_src_var._type, "Source_sam", 16384);
   _src_var._index=3;
@@ -8201,9 +7976,9 @@ int _src_setpos(void)
   else 
   _src_var._parameters.ydiv_file[0]='\0';
   _src_var._parameters.radius = 0.0;
-  _src_var._parameters.dist = 3.3;
-  _src_var._parameters.focus_xw = 0.01;
-  _src_var._parameters.focus_yh = 0.01;
+  _src_var._parameters.dist = 2.36;
+  _src_var._parameters.focus_xw = 0.029;
+  _src_var._parameters.focus_yh = 0.029;
   _src_var._parameters.focus_aw = 0;
   _src_var._parameters.focus_ah = 0;
   _src_var._parameters.E0 = 0;
@@ -8211,8 +7986,8 @@ int _src_setpos(void)
   _src_var._parameters.lambda0 = 5.5;
   _src_var._parameters.dlambda = _instrument_var._parameters.delta_lambda;
   _src_var._parameters.I1 = 1E+15;
-  _src_var._parameters.yheight = 0.02;
-  _src_var._parameters.xwidth = 0.02;
+  _src_var._parameters.yheight = 0.019;
+  _src_var._parameters.xwidth = 0.019;
   _src_var._parameters.verbose = 0;
   _src_var._parameters.T1 = 0;
   _src_var._parameters.flux_file_perAA = 0;
@@ -8234,14 +8009,11 @@ int _src_setpos(void)
   /* component src=Source_sam() AT ROTATED */
   {
     Coords tc1, tc2;
-    tc1 = coords_set(0,0,0);
-    tc2 = coords_set(0,0,0);
     Rotation tr1;
-    rot_set_rotation(tr1,0,0,0);
     rot_set_rotation(tr1,
       (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
     rot_mul(tr1, _origin_var._rotation_absolute, _src_var._rotation_absolute);
-    rot_transpose(_origin_var._rotation_absolute, tr1);
+    rot_transpose(_arm_var._rotation_absolute, tr1);
     rot_mul(_src_var._rotation_absolute, tr1, _src_var._rotation_relative);
     _src_var._rotation_is_identity =  rot_test_identity(_src_var._rotation_relative);
     tc1 = coords_set(
@@ -8249,7 +8021,7 @@ int _src_setpos(void)
     rot_transpose(_origin_var._rotation_absolute, tr1);
     tc2 = rot_apply(tr1, tc1);
     _src_var._position_absolute = coords_add(_origin_var._position_absolute, tc2);
-    tc1 = coords_sub(_origin_var._position_absolute, _src_var._position_absolute);
+    tc1 = coords_sub(_arm_var._position_absolute, _src_var._position_absolute);
     _src_var._position_relative = rot_apply(_src_var._rotation_absolute, tc1);
   } /* src=Source_sam() AT ROTATED */
   DEBUG_COMPONENT("src", _src_var._position_absolute, _src_var._rotation_absolute);
@@ -8264,11 +8036,11 @@ int _src_setpos(void)
 /* component div1=DivPos_monitor() SETTING, POSITION/ROTATION */
 int _div1_setpos(void)
 { /* sets initial component parameters, position and rotation */
-  SIG_MESSAGE("[_div1_setpos] component div1=DivPos_monitor() SETTING [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\monitors\\DivPos_monitor.comp:72]");
+  SIG_MESSAGE("[_div1_setpos] component div1=DivPos_monitor() SETTING [C:\\mcstas-3.1\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\monitors\\DivPos_monitor.comp:72]");
   stracpy(_div1_var._name, "div1", 16384);
   stracpy(_div1_var._type, "DivPos_monitor", 16384);
   _div1_var._index=4;
-  _div1_var._parameters.nb = 100;
+  _div1_var._parameters.nb = 128;
   _div1_var._parameters.ndiv = 100;
   if("acc_source.dat" && strlen("acc_source.dat"))
     stracpy(_div1_var._parameters.filename, "acc_source.dat" ? "acc_source.dat" : "", 16384);
@@ -8278,9 +8050,9 @@ int _div1_setpos(void)
   _div1_var._parameters.xmax = 0.05;
   _div1_var._parameters.ymin = -0.05;
   _div1_var._parameters.ymax = 0.05;
-  _div1_var._parameters.xwidth = 0.01;
-  _div1_var._parameters.yheight = 0.01;
-  _div1_var._parameters.maxdiv = 0.260435;
+  _div1_var._parameters.xwidth = 0.029;
+  _div1_var._parameters.yheight = 0.029;
+  _div1_var._parameters.maxdiv = 0.582669;
   _div1_var._parameters.restore_neutron = 0;
   _div1_var._parameters.nx = 0;
   _div1_var._parameters.ny = 0;
@@ -8292,10 +8064,7 @@ int _div1_setpos(void)
   /* component div1=DivPos_monitor() AT ROTATED */
   {
     Coords tc1, tc2;
-    tc1 = coords_set(0,0,0);
-    tc2 = coords_set(0,0,0);
     Rotation tr1;
-    rot_set_rotation(tr1,0,0,0);
     rot_set_rotation(tr1,
       (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
     rot_mul(tr1, _origin_var._rotation_absolute, _div1_var._rotation_absolute);
@@ -8322,7 +8091,7 @@ int _div1_setpos(void)
 /* component pol=Set_pol() SETTING, POSITION/ROTATION */
 int _pol_setpos(void)
 { /* sets initial component parameters, position and rotation */
-  SIG_MESSAGE("[_pol_setpos] component pol=Set_pol() SETTING [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\optics\\Set_pol.comp:52]");
+  SIG_MESSAGE("[_pol_setpos] component pol=Set_pol() SETTING [C:\\mcstas-3.1\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\optics\\Set_pol.comp:52]");
   stracpy(_pol_var._name, "pol", 16384);
   stracpy(_pol_var._type, "Set_pol", 16384);
   _pol_var._index=5;
@@ -8335,10 +8104,7 @@ int _pol_setpos(void)
   /* component pol=Set_pol() AT ROTATED */
   {
     Coords tc1, tc2;
-    tc1 = coords_set(0,0,0);
-    tc2 = coords_set(0,0,0);
     Rotation tr1;
-    rot_set_rotation(tr1,0,0,0);
     rot_set_rotation(tr1,
       (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
     rot_mul(tr1, _origin_var._rotation_absolute, _pol_var._rotation_absolute);
@@ -8365,7 +8131,7 @@ int _pol_setpos(void)
 /* component MWP1=Pol_MWP_v3() SETTING, POSITION/ROTATION */
 int _MWP1_setpos(void)
 { /* sets initial component parameters, position and rotation */
-  SIG_MESSAGE("[_MWP1_setpos] component MWP1=Pol_MWP_v3() SETTING [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\contrib\\Pol_MWP_v3.comp:74]");
+  SIG_MESSAGE("[_MWP1_setpos] component MWP1=Pol_MWP_v3() SETTING [C:\\mcstas-3.1\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\contrib\\Pol_MWP_v3.comp:74]");
   stracpy(_MWP1_var._name, "MWP1", 16384);
   stracpy(_MWP1_var._type, "Pol_MWP_v3", 16384);
   _MWP1_var._index=6;
@@ -8375,8 +8141,8 @@ int _MWP1_setpos(void)
   _MWP1_var._parameters.current = _instrument_var._parameters.cur1 * ( 1 - _instrument_var._parameters.all_off );
   _MWP1_var._parameters.Hyp_inv = 0;
   _MWP1_var._parameters.FI0 = .0;
-  _MWP1_var._parameters.a = 0.005;
-  _MWP1_var._parameters.b = 0.005;
+  _MWP1_var._parameters.a = 0.0055;
+  _MWP1_var._parameters.b = 0;
   _MWP1_var._parameters.c = .0001;
   _MWP1_var._parameters.d = -.22;
   _MWP1_var._parameters.B0 = .0;
@@ -8388,10 +8154,7 @@ int _MWP1_setpos(void)
   /* component MWP1=Pol_MWP_v3() AT ROTATED */
   {
     Coords tc1, tc2;
-    tc1 = coords_set(0,0,0);
-    tc2 = coords_set(0,0,0);
     Rotation tr1;
-    rot_set_rotation(tr1,0,0,0);
     rot_set_rotation(tr1,
       (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
     rot_mul(tr1, _origin_var._rotation_absolute, _MWP1_var._rotation_absolute);
@@ -8418,7 +8181,7 @@ int _MWP1_setpos(void)
 /* component CG=Pol_constBfield() SETTING, POSITION/ROTATION */
 int _CG_setpos(void)
 { /* sets initial component parameters, position and rotation */
-  SIG_MESSAGE("[_CG_setpos] component CG=Pol_constBfield() SETTING [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\optics\\Pol_constBfield.comp:70]");
+  SIG_MESSAGE("[_CG_setpos] component CG=Pol_constBfield() SETTING [C:\\mcstas-3.1\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\optics\\Pol_constBfield.comp:70]");
   stracpy(_CG_var._name, "CG", 16384);
   stracpy(_CG_var._type, "Pol_constBfield", 16384);
   _CG_var._index=7;
@@ -8433,10 +8196,7 @@ int _CG_setpos(void)
   /* component CG=Pol_constBfield() AT ROTATED */
   {
     Coords tc1, tc2;
-    tc1 = coords_set(0,0,0);
-    tc2 = coords_set(0,0,0);
     Rotation tr1;
-    rot_set_rotation(tr1,0,0,0);
     rot_set_rotation(tr1,
       (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
     rot_mul(tr1, _origin_var._rotation_absolute, _CG_var._rotation_absolute);
@@ -8463,7 +8223,7 @@ int _CG_setpos(void)
 /* component MWP2=Pol_MWP_v3() SETTING, POSITION/ROTATION */
 int _MWP2_setpos(void)
 { /* sets initial component parameters, position and rotation */
-  SIG_MESSAGE("[_MWP2_setpos] component MWP2=Pol_MWP_v3() SETTING [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\contrib\\Pol_MWP_v3.comp:74]");
+  SIG_MESSAGE("[_MWP2_setpos] component MWP2=Pol_MWP_v3() SETTING [C:\\mcstas-3.1\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\contrib\\Pol_MWP_v3.comp:74]");
   stracpy(_MWP2_var._name, "MWP2", 16384);
   stracpy(_MWP2_var._type, "Pol_MWP_v3", 16384);
   _MWP2_var._index=8;
@@ -8473,8 +8233,8 @@ int _MWP2_setpos(void)
   _MWP2_var._parameters.current = _instrument_var._parameters.cur2 * ( 1 - _instrument_var._parameters.all_off );
   _MWP2_var._parameters.Hyp_inv = 0;
   _MWP2_var._parameters.FI0 = .0;
-  _MWP2_var._parameters.a = 0.005;
-  _MWP2_var._parameters.b = 0.005;
+  _MWP2_var._parameters.a = 0.0055;
+  _MWP2_var._parameters.b = 0;
   _MWP2_var._parameters.c = .0001;
   _MWP2_var._parameters.d = -.22;
   _MWP2_var._parameters.B0 = .0;
@@ -8486,10 +8246,7 @@ int _MWP2_setpos(void)
   /* component MWP2=Pol_MWP_v3() AT ROTATED */
   {
     Coords tc1, tc2;
-    tc1 = coords_set(0,0,0);
-    tc2 = coords_set(0,0,0);
     Rotation tr1;
-    rot_set_rotation(tr1,0,0,0);
     rot_set_rotation(tr1,
       (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
     rot_mul(tr1, _origin_var._rotation_absolute, _MWP2_var._rotation_absolute);
@@ -8516,7 +8273,7 @@ int _MWP2_setpos(void)
 /* component ana=PolAnalyser_ideal() SETTING, POSITION/ROTATION */
 int _ana_setpos(void)
 { /* sets initial component parameters, position and rotation */
-  SIG_MESSAGE("[_ana_setpos] component ana=PolAnalyser_ideal() SETTING [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\optics\\PolAnalyser_ideal.comp:46]");
+  SIG_MESSAGE("[_ana_setpos] component ana=PolAnalyser_ideal() SETTING [C:\\mcstas-3.1\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\optics\\PolAnalyser_ideal.comp:46]");
   stracpy(_ana_var._name, "ana", 16384);
   stracpy(_ana_var._type, "PolAnalyser_ideal", 16384);
   _ana_var._index=9;
@@ -8527,10 +8284,7 @@ int _ana_setpos(void)
   /* component ana=PolAnalyser_ideal() AT ROTATED */
   {
     Coords tc1, tc2;
-    tc1 = coords_set(0,0,0);
-    tc2 = coords_set(0,0,0);
     Rotation tr1;
-    rot_set_rotation(tr1,0,0,0);
     rot_set_rotation(tr1,
       (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
     rot_mul(tr1, _origin_var._rotation_absolute, _ana_var._rotation_absolute);
@@ -8557,11 +8311,11 @@ int _ana_setpos(void)
 /* component div2=DivPos_monitor() SETTING, POSITION/ROTATION */
 int _div2_setpos(void)
 { /* sets initial component parameters, position and rotation */
-  SIG_MESSAGE("[_div2_setpos] component div2=DivPos_monitor() SETTING [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\monitors\\DivPos_monitor.comp:72]");
+  SIG_MESSAGE("[_div2_setpos] component div2=DivPos_monitor() SETTING [C:\\mcstas-3.1\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\monitors\\DivPos_monitor.comp:72]");
   stracpy(_div2_var._name, "div2", 16384);
   stracpy(_div2_var._type, "DivPos_monitor", 16384);
   _div2_var._index=10;
-  _div2_var._parameters.nb = 100;
+  _div2_var._parameters.nb = 128;
   _div2_var._parameters.ndiv = 100;
   if("acc_sample.dat" && strlen("acc_sample.dat"))
     stracpy(_div2_var._parameters.filename, "acc_sample.dat" ? "acc_sample.dat" : "", 16384);
@@ -8571,9 +8325,9 @@ int _div2_setpos(void)
   _div2_var._parameters.xmax = 0.05;
   _div2_var._parameters.ymin = -0.05;
   _div2_var._parameters.ymax = 0.05;
-  _div2_var._parameters.xwidth = 0.01;
-  _div2_var._parameters.yheight = 0.01;
-  _div2_var._parameters.maxdiv = 0.260435;
+  _div2_var._parameters.xwidth = 0.029;
+  _div2_var._parameters.yheight = 0.029;
+  _div2_var._parameters.maxdiv = 0.582669;
   _div2_var._parameters.restore_neutron = 0;
   _div2_var._parameters.nx = 0;
   _div2_var._parameters.ny = 0;
@@ -8585,10 +8339,7 @@ int _div2_setpos(void)
   /* component div2=DivPos_monitor() AT ROTATED */
   {
     Coords tc1, tc2;
-    tc1 = coords_set(0,0,0);
-    tc2 = coords_set(0,0,0);
     Rotation tr1;
-    rot_set_rotation(tr1,0,0,0);
     rot_set_rotation(tr1,
       (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
     rot_mul(tr1, _origin_var._rotation_absolute, _div2_var._rotation_absolute);
@@ -8596,7 +8347,7 @@ int _div2_setpos(void)
     rot_mul(_div2_var._rotation_absolute, tr1, _div2_var._rotation_relative);
     _div2_var._rotation_is_identity =  rot_test_identity(_div2_var._rotation_relative);
     tc1 = coords_set(
-      0, 0, 1.399999);
+      0, 0, 1.559999);
     rot_transpose(_origin_var._rotation_absolute, tr1);
     tc2 = rot_apply(tr1, tc1);
     _div2_var._position_absolute = coords_add(_origin_var._position_absolute, tc2);
@@ -8615,7 +8366,7 @@ int _div2_setpos(void)
 /* component sam=grating_mask() SETTING, POSITION/ROTATION */
 int _sam_setpos(void)
 { /* sets initial component parameters, position and rotation */
-  SIG_MESSAGE("[_sam_setpos] component sam=grating_mask() SETTING [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\contrib\\grating_mask.comp:58]");
+  SIG_MESSAGE("[_sam_setpos] component sam=grating_mask() SETTING [C:\\mcstas-3.1\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\contrib\\grating_mask.comp:57]");
   stracpy(_sam_var._name, "sam", 16384);
   stracpy(_sam_var._type, "grating_mask", 16384);
   _sam_var._index=11;
@@ -8630,10 +8381,7 @@ int _sam_setpos(void)
   /* component sam=grating_mask() AT ROTATED */
   {
     Coords tc1, tc2;
-    tc1 = coords_set(0,0,0);
-    tc2 = coords_set(0,0,0);
     Rotation tr1;
-    rot_set_rotation(tr1,0,0,0);
     rot_set_rotation(tr1,
       (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
     rot_mul(tr1, _origin_var._rotation_absolute, _sam_var._rotation_absolute);
@@ -8641,7 +8389,7 @@ int _sam_setpos(void)
     rot_mul(_sam_var._rotation_absolute, tr1, _sam_var._rotation_relative);
     _sam_var._rotation_is_identity =  rot_test_identity(_sam_var._rotation_relative);
     tc1 = coords_set(
-      1.0, 0.0, 1.4);
+      1.0, 0.0, 1.5599999999999998);
     rot_transpose(_origin_var._rotation_absolute, tr1);
     tc2 = rot_apply(tr1, tc1);
     _sam_var._position_absolute = coords_add(_origin_var._position_absolute, tc2);
@@ -8660,11 +8408,11 @@ int _sam_setpos(void)
 /* component div2b=DivPos_monitor() SETTING, POSITION/ROTATION */
 int _div2b_setpos(void)
 { /* sets initial component parameters, position and rotation */
-  SIG_MESSAGE("[_div2b_setpos] component div2b=DivPos_monitor() SETTING [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\monitors\\DivPos_monitor.comp:72]");
+  SIG_MESSAGE("[_div2b_setpos] component div2b=DivPos_monitor() SETTING [C:\\mcstas-3.1\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\monitors\\DivPos_monitor.comp:72]");
   stracpy(_div2b_var._name, "div2b", 16384);
   stracpy(_div2b_var._type, "DivPos_monitor", 16384);
   _div2b_var._index=12;
-  _div2b_var._parameters.nb = 100;
+  _div2b_var._parameters.nb = 128;
   _div2b_var._parameters.ndiv = 100;
   if("acc_post_sample.dat" && strlen("acc_post_sample.dat"))
     stracpy(_div2b_var._parameters.filename, "acc_post_sample.dat" ? "acc_post_sample.dat" : "", 16384);
@@ -8674,9 +8422,9 @@ int _div2b_setpos(void)
   _div2b_var._parameters.xmax = 0.05;
   _div2b_var._parameters.ymin = -0.05;
   _div2b_var._parameters.ymax = 0.05;
-  _div2b_var._parameters.xwidth = 0.01;
-  _div2b_var._parameters.yheight = 0.01;
-  _div2b_var._parameters.maxdiv = 0.260435;
+  _div2b_var._parameters.xwidth = 0.029;
+  _div2b_var._parameters.yheight = 0.029;
+  _div2b_var._parameters.maxdiv = 0.582669;
   _div2b_var._parameters.restore_neutron = 0;
   _div2b_var._parameters.nx = 0;
   _div2b_var._parameters.ny = 0;
@@ -8688,10 +8436,7 @@ int _div2b_setpos(void)
   /* component div2b=DivPos_monitor() AT ROTATED */
   {
     Coords tc1, tc2;
-    tc1 = coords_set(0,0,0);
-    tc2 = coords_set(0,0,0);
     Rotation tr1;
-    rot_set_rotation(tr1,0,0,0);
     rot_set_rotation(tr1,
       (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
     rot_mul(tr1, _origin_var._rotation_absolute, _div2b_var._rotation_absolute);
@@ -8699,7 +8444,7 @@ int _div2b_setpos(void)
     rot_mul(_div2b_var._rotation_absolute, tr1, _div2b_var._rotation_relative);
     _div2b_var._rotation_is_identity =  rot_test_identity(_div2b_var._rotation_relative);
     tc1 = coords_set(
-      0, 0, 1.4000009999999998);
+      0, 0, 1.5600009999999997);
     rot_transpose(_origin_var._rotation_absolute, tr1);
     tc2 = rot_apply(tr1, tc1);
     _div2b_var._position_absolute = coords_add(_origin_var._position_absolute, tc2);
@@ -8718,11 +8463,11 @@ int _div2b_setpos(void)
 /* component div3=DivPos_monitor() SETTING, POSITION/ROTATION */
 int _div3_setpos(void)
 { /* sets initial component parameters, position and rotation */
-  SIG_MESSAGE("[_div3_setpos] component div3=DivPos_monitor() SETTING [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\monitors\\DivPos_monitor.comp:72]");
+  SIG_MESSAGE("[_div3_setpos] component div3=DivPos_monitor() SETTING [C:\\mcstas-3.1\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\monitors\\DivPos_monitor.comp:72]");
   stracpy(_div3_var._name, "div3", 16384);
   stracpy(_div3_var._type, "DivPos_monitor", 16384);
   _div3_var._index=13;
-  _div3_var._parameters.nb = 100;
+  _div3_var._parameters.nb = 128;
   _div3_var._parameters.ndiv = 100;
   if("acc_det.dat" && strlen("acc_det.dat"))
     stracpy(_div3_var._parameters.filename, "acc_det.dat" ? "acc_det.dat" : "", 16384);
@@ -8732,9 +8477,9 @@ int _div3_setpos(void)
   _div3_var._parameters.xmax = 0.05;
   _div3_var._parameters.ymin = -0.05;
   _div3_var._parameters.ymax = 0.05;
-  _div3_var._parameters.xwidth = 0.01;
-  _div3_var._parameters.yheight = 0.01;
-  _div3_var._parameters.maxdiv = 0.260435;
+  _div3_var._parameters.xwidth = 0.029;
+  _div3_var._parameters.yheight = 0.029;
+  _div3_var._parameters.maxdiv = 0.582669;
   _div3_var._parameters.restore_neutron = 0;
   _div3_var._parameters.nx = 0;
   _div3_var._parameters.ny = 0;
@@ -8746,10 +8491,7 @@ int _div3_setpos(void)
   /* component div3=DivPos_monitor() AT ROTATED */
   {
     Coords tc1, tc2;
-    tc1 = coords_set(0,0,0);
-    tc2 = coords_set(0,0,0);
     Rotation tr1;
-    rot_set_rotation(tr1,0,0,0);
     rot_set_rotation(tr1,
       (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
     rot_mul(tr1, _origin_var._rotation_absolute, _div3_var._rotation_absolute);
@@ -8757,7 +8499,7 @@ int _div3_setpos(void)
     rot_mul(_div3_var._rotation_absolute, tr1, _div3_var._rotation_relative);
     _div3_var._rotation_is_identity =  rot_test_identity(_div3_var._rotation_relative);
     tc1 = coords_set(
-      0, 0, 3.2999989999999997);
+      0, 0, 2.3599989999999997);
     rot_transpose(_origin_var._rotation_absolute, tr1);
     tc2 = rot_apply(tr1, tc1);
     _div3_var._position_absolute = coords_add(_origin_var._position_absolute, tc2);
@@ -8776,12 +8518,12 @@ int _div3_setpos(void)
 /* component det=PSD_monitor() SETTING, POSITION/ROTATION */
 int _det_setpos(void)
 { /* sets initial component parameters, position and rotation */
-  SIG_MESSAGE("[_det_setpos] component det=PSD_monitor() SETTING [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\monitors\\PSD_monitor.comp:62]");
+  SIG_MESSAGE("[_det_setpos] component det=PSD_monitor() SETTING [C:\\mcstas-3.1\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\monitors\\PSD_monitor.comp:62]");
   stracpy(_det_var._name, "det", 16384);
   stracpy(_det_var._type, "PSD_monitor", 16384);
   _det_var._index=14;
-  _det_var._parameters.nx = 100;
-  _det_var._parameters.ny = 100;
+  _det_var._parameters.nx = 128;
+  _det_var._parameters.ny = 128;
   if("AER_2D.dat" && strlen("AER_2D.dat"))
     stracpy(_det_var._parameters.filename, "AER_2D.dat" ? "AER_2D.dat" : "", 16384);
   else 
@@ -8790,8 +8532,8 @@ int _det_setpos(void)
   _det_var._parameters.xmax = 0.05;
   _det_var._parameters.ymin = -0.05;
   _det_var._parameters.ymax = 0.05;
-  _det_var._parameters.xwidth = 0.01;
-  _det_var._parameters.yheight = 0.01;
+  _det_var._parameters.xwidth = 0.029;
+  _det_var._parameters.yheight = 0.029;
   _det_var._parameters.restore_neutron = 0;
   _det_var._parameters.nowritefile = 0;
 
@@ -8799,10 +8541,7 @@ int _det_setpos(void)
   /* component det=PSD_monitor() AT ROTATED */
   {
     Coords tc1, tc2;
-    tc1 = coords_set(0,0,0);
-    tc2 = coords_set(0,0,0);
     Rotation tr1;
-    rot_set_rotation(tr1,0,0,0);
     rot_set_rotation(tr1,
       (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
     rot_mul(tr1, _origin_var._rotation_absolute, _det_var._rotation_absolute);
@@ -8810,7 +8549,7 @@ int _det_setpos(void)
     rot_mul(_det_var._rotation_absolute, tr1, _det_var._rotation_relative);
     _det_var._rotation_is_identity =  rot_test_identity(_det_var._rotation_relative);
     tc1 = coords_set(
-      0, 0, 3.3);
+      0, 0, 2.36);
     rot_transpose(_origin_var._rotation_absolute, tr1);
     tc2 = rot_apply(tr1, tc1);
     _det_var._position_absolute = coords_add(_origin_var._position_absolute, tc2);
@@ -8836,7 +8575,7 @@ _class_Progress_bar *class_Progress_bar_init(_class_Progress_bar *_comp
   #define StartTime (_comp->_parameters.StartTime)
   #define EndTime (_comp->_parameters.EndTime)
   #define CurrentTime (_comp->_parameters.CurrentTime)
-  SIG_MESSAGE("[_origin_init] component origin=Progress_bar() INITIALISE [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\misc\\Progress_bar.comp:57]");
+  SIG_MESSAGE("[_origin_init] component origin=Progress_bar() INITIALISE [C:\\mcstas-3.1\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\misc\\Progress_bar.comp:57]");
 
 IntermediateCnts=0;
 StartTime=0;
@@ -8912,7 +8651,7 @@ _class_Source_sam *class_Source_sam_init(_class_Source_sam *_comp
   #define pTable_dxmax (_comp->_parameters.pTable_dxmax)
   #define pTable_dymin (_comp->_parameters.pTable_dymin)
   #define pTable_dymax (_comp->_parameters.pTable_dymax)
-  SIG_MESSAGE("[_src_init] component src=Source_sam() INITIALISE [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\contrib\\Source_sam.comp:209]");
+  SIG_MESSAGE("[_src_init] component src=Source_sam() INITIALISE [C:\\mcstas-3.1\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\contrib\\Source_sam.comp:209]");
 
   pTable_xsum=0;
   pTable_ysum=0;
@@ -9256,7 +8995,7 @@ _class_DivPos_monitor *class_DivPos_monitor_init(_class_DivPos_monitor *_comp
   #define Div_N (_comp->_parameters.Div_N)
   #define Div_p (_comp->_parameters.Div_p)
   #define Div_p2 (_comp->_parameters.Div_p2)
-  SIG_MESSAGE("[_div1_init] component div1=DivPos_monitor() INITIALISE [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\monitors\\DivPos_monitor.comp:72]");
+  SIG_MESSAGE("[_div1_init] component div1=DivPos_monitor() INITIALISE [C:\\mcstas-3.1\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\monitors\\DivPos_monitor.comp:72]");
 
   int i, j;
 
@@ -9283,9 +9022,6 @@ _class_DivPos_monitor *class_DivPos_monitor_init(_class_DivPos_monitor *_comp
     }
 
   NORM(nx,ny,nz);
-
-  // Use instance name for monitor output if no input was given
-  if (!strcmp(filename,"\0")) sprintf(filename,NAME_CURRENT_COMP);
   #undef nb
   #undef ndiv
   #undef filename
@@ -9315,7 +9051,7 @@ _class_Set_pol *class_Set_pol_init(_class_Set_pol *_comp
   #define pz (_comp->_parameters.pz)
   #define randomOn (_comp->_parameters.randomOn)
   #define normalize (_comp->_parameters.normalize)
-  SIG_MESSAGE("[_pol_init] component pol=Set_pol() INITIALISE [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\optics\\Set_pol.comp:52]");
+  SIG_MESSAGE("[_pol_init] component pol=Set_pol() INITIALISE [C:\\mcstas-3.1\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\optics\\Set_pol.comp:52]");
 
 
   if (sqrt(px*px + py*py + pz*pz) > 1+FLT_EPSILON)
@@ -9363,7 +9099,7 @@ _class_Pol_MWP_v3 *class_Pol_MWP_v3_init(_class_Pol_MWP_v3 *_comp
   #define LG (_comp->_parameters.LG)
   #define phi (_comp->_parameters.phi)
   #define psi (_comp->_parameters.psi)
-  SIG_MESSAGE("[_MWP1_init] component MWP1=Pol_MWP_v3() INITIALISE [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\contrib\\Pol_MWP_v3.comp:74]");
+  SIG_MESSAGE("[_MWP1_init] component MWP1=Pol_MWP_v3() INITIALISE [C:\\mcstas-3.1\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\contrib\\Pol_MWP_v3.comp:74]");
 
 	gamma = -1.832471*pow(10,8); //neutron gyromagnetic ratio
   
@@ -9412,7 +9148,7 @@ _class_Pol_constBfield *class_Pol_constBfield_init(_class_Pol_constBfield *_comp
   #define fliplambda (_comp->_parameters.fliplambda)
   #define flipangle (_comp->_parameters.flipangle)
   #define omegaL (_comp->_parameters.omegaL)
-  SIG_MESSAGE("[_CG_init] component CG=Pol_constBfield() INITIALISE [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\optics\\Pol_constBfield.comp:70]");
+  SIG_MESSAGE("[_CG_init] component CG=Pol_constBfield() INITIALISE [C:\\mcstas-3.1\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\optics\\Pol_constBfield.comp:70]");
 
   omegaL = 0;
 
@@ -9457,7 +9193,7 @@ _class_PolAnalyser_ideal *class_PolAnalyser_ideal_init(_class_PolAnalyser_ideal 
   #define mx (_comp->_parameters.mx)
   #define my (_comp->_parameters.my)
   #define mz (_comp->_parameters.mz)
-  SIG_MESSAGE("[_ana_init] component ana=PolAnalyser_ideal() INITIALISE [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\optics\\PolAnalyser_ideal.comp:46]");
+  SIG_MESSAGE("[_ana_init] component ana=PolAnalyser_ideal() INITIALISE [C:\\mcstas-3.1\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\optics\\PolAnalyser_ideal.comp:46]");
 
 if (mx==0 && my==0 && mz==0) {
     printf("PolAnalyser_ideal: %s: NULL vector defined!\n"
@@ -9498,7 +9234,7 @@ _class_grating_mask *class_grating_mask_init(_class_grating_mask *_comp
   #define x_inner_min (_comp->_parameters.x_inner_min)
   #define extra (_comp->_parameters.extra)
   #define pass (_comp->_parameters.pass)
-  SIG_MESSAGE("[_sam_init] component sam=grating_mask() INITIALISE [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\contrib\\grating_mask.comp:58]");
+  SIG_MESSAGE("[_sam_init] component sam=grating_mask() INITIALISE [C:\\mcstas-3.1\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\contrib\\grating_mask.comp:57]");
 
 	ymax = outer/2;
 	ymin = -outer/2;
@@ -9564,7 +9300,7 @@ _class_PSD_monitor *class_PSD_monitor_init(_class_PSD_monitor *_comp
   #define PSD_N (_comp->_parameters.PSD_N)
   #define PSD_p (_comp->_parameters.PSD_p)
   #define PSD_p2 (_comp->_parameters.PSD_p2)
-  SIG_MESSAGE("[_det_init] component det=PSD_monitor() INITIALISE [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\monitors\\PSD_monitor.comp:62]");
+  SIG_MESSAGE("[_det_init] component det=PSD_monitor() INITIALISE [C:\\mcstas-3.1\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\monitors\\PSD_monitor.comp:62]");
 
   if (xwidth  > 0) { xmax = xwidth/2;  xmin = -xmax; }
   if (yheight > 0) { ymax = yheight/2; ymin = -ymax; }
@@ -9580,8 +9316,6 @@ _class_PSD_monitor *class_PSD_monitor_init(_class_PSD_monitor *_comp
   PSD_p = create_darr2d(nx, ny);
   PSD_p2 = create_darr2d(nx, ny);
 
-  // Use instance name for monitor output if no input was given
-  if (!strcmp(filename,"\0")) sprintf(filename,NAME_CURRENT_COMP);
   #undef nx
   #undef ny
   #undef filename
@@ -9723,6 +9457,7 @@ int init(void) { /* called by mccode_main for AER_HFIR_2023:INITIALISE */
 #ifndef MULTICORE
 #define fprintf(stderr,...) printf(__VA_ARGS__)
 #define sprintf(string,...) printf(__VA_ARGS__)
+#define printf(...) noprintf()
 #define exit(...) noprintf()
 #define strcmp(a,b) str_comp(a,b)
 #define strlen(a) str_len(a)
@@ -9747,7 +9482,7 @@ _class_Progress_bar *class_Progress_bar_trace(_class_Progress_bar *_comp
   #define StartTime (_comp->_parameters.StartTime)
   #define EndTime (_comp->_parameters.EndTime)
   #define CurrentTime (_comp->_parameters.CurrentTime)
-  SIG_MESSAGE("[_origin_trace] component origin=Progress_bar() TRACE [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\misc\\Progress_bar.comp:73]");
+  SIG_MESSAGE("[_origin_trace] component origin=Progress_bar() TRACE [C:\\mcstas-3.1\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\misc\\Progress_bar.comp:73]");
 
 #ifndef OPENACC
   double ncount;
@@ -9798,7 +9533,7 @@ _class_Progress_bar *class_Progress_bar_trace(_class_Progress_bar *_comp
   if(isnan(t)  ||  isinf(t)) ABSORB;
   if(isnan(vx) || isinf(vx)) ABSORB;
   if(isnan(vy) || isinf(vy)) ABSORB;
-  if(isnan(vz) || isinf(vz)) ABSORB;
+  if(isnan(vy) || isinf(vy)) ABSORB;
   if(isnan(x)  ||  isinf(x)) ABSORB;
   if(isnan(y)  ||  isinf(y)) ABSORB;
   if(isnan(z)  ||  isinf(z)) ABSORB;
@@ -9807,7 +9542,7 @@ _class_Progress_bar *class_Progress_bar_trace(_class_Progress_bar *_comp
   if(isnan(t)  ||  isinf(t)) printf("NAN or INF found in t,  %s (particle %lld)\n",_comp->_name,_particle->_uid);
   if(isnan(vx) || isinf(vx)) printf("NAN or INF found in vx, %s (particle %lld)\n",_comp->_name,_particle->_uid);
   if(isnan(vy) || isinf(vy)) printf("NAN or INF found in vy, %s (particle %lld)\n",_comp->_name,_particle->_uid);
-  if(isnan(vz) || isinf(vz)) printf("NAN or INF found in vz, %s (particle %lld)\n",_comp->_name,_particle->_uid);
+  if(isnan(vy) || isinf(vy)) printf("NAN or INF found in vz, %s (particle %lld)\n",_comp->_name,_particle->_uid);
   if(isnan(x)  ||  isinf(x)) printf("NAN or INF found in x,  %s (particle %lld)\n",_comp->_name,_particle->_uid);
   if(isnan(y)  ||  isinf(y)) printf("NAN or INF found in y,  %s (particle %lld)\n",_comp->_name,_particle->_uid);
   if(isnan(z)  ||  isinf(z)) printf("NAN or INF found in z,  %s (particle %lld)\n",_comp->_name,_particle->_uid);
@@ -9876,7 +9611,7 @@ _class_Source_sam *class_Source_sam_trace(_class_Source_sam *_comp
   #define pTable_dxmax (_comp->_parameters.pTable_dxmax)
   #define pTable_dymin (_comp->_parameters.pTable_dymin)
   #define pTable_dymax (_comp->_parameters.pTable_dymax)
-  SIG_MESSAGE("[_src_trace] component src=Source_sam() TRACE [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\contrib\\Source_sam.comp:482]");
+  SIG_MESSAGE("[_src_trace] component src=Source_sam() TRACE [C:\\mcstas-3.1\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\contrib\\Source_sam.comp:482]");
 
   double dx=0,dy=0,xf,yf,rf,pdir,chi,v,r, lambda;
   double Maxwell;
@@ -9976,7 +9711,7 @@ if (T1 > 0 && I1 > 0)
   if(isnan(t)  ||  isinf(t)) ABSORB;
   if(isnan(vx) || isinf(vx)) ABSORB;
   if(isnan(vy) || isinf(vy)) ABSORB;
-  if(isnan(vz) || isinf(vz)) ABSORB;
+  if(isnan(vy) || isinf(vy)) ABSORB;
   if(isnan(x)  ||  isinf(x)) ABSORB;
   if(isnan(y)  ||  isinf(y)) ABSORB;
   if(isnan(z)  ||  isinf(z)) ABSORB;
@@ -9985,7 +9720,7 @@ if (T1 > 0 && I1 > 0)
   if(isnan(t)  ||  isinf(t)) printf("NAN or INF found in t,  %s (particle %lld)\n",_comp->_name,_particle->_uid);
   if(isnan(vx) || isinf(vx)) printf("NAN or INF found in vx, %s (particle %lld)\n",_comp->_name,_particle->_uid);
   if(isnan(vy) || isinf(vy)) printf("NAN or INF found in vy, %s (particle %lld)\n",_comp->_name,_particle->_uid);
-  if(isnan(vz) || isinf(vz)) printf("NAN or INF found in vz, %s (particle %lld)\n",_comp->_name,_particle->_uid);
+  if(isnan(vy) || isinf(vy)) printf("NAN or INF found in vz, %s (particle %lld)\n",_comp->_name,_particle->_uid);
   if(isnan(x)  ||  isinf(x)) printf("NAN or INF found in x,  %s (particle %lld)\n",_comp->_name,_particle->_uid);
   if(isnan(y)  ||  isinf(y)) printf("NAN or INF found in y,  %s (particle %lld)\n",_comp->_name,_particle->_uid);
   if(isnan(z)  ||  isinf(z)) printf("NAN or INF found in z,  %s (particle %lld)\n",_comp->_name,_particle->_uid);
@@ -10065,7 +9800,7 @@ _class_DivPos_monitor *class_DivPos_monitor_trace(_class_DivPos_monitor *_comp
   #define Div_N (_comp->_parameters.Div_N)
   #define Div_p (_comp->_parameters.Div_p)
   #define Div_p2 (_comp->_parameters.Div_p2)
-  SIG_MESSAGE("[_div1_trace] component div1=DivPos_monitor() TRACE [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\monitors\\DivPos_monitor.comp:104]");
+  SIG_MESSAGE("[_div1_trace] component div1=DivPos_monitor() TRACE [C:\\mcstas-3.1\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\monitors\\DivPos_monitor.comp:101]");
 
   int i,j;
   double div;
@@ -10109,7 +9844,7 @@ _class_DivPos_monitor *class_DivPos_monitor_trace(_class_DivPos_monitor *_comp
   if(isnan(t)  ||  isinf(t)) ABSORB;
   if(isnan(vx) || isinf(vx)) ABSORB;
   if(isnan(vy) || isinf(vy)) ABSORB;
-  if(isnan(vz) || isinf(vz)) ABSORB;
+  if(isnan(vy) || isinf(vy)) ABSORB;
   if(isnan(x)  ||  isinf(x)) ABSORB;
   if(isnan(y)  ||  isinf(y)) ABSORB;
   if(isnan(z)  ||  isinf(z)) ABSORB;
@@ -10118,7 +9853,7 @@ _class_DivPos_monitor *class_DivPos_monitor_trace(_class_DivPos_monitor *_comp
   if(isnan(t)  ||  isinf(t)) printf("NAN or INF found in t,  %s (particle %lld)\n",_comp->_name,_particle->_uid);
   if(isnan(vx) || isinf(vx)) printf("NAN or INF found in vx, %s (particle %lld)\n",_comp->_name,_particle->_uid);
   if(isnan(vy) || isinf(vy)) printf("NAN or INF found in vy, %s (particle %lld)\n",_comp->_name,_particle->_uid);
-  if(isnan(vz) || isinf(vz)) printf("NAN or INF found in vz, %s (particle %lld)\n",_comp->_name,_particle->_uid);
+  if(isnan(vy) || isinf(vy)) printf("NAN or INF found in vz, %s (particle %lld)\n",_comp->_name,_particle->_uid);
   if(isnan(x)  ||  isinf(x)) printf("NAN or INF found in x,  %s (particle %lld)\n",_comp->_name,_particle->_uid);
   if(isnan(y)  ||  isinf(y)) printf("NAN or INF found in y,  %s (particle %lld)\n",_comp->_name,_particle->_uid);
   if(isnan(z)  ||  isinf(z)) printf("NAN or INF found in z,  %s (particle %lld)\n",_comp->_name,_particle->_uid);
@@ -10154,7 +9889,7 @@ _class_Set_pol *class_Set_pol_trace(_class_Set_pol *_comp
   #define pz (_comp->_parameters.pz)
   #define randomOn (_comp->_parameters.randomOn)
   #define normalize (_comp->_parameters.normalize)
-  SIG_MESSAGE("[_pol_trace] component pol=Set_pol() TRACE [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\optics\\Set_pol.comp:71]");
+  SIG_MESSAGE("[_pol_trace] component pol=Set_pol() TRACE [C:\\mcstas-3.1\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\optics\\Set_pol.comp:71]");
 
   double theta, phi;
 
@@ -10190,7 +9925,7 @@ _class_Set_pol *class_Set_pol_trace(_class_Set_pol *_comp
   if(isnan(t)  ||  isinf(t)) ABSORB;
   if(isnan(vx) || isinf(vx)) ABSORB;
   if(isnan(vy) || isinf(vy)) ABSORB;
-  if(isnan(vz) || isinf(vz)) ABSORB;
+  if(isnan(vy) || isinf(vy)) ABSORB;
   if(isnan(x)  ||  isinf(x)) ABSORB;
   if(isnan(y)  ||  isinf(y)) ABSORB;
   if(isnan(z)  ||  isinf(z)) ABSORB;
@@ -10199,7 +9934,7 @@ _class_Set_pol *class_Set_pol_trace(_class_Set_pol *_comp
   if(isnan(t)  ||  isinf(t)) printf("NAN or INF found in t,  %s (particle %lld)\n",_comp->_name,_particle->_uid);
   if(isnan(vx) || isinf(vx)) printf("NAN or INF found in vx, %s (particle %lld)\n",_comp->_name,_particle->_uid);
   if(isnan(vy) || isinf(vy)) printf("NAN or INF found in vy, %s (particle %lld)\n",_comp->_name,_particle->_uid);
-  if(isnan(vz) || isinf(vz)) printf("NAN or INF found in vz, %s (particle %lld)\n",_comp->_name,_particle->_uid);
+  if(isnan(vy) || isinf(vy)) printf("NAN or INF found in vz, %s (particle %lld)\n",_comp->_name,_particle->_uid);
   if(isnan(x)  ||  isinf(x)) printf("NAN or INF found in x,  %s (particle %lld)\n",_comp->_name,_particle->_uid);
   if(isnan(y)  ||  isinf(y)) printf("NAN or INF found in y,  %s (particle %lld)\n",_comp->_name,_particle->_uid);
   if(isnan(z)  ||  isinf(z)) printf("NAN or INF found in z,  %s (particle %lld)\n",_comp->_name,_particle->_uid);
@@ -10237,7 +9972,7 @@ _class_Pol_MWP_v3 *class_Pol_MWP_v3_trace(_class_Pol_MWP_v3 *_comp
   #define LG (_comp->_parameters.LG)
   #define phi (_comp->_parameters.phi)
   #define psi (_comp->_parameters.psi)
-  SIG_MESSAGE("[_MWP1_trace] component MWP1=Pol_MWP_v3() TRACE [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\contrib\\Pol_MWP_v3.comp:92]");
+  SIG_MESSAGE("[_MWP1_trace] component MWP1=Pol_MWP_v3() TRACE [C:\\mcstas-3.1\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\contrib\\Pol_MWP_v3.comp:92]");
 
 	int unpol = 0;  //flags neutron as unpolarized
 	double sx_in = sx, sy_in = sy, sz_in = sz; //initial spin components
@@ -10289,7 +10024,7 @@ _class_Pol_MWP_v3 *class_Pol_MWP_v3_trace(_class_Pol_MWP_v3 *_comp
   if(isnan(t)  ||  isinf(t)) ABSORB;
   if(isnan(vx) || isinf(vx)) ABSORB;
   if(isnan(vy) || isinf(vy)) ABSORB;
-  if(isnan(vz) || isinf(vz)) ABSORB;
+  if(isnan(vy) || isinf(vy)) ABSORB;
   if(isnan(x)  ||  isinf(x)) ABSORB;
   if(isnan(y)  ||  isinf(y)) ABSORB;
   if(isnan(z)  ||  isinf(z)) ABSORB;
@@ -10298,7 +10033,7 @@ _class_Pol_MWP_v3 *class_Pol_MWP_v3_trace(_class_Pol_MWP_v3 *_comp
   if(isnan(t)  ||  isinf(t)) printf("NAN or INF found in t,  %s (particle %lld)\n",_comp->_name,_particle->_uid);
   if(isnan(vx) || isinf(vx)) printf("NAN or INF found in vx, %s (particle %lld)\n",_comp->_name,_particle->_uid);
   if(isnan(vy) || isinf(vy)) printf("NAN or INF found in vy, %s (particle %lld)\n",_comp->_name,_particle->_uid);
-  if(isnan(vz) || isinf(vz)) printf("NAN or INF found in vz, %s (particle %lld)\n",_comp->_name,_particle->_uid);
+  if(isnan(vy) || isinf(vy)) printf("NAN or INF found in vz, %s (particle %lld)\n",_comp->_name,_particle->_uid);
   if(isnan(x)  ||  isinf(x)) printf("NAN or INF found in x,  %s (particle %lld)\n",_comp->_name,_particle->_uid);
   if(isnan(y)  ||  isinf(y)) printf("NAN or INF found in y,  %s (particle %lld)\n",_comp->_name,_particle->_uid);
   if(isnan(z)  ||  isinf(z)) printf("NAN or INF found in z,  %s (particle %lld)\n",_comp->_name,_particle->_uid);
@@ -10338,7 +10073,7 @@ _class_Pol_constBfield *class_Pol_constBfield_trace(_class_Pol_constBfield *_com
   #define fliplambda (_comp->_parameters.fliplambda)
   #define flipangle (_comp->_parameters.flipangle)
   #define omegaL (_comp->_parameters.omegaL)
-  SIG_MESSAGE("[_CG_trace] component CG=Pol_constBfield() TRACE [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\optics\\Pol_constBfield.comp:102]");
+  SIG_MESSAGE("[_CG_trace] component CG=Pol_constBfield() TRACE [C:\\mcstas-3.1\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\optics\\Pol_constBfield.comp:102]");
 
   double deltaT, deltaTx, deltaTy, sx_in, sz_in;
 
@@ -10387,7 +10122,7 @@ _class_Pol_constBfield *class_Pol_constBfield_trace(_class_Pol_constBfield *_com
   if(isnan(t)  ||  isinf(t)) ABSORB;
   if(isnan(vx) || isinf(vx)) ABSORB;
   if(isnan(vy) || isinf(vy)) ABSORB;
-  if(isnan(vz) || isinf(vz)) ABSORB;
+  if(isnan(vy) || isinf(vy)) ABSORB;
   if(isnan(x)  ||  isinf(x)) ABSORB;
   if(isnan(y)  ||  isinf(y)) ABSORB;
   if(isnan(z)  ||  isinf(z)) ABSORB;
@@ -10396,7 +10131,7 @@ _class_Pol_constBfield *class_Pol_constBfield_trace(_class_Pol_constBfield *_com
   if(isnan(t)  ||  isinf(t)) printf("NAN or INF found in t,  %s (particle %lld)\n",_comp->_name,_particle->_uid);
   if(isnan(vx) || isinf(vx)) printf("NAN or INF found in vx, %s (particle %lld)\n",_comp->_name,_particle->_uid);
   if(isnan(vy) || isinf(vy)) printf("NAN or INF found in vy, %s (particle %lld)\n",_comp->_name,_particle->_uid);
-  if(isnan(vz) || isinf(vz)) printf("NAN or INF found in vz, %s (particle %lld)\n",_comp->_name,_particle->_uid);
+  if(isnan(vy) || isinf(vy)) printf("NAN or INF found in vz, %s (particle %lld)\n",_comp->_name,_particle->_uid);
   if(isnan(x)  ||  isinf(x)) printf("NAN or INF found in x,  %s (particle %lld)\n",_comp->_name,_particle->_uid);
   if(isnan(y)  ||  isinf(y)) printf("NAN or INF found in y,  %s (particle %lld)\n",_comp->_name,_particle->_uid);
   if(isnan(z)  ||  isinf(z)) printf("NAN or INF found in z,  %s (particle %lld)\n",_comp->_name,_particle->_uid);
@@ -10418,7 +10153,7 @@ _class_PolAnalyser_ideal *class_PolAnalyser_ideal_trace(_class_PolAnalyser_ideal
   #define mx (_comp->_parameters.mx)
   #define my (_comp->_parameters.my)
   #define mz (_comp->_parameters.mz)
-  SIG_MESSAGE("[_ana_trace] component ana=PolAnalyser_ideal() TRACE [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\optics\\PolAnalyser_ideal.comp:65]");
+  SIG_MESSAGE("[_ana_trace] component ana=PolAnalyser_ideal() TRACE [C:\\mcstas-3.1\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\optics\\PolAnalyser_ideal.comp:65]");
 
   double prob_up;
 
@@ -10439,7 +10174,7 @@ _class_PolAnalyser_ideal *class_PolAnalyser_ideal_trace(_class_PolAnalyser_ideal
   if(isnan(t)  ||  isinf(t)) ABSORB;
   if(isnan(vx) || isinf(vx)) ABSORB;
   if(isnan(vy) || isinf(vy)) ABSORB;
-  if(isnan(vz) || isinf(vz)) ABSORB;
+  if(isnan(vy) || isinf(vy)) ABSORB;
   if(isnan(x)  ||  isinf(x)) ABSORB;
   if(isnan(y)  ||  isinf(y)) ABSORB;
   if(isnan(z)  ||  isinf(z)) ABSORB;
@@ -10448,7 +10183,7 @@ _class_PolAnalyser_ideal *class_PolAnalyser_ideal_trace(_class_PolAnalyser_ideal
   if(isnan(t)  ||  isinf(t)) printf("NAN or INF found in t,  %s (particle %lld)\n",_comp->_name,_particle->_uid);
   if(isnan(vx) || isinf(vx)) printf("NAN or INF found in vx, %s (particle %lld)\n",_comp->_name,_particle->_uid);
   if(isnan(vy) || isinf(vy)) printf("NAN or INF found in vy, %s (particle %lld)\n",_comp->_name,_particle->_uid);
-  if(isnan(vz) || isinf(vz)) printf("NAN or INF found in vz, %s (particle %lld)\n",_comp->_name,_particle->_uid);
+  if(isnan(vy) || isinf(vy)) printf("NAN or INF found in vz, %s (particle %lld)\n",_comp->_name,_particle->_uid);
   if(isnan(x)  ||  isinf(x)) printf("NAN or INF found in x,  %s (particle %lld)\n",_comp->_name,_particle->_uid);
   if(isnan(y)  ||  isinf(y)) printf("NAN or INF found in y,  %s (particle %lld)\n",_comp->_name,_particle->_uid);
   if(isnan(z)  ||  isinf(z)) printf("NAN or INF found in z,  %s (particle %lld)\n",_comp->_name,_particle->_uid);
@@ -10479,7 +10214,7 @@ _class_grating_mask *class_grating_mask_trace(_class_grating_mask *_comp
   #define x_inner_min (_comp->_parameters.x_inner_min)
   #define extra (_comp->_parameters.extra)
   #define pass (_comp->_parameters.pass)
-  SIG_MESSAGE("[_sam_trace] component sam=grating_mask() TRACE [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\contrib\\grating_mask.comp:91]");
+  SIG_MESSAGE("[_sam_trace] component sam=grating_mask() TRACE [C:\\mcstas-3.1\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\contrib\\grating_mask.comp:90]");
 
 	pass = 0;
     PROP_Z0;
@@ -10495,7 +10230,6 @@ _class_grating_mask *class_grating_mask_trace(_class_grating_mask *_comp
 					{ 
 					SCATTER; //Pass through one of the slits in the mask
 					pass += 1;
-					break;
 					} 
 				}
 			if (pass == 0)
@@ -10510,7 +10244,7 @@ _class_grating_mask *class_grating_mask_trace(_class_grating_mask *_comp
   if(isnan(t)  ||  isinf(t)) ABSORB;
   if(isnan(vx) || isinf(vx)) ABSORB;
   if(isnan(vy) || isinf(vy)) ABSORB;
-  if(isnan(vz) || isinf(vz)) ABSORB;
+  if(isnan(vy) || isinf(vy)) ABSORB;
   if(isnan(x)  ||  isinf(x)) ABSORB;
   if(isnan(y)  ||  isinf(y)) ABSORB;
   if(isnan(z)  ||  isinf(z)) ABSORB;
@@ -10519,7 +10253,7 @@ _class_grating_mask *class_grating_mask_trace(_class_grating_mask *_comp
   if(isnan(t)  ||  isinf(t)) printf("NAN or INF found in t,  %s (particle %lld)\n",_comp->_name,_particle->_uid);
   if(isnan(vx) || isinf(vx)) printf("NAN or INF found in vx, %s (particle %lld)\n",_comp->_name,_particle->_uid);
   if(isnan(vy) || isinf(vy)) printf("NAN or INF found in vy, %s (particle %lld)\n",_comp->_name,_particle->_uid);
-  if(isnan(vz) || isinf(vz)) printf("NAN or INF found in vz, %s (particle %lld)\n",_comp->_name,_particle->_uid);
+  if(isnan(vy) || isinf(vy)) printf("NAN or INF found in vz, %s (particle %lld)\n",_comp->_name,_particle->_uid);
   if(isnan(x)  ||  isinf(x)) printf("NAN or INF found in x,  %s (particle %lld)\n",_comp->_name,_particle->_uid);
   if(isnan(y)  ||  isinf(y)) printf("NAN or INF found in y,  %s (particle %lld)\n",_comp->_name,_particle->_uid);
   if(isnan(z)  ||  isinf(z)) printf("NAN or INF found in z,  %s (particle %lld)\n",_comp->_name,_particle->_uid);
@@ -10561,7 +10295,7 @@ _class_PSD_monitor *class_PSD_monitor_trace(_class_PSD_monitor *_comp
   #define PSD_N (_comp->_parameters.PSD_N)
   #define PSD_p (_comp->_parameters.PSD_p)
   #define PSD_p2 (_comp->_parameters.PSD_p2)
-  SIG_MESSAGE("[_det_trace] component det=PSD_monitor() TRACE [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\monitors\\PSD_monitor.comp:82]");
+  SIG_MESSAGE("[_det_trace] component det=PSD_monitor() TRACE [C:\\mcstas-3.1\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\monitors\\PSD_monitor.comp:80]");
 
   PROP_Z0;
   if (x>xmin && x<xmax && y>ymin && y<ymax){
@@ -10589,7 +10323,7 @@ _class_PSD_monitor *class_PSD_monitor_trace(_class_PSD_monitor *_comp
   if(isnan(t)  ||  isinf(t)) ABSORB;
   if(isnan(vx) || isinf(vx)) ABSORB;
   if(isnan(vy) || isinf(vy)) ABSORB;
-  if(isnan(vz) || isinf(vz)) ABSORB;
+  if(isnan(vy) || isinf(vy)) ABSORB;
   if(isnan(x)  ||  isinf(x)) ABSORB;
   if(isnan(y)  ||  isinf(y)) ABSORB;
   if(isnan(z)  ||  isinf(z)) ABSORB;
@@ -10598,7 +10332,7 @@ _class_PSD_monitor *class_PSD_monitor_trace(_class_PSD_monitor *_comp
   if(isnan(t)  ||  isinf(t)) printf("NAN or INF found in t,  %s (particle %lld)\n",_comp->_name,_particle->_uid);
   if(isnan(vx) || isinf(vx)) printf("NAN or INF found in vx, %s (particle %lld)\n",_comp->_name,_particle->_uid);
   if(isnan(vy) || isinf(vy)) printf("NAN or INF found in vy, %s (particle %lld)\n",_comp->_name,_particle->_uid);
-  if(isnan(vz) || isinf(vz)) printf("NAN or INF found in vz, %s (particle %lld)\n",_comp->_name,_particle->_uid);
+  if(isnan(vy) || isinf(vy)) printf("NAN or INF found in vz, %s (particle %lld)\n",_comp->_name,_particle->_uid);
   if(isnan(x)  ||  isinf(x)) printf("NAN or INF found in x,  %s (particle %lld)\n",_comp->_name,_particle->_uid);
   if(isnan(y)  ||  isinf(y)) printf("NAN or INF found in y,  %s (particle %lld)\n",_comp->_name,_particle->_uid);
   if(isnan(z)  ||  isinf(z)) printf("NAN or INF found in z,  %s (particle %lld)\n",_comp->_name,_particle->_uid);
@@ -10636,9 +10370,9 @@ int raytrace(_class_particle* _particle) { /* single event propagation, called b
   DEBUG_ENTER();
   DEBUG_STATE();
   _particle->flag_nocoordschange=0; /* Init */
-  _class_particle _particle_save;
   /* the main iteration loop for one incoming event */
   while (!ABSORBED) { /* iterate event until absorbed */
+    _class_particle _particle_save;
     /* send particle event to component instance, one after the other */
     /* begin component origin=Progress_bar() [1] */
     if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
@@ -10657,14 +10391,27 @@ int raytrace(_class_particle* _particle) { /* single event propagation, called b
       DEBUG_STATE();
       class_Progress_bar_trace(&_origin_var, _particle);
       if (_particle->_restore)
-        particle_restore(_particle, &_particle_save);
+        *_particle = _particle_save;
       _particle->_index++;
-      if (!ABSORBED) { DEBUG_STATE(); }
+      if (!ABSORBED) DEBUG_STATE();
     } /* end component origin [1] */
     /* begin component arm=Arm() [2] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_arm_var._rotation_is_identity) {
+        if(!_arm_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _arm_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_arm_var._position_relative, _arm_var._rotation_relative, _particle);
+      }
+    }
     if (!ABSORBED && _particle->_index == 2) {
       _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_arm_var._name);
+      DEBUG_STATE();
       _particle->_index++;
+      if (!ABSORBED) DEBUG_STATE();
     } /* end component arm [2] */
     /* begin component src=Source_sam() [3] */
     if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
@@ -10683,9 +10430,9 @@ int raytrace(_class_particle* _particle) { /* single event propagation, called b
       DEBUG_STATE();
       class_Source_sam_trace(&_src_var, _particle);
       if (_particle->_restore)
-        particle_restore(_particle, &_particle_save);
+        *_particle = _particle_save;
       _particle->_index++;
-      if (!ABSORBED) { DEBUG_STATE(); }
+      if (!ABSORBED) DEBUG_STATE();
     } /* end component src [3] */
     /* begin component div1=DivPos_monitor() [4] */
     if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
@@ -10704,9 +10451,9 @@ int raytrace(_class_particle* _particle) { /* single event propagation, called b
       DEBUG_STATE();
       class_DivPos_monitor_trace(&_div1_var, _particle);
       if (_particle->_restore)
-        particle_restore(_particle, &_particle_save);
+        *_particle = _particle_save;
       _particle->_index++;
-      if (!ABSORBED) { DEBUG_STATE(); }
+      if (!ABSORBED) DEBUG_STATE();
     } /* end component div1 [4] */
     /* begin component pol=Set_pol() [5] */
     if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
@@ -10725,9 +10472,9 @@ int raytrace(_class_particle* _particle) { /* single event propagation, called b
       DEBUG_STATE();
       class_Set_pol_trace(&_pol_var, _particle);
       if (_particle->_restore)
-        particle_restore(_particle, &_particle_save);
+        *_particle = _particle_save;
       _particle->_index++;
-      if (!ABSORBED) { DEBUG_STATE(); }
+      if (!ABSORBED) DEBUG_STATE();
     } /* end component pol [5] */
     /* begin component MWP1=Pol_MWP_v3() [6] */
     if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
@@ -10746,9 +10493,9 @@ int raytrace(_class_particle* _particle) { /* single event propagation, called b
       DEBUG_STATE();
       class_Pol_MWP_v3_trace(&_MWP1_var, _particle);
       if (_particle->_restore)
-        particle_restore(_particle, &_particle_save);
+        *_particle = _particle_save;
       _particle->_index++;
-      if (!ABSORBED) { DEBUG_STATE(); }
+      if (!ABSORBED) DEBUG_STATE();
     } /* end component MWP1 [6] */
     /* begin component CG=Pol_constBfield() [7] */
     if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
@@ -10767,9 +10514,9 @@ int raytrace(_class_particle* _particle) { /* single event propagation, called b
       DEBUG_STATE();
       class_Pol_constBfield_trace(&_CG_var, _particle);
       if (_particle->_restore)
-        particle_restore(_particle, &_particle_save);
+        *_particle = _particle_save;
       _particle->_index++;
-      if (!ABSORBED) { DEBUG_STATE(); }
+      if (!ABSORBED) DEBUG_STATE();
     } /* end component CG [7] */
     /* begin component MWP2=Pol_MWP_v3() [8] */
     if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
@@ -10788,9 +10535,9 @@ int raytrace(_class_particle* _particle) { /* single event propagation, called b
       DEBUG_STATE();
       class_Pol_MWP_v3_trace(&_MWP2_var, _particle);
       if (_particle->_restore)
-        particle_restore(_particle, &_particle_save);
+        *_particle = _particle_save;
       _particle->_index++;
-      if (!ABSORBED) { DEBUG_STATE(); }
+      if (!ABSORBED) DEBUG_STATE();
     } /* end component MWP2 [8] */
     /* begin component ana=PolAnalyser_ideal() [9] */
     if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
@@ -10809,9 +10556,9 @@ int raytrace(_class_particle* _particle) { /* single event propagation, called b
       DEBUG_STATE();
       class_PolAnalyser_ideal_trace(&_ana_var, _particle);
       if (_particle->_restore)
-        particle_restore(_particle, &_particle_save);
+        *_particle = _particle_save;
       _particle->_index++;
-      if (!ABSORBED) { DEBUG_STATE(); }
+      if (!ABSORBED) DEBUG_STATE();
     } /* end component ana [9] */
     /* begin component div2=DivPos_monitor() [10] */
     if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
@@ -10830,9 +10577,9 @@ int raytrace(_class_particle* _particle) { /* single event propagation, called b
       DEBUG_STATE();
       class_DivPos_monitor_trace(&_div2_var, _particle);
       if (_particle->_restore)
-        particle_restore(_particle, &_particle_save);
+        *_particle = _particle_save;
       _particle->_index++;
-      if (!ABSORBED) { DEBUG_STATE(); }
+      if (!ABSORBED) DEBUG_STATE();
     } /* end component div2 [10] */
     /* begin component sam=grating_mask() [11] */
     if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
@@ -10851,9 +10598,9 @@ int raytrace(_class_particle* _particle) { /* single event propagation, called b
       DEBUG_STATE();
       class_grating_mask_trace(&_sam_var, _particle);
       if (_particle->_restore)
-        particle_restore(_particle, &_particle_save);
+        *_particle = _particle_save;
       _particle->_index++;
-      if (!ABSORBED) { DEBUG_STATE(); }
+      if (!ABSORBED) DEBUG_STATE();
     } /* end component sam [11] */
     /* begin component div2b=DivPos_monitor() [12] */
     if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
@@ -10872,9 +10619,9 @@ int raytrace(_class_particle* _particle) { /* single event propagation, called b
       DEBUG_STATE();
       class_DivPos_monitor_trace(&_div2b_var, _particle);
       if (_particle->_restore)
-        particle_restore(_particle, &_particle_save);
+        *_particle = _particle_save;
       _particle->_index++;
-      if (!ABSORBED) { DEBUG_STATE(); }
+      if (!ABSORBED) DEBUG_STATE();
     } /* end component div2b [12] */
     /* begin component div3=DivPos_monitor() [13] */
     if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
@@ -10893,9 +10640,9 @@ int raytrace(_class_particle* _particle) { /* single event propagation, called b
       DEBUG_STATE();
       class_DivPos_monitor_trace(&_div3_var, _particle);
       if (_particle->_restore)
-        particle_restore(_particle, &_particle_save);
+        *_particle = _particle_save;
       _particle->_index++;
-      if (!ABSORBED) { DEBUG_STATE(); }
+      if (!ABSORBED) DEBUG_STATE();
     } /* end component div3 [13] */
     /* begin component det=PSD_monitor() [14] */
     if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
@@ -10914,16 +10661,15 @@ int raytrace(_class_particle* _particle) { /* single event propagation, called b
       DEBUG_STATE();
       class_PSD_monitor_trace(&_det_var, _particle);
       if (_particle->_restore)
-        particle_restore(_particle, &_particle_save);
+        *_particle = _particle_save;
       _particle->_index++;
-      if (!ABSORBED) { DEBUG_STATE(); }
+      if (!ABSORBED) DEBUG_STATE();
     } /* end component det [14] */
     if (_particle->_index > 14)
       ABSORBED++; /* absorbed when passed all components */
   } /* while !ABSORBED */
 
   DEBUG_LEAVE()
-  particle_restore(_particle, &_particle_save);
   DEBUG_STATE()
 
   return(_particle->_index);
@@ -11062,12 +10808,17 @@ void raytrace_all_funnel(unsigned long long ncount, unsigned long seed) {
         _particle_save = *_particle;
         class_Progress_bar_trace(&_origin_var, _particle);
         if (_particle->_restore)
-        particle_restore(_particle, &_particle_save);
+          *_particle = _particle_save;
         _particle->_index++;
       }
 
       // arm
     if (!ABSORBED && _particle->_index == 2) {
+        if (_arm_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _arm_var._position_relative),&x, &y, &z);
+        else
+          mccoordschange(_arm_var._position_relative, _arm_var._rotation_relative, _particle);
+        _particle_save = *_particle;
         _particle->_index++;
       }
 
@@ -11080,7 +10831,7 @@ void raytrace_all_funnel(unsigned long long ncount, unsigned long seed) {
         _particle_save = *_particle;
         class_Source_sam_trace(&_src_var, _particle);
         if (_particle->_restore)
-        particle_restore(_particle, &_particle_save);
+          *_particle = _particle_save;
         _particle->_index++;
       }
 
@@ -11093,7 +10844,7 @@ void raytrace_all_funnel(unsigned long long ncount, unsigned long seed) {
         _particle_save = *_particle;
         class_DivPos_monitor_trace(&_div1_var, _particle);
         if (_particle->_restore)
-        particle_restore(_particle, &_particle_save);
+          *_particle = _particle_save;
         _particle->_index++;
       }
 
@@ -11106,7 +10857,7 @@ void raytrace_all_funnel(unsigned long long ncount, unsigned long seed) {
         _particle_save = *_particle;
         class_Set_pol_trace(&_pol_var, _particle);
         if (_particle->_restore)
-        particle_restore(_particle, &_particle_save);
+          *_particle = _particle_save;
         _particle->_index++;
       }
 
@@ -11119,7 +10870,7 @@ void raytrace_all_funnel(unsigned long long ncount, unsigned long seed) {
         _particle_save = *_particle;
         class_Pol_MWP_v3_trace(&_MWP1_var, _particle);
         if (_particle->_restore)
-        particle_restore(_particle, &_particle_save);
+          *_particle = _particle_save;
         _particle->_index++;
       }
 
@@ -11132,7 +10883,7 @@ void raytrace_all_funnel(unsigned long long ncount, unsigned long seed) {
         _particle_save = *_particle;
         class_Pol_constBfield_trace(&_CG_var, _particle);
         if (_particle->_restore)
-        particle_restore(_particle, &_particle_save);
+          *_particle = _particle_save;
         _particle->_index++;
       }
 
@@ -11145,7 +10896,7 @@ void raytrace_all_funnel(unsigned long long ncount, unsigned long seed) {
         _particle_save = *_particle;
         class_Pol_MWP_v3_trace(&_MWP2_var, _particle);
         if (_particle->_restore)
-        particle_restore(_particle, &_particle_save);
+          *_particle = _particle_save;
         _particle->_index++;
       }
 
@@ -11158,7 +10909,7 @@ void raytrace_all_funnel(unsigned long long ncount, unsigned long seed) {
         _particle_save = *_particle;
         class_PolAnalyser_ideal_trace(&_ana_var, _particle);
         if (_particle->_restore)
-        particle_restore(_particle, &_particle_save);
+          *_particle = _particle_save;
         _particle->_index++;
       }
 
@@ -11171,7 +10922,7 @@ void raytrace_all_funnel(unsigned long long ncount, unsigned long seed) {
         _particle_save = *_particle;
         class_DivPos_monitor_trace(&_div2_var, _particle);
         if (_particle->_restore)
-        particle_restore(_particle, &_particle_save);
+          *_particle = _particle_save;
         _particle->_index++;
       }
 
@@ -11184,7 +10935,7 @@ void raytrace_all_funnel(unsigned long long ncount, unsigned long seed) {
         _particle_save = *_particle;
         class_grating_mask_trace(&_sam_var, _particle);
         if (_particle->_restore)
-        particle_restore(_particle, &_particle_save);
+          *_particle = _particle_save;
         _particle->_index++;
       }
 
@@ -11197,7 +10948,7 @@ void raytrace_all_funnel(unsigned long long ncount, unsigned long seed) {
         _particle_save = *_particle;
         class_DivPos_monitor_trace(&_div2b_var, _particle);
         if (_particle->_restore)
-        particle_restore(_particle, &_particle_save);
+          *_particle = _particle_save;
         _particle->_index++;
       }
 
@@ -11210,7 +10961,7 @@ void raytrace_all_funnel(unsigned long long ncount, unsigned long seed) {
         _particle_save = *_particle;
         class_DivPos_monitor_trace(&_div3_var, _particle);
         if (_particle->_restore)
-        particle_restore(_particle, &_particle_save);
+          *_particle = _particle_save;
         _particle->_index++;
       }
 
@@ -11223,7 +10974,7 @@ void raytrace_all_funnel(unsigned long long ncount, unsigned long seed) {
         _particle_save = *_particle;
         class_PSD_monitor_trace(&_det_var, _particle);
         if (_particle->_restore)
-        particle_restore(_particle, &_particle_save);
+          *_particle = _particle_save;
         _particle->_index++;
       }
 
@@ -11285,7 +11036,7 @@ _class_Progress_bar *class_Progress_bar_save(_class_Progress_bar *_comp
   #define StartTime (_comp->_parameters.StartTime)
   #define EndTime (_comp->_parameters.EndTime)
   #define CurrentTime (_comp->_parameters.CurrentTime)
-  SIG_MESSAGE("[_origin_save] component origin=Progress_bar() SAVE [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\misc\\Progress_bar.comp:120]");
+  SIG_MESSAGE("[_origin_save] component origin=Progress_bar() SAVE [C:\\mcstas-3.1\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\misc\\Progress_bar.comp:120]");
 
   MPI_MASTER(fprintf(stdout, "\nSave [%s]\n", instrument_name););
   if (profile && strlen(profile) && strcmp(profile,"NULL") && strcmp(profile,"0")) {
@@ -11333,7 +11084,7 @@ _class_DivPos_monitor *class_DivPos_monitor_save(_class_DivPos_monitor *_comp
   #define Div_N (_comp->_parameters.Div_N)
   #define Div_p (_comp->_parameters.Div_p)
   #define Div_p2 (_comp->_parameters.Div_p2)
-  SIG_MESSAGE("[_div1_save] component div1=DivPos_monitor() SAVE [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\monitors\\DivPos_monitor.comp:144]");
+  SIG_MESSAGE("[_div1_save] component div1=DivPos_monitor() SAVE [C:\\mcstas-3.1\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\monitors\\DivPos_monitor.comp:141]");
 
 if (!nowritefile) {
   DETECTOR_OUT_2D(
@@ -11380,7 +11131,7 @@ _class_PSD_monitor *class_PSD_monitor_save(_class_PSD_monitor *_comp
   #define PSD_N (_comp->_parameters.PSD_N)
   #define PSD_p (_comp->_parameters.PSD_p)
   #define PSD_p2 (_comp->_parameters.PSD_p2)
-  SIG_MESSAGE("[_det_save] component det=PSD_monitor() SAVE [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\monitors\\PSD_monitor.comp:106]");
+  SIG_MESSAGE("[_det_save] component det=PSD_monitor() SAVE [C:\\mcstas-3.1\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\monitors\\PSD_monitor.comp:104]");
 
     if (!nowritefile) {
       DETECTOR_OUT_2D(
@@ -11454,7 +11205,7 @@ _class_Progress_bar *class_Progress_bar_finally(_class_Progress_bar *_comp
   #define StartTime (_comp->_parameters.StartTime)
   #define EndTime (_comp->_parameters.EndTime)
   #define CurrentTime (_comp->_parameters.CurrentTime)
-  SIG_MESSAGE("[_origin_finally] component origin=Progress_bar() FINALLY [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\misc\\Progress_bar.comp:138]");
+  SIG_MESSAGE("[_origin_finally] component origin=Progress_bar() FINALLY [C:\\mcstas-3.1\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\misc\\Progress_bar.comp:138]");
 
   time_t NowTime;
   time(&NowTime);
@@ -11462,7 +11213,7 @@ _class_Progress_bar *class_Progress_bar_finally(_class_Progress_bar *_comp
   if (difftime(NowTime,StartTime) < 60.0)
     fprintf(stdout, "%g [s] ", difftime(NowTime,StartTime));
   else if (difftime(NowTime,StartTime) > 3600.0)
-    fprintf(stdout, "%g [h] ", difftime(NowTime,StartTime)/3600.0);
+    fprintf(stdout, "%g [h] ", difftime(NowTime,StartTime)/3660.0);
   else
     fprintf(stdout, "%g [min] ", difftime(NowTime,StartTime)/60.0);
   fprintf(stdout, "\n");
@@ -11528,7 +11279,7 @@ _class_Source_sam *class_Source_sam_finally(_class_Source_sam *_comp
   #define pTable_dxmax (_comp->_parameters.pTable_dxmax)
   #define pTable_dymin (_comp->_parameters.pTable_dymin)
   #define pTable_dymax (_comp->_parameters.pTable_dymax)
-  SIG_MESSAGE("[_src_finally] component src=Source_sam() FINALLY [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\contrib\\Source_sam.comp:578]");
+  SIG_MESSAGE("[_src_finally] component src=Source_sam() FINALLY [C:\\mcstas-3.1\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\contrib\\Source_sam.comp:578]");
 
   Table_Free(&pTable);
   Table_Free(&pTable_x);
@@ -11606,7 +11357,7 @@ _class_DivPos_monitor *class_DivPos_monitor_finally(_class_DivPos_monitor *_comp
   #define Div_N (_comp->_parameters.Div_N)
   #define Div_p (_comp->_parameters.Div_p)
   #define Div_p2 (_comp->_parameters.Div_p2)
-  SIG_MESSAGE("[_div1_finally] component div1=DivPos_monitor() FINALLY [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\monitors\\DivPos_monitor.comp:155]");
+  SIG_MESSAGE("[_div1_finally] component div1=DivPos_monitor() FINALLY [C:\\mcstas-3.1\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\monitors\\DivPos_monitor.comp:152]");
 
   destroy_darr2d(Div_N);
   destroy_darr2d(Div_p);
@@ -11633,44 +11384,6 @@ _class_DivPos_monitor *class_DivPos_monitor_finally(_class_DivPos_monitor *_comp
   return(_comp);
 } /* class_DivPos_monitor_finally */
 
-_class_PSD_monitor *class_PSD_monitor_finally(_class_PSD_monitor *_comp
-) {
-  #define nx (_comp->_parameters.nx)
-  #define ny (_comp->_parameters.ny)
-  #define filename (_comp->_parameters.filename)
-  #define xmin (_comp->_parameters.xmin)
-  #define xmax (_comp->_parameters.xmax)
-  #define ymin (_comp->_parameters.ymin)
-  #define ymax (_comp->_parameters.ymax)
-  #define xwidth (_comp->_parameters.xwidth)
-  #define yheight (_comp->_parameters.yheight)
-  #define restore_neutron (_comp->_parameters.restore_neutron)
-  #define nowritefile (_comp->_parameters.nowritefile)
-  #define PSD_N (_comp->_parameters.PSD_N)
-  #define PSD_p (_comp->_parameters.PSD_p)
-  #define PSD_p2 (_comp->_parameters.PSD_p2)
-  SIG_MESSAGE("[_det_finally] component det=PSD_monitor() FINALLY [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\monitors\\PSD_monitor.comp:119]");
-
-  destroy_darr2d(PSD_N);
-  destroy_darr2d(PSD_p);
-  destroy_darr2d(PSD_p2);
-  #undef nx
-  #undef ny
-  #undef filename
-  #undef xmin
-  #undef xmax
-  #undef ymin
-  #undef ymax
-  #undef xwidth
-  #undef yheight
-  #undef restore_neutron
-  #undef nowritefile
-  #undef PSD_N
-  #undef PSD_p
-  #undef PSD_p2
-  return(_comp);
-} /* class_PSD_monitor_finally */
-
 
 
 int finally(void) { /* called by mccode_main for AER_HFIR_2023:FINALLY */
@@ -11694,7 +11407,7 @@ int finally(void) { /* called by mccode_main for AER_HFIR_2023:FINALLY */
   save(siminfo_file); /* save data when simulation ends */
 
   /* Instrument 'AER_HFIR_2023' FINALLY */
-  SIG_MESSAGE("[AER_HFIR_2023] FINALLY [AER_HFIR_2023.instr:128]");
+  SIG_MESSAGE("[AER_HFIR_2023] FINALLY [AER_HFIR_2023.instr:132]");
   #define delta_lambda (instrument->_parameters.delta_lambda)
   #define low_count (instrument->_parameters.low_count)
   #define all_off (instrument->_parameters.all_off)
@@ -11736,7 +11449,6 @@ int finally(void) { /* called by mccode_main for AER_HFIR_2023:FINALLY */
 
   class_DivPos_monitor_finally(&_div3_var);
 
-  class_PSD_monitor_finally(&_det_var);
 
   siminfo_close(); 
 
@@ -11766,7 +11478,7 @@ _class_Progress_bar *class_Progress_bar_display(_class_Progress_bar *_comp
   #define StartTime (_comp->_parameters.StartTime)
   #define EndTime (_comp->_parameters.EndTime)
   #define CurrentTime (_comp->_parameters.CurrentTime)
-  SIG_MESSAGE("[_origin_display] component origin=Progress_bar() DISPLAY [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\misc\\Progress_bar.comp:152]");
+  SIG_MESSAGE("[_origin_display] component origin=Progress_bar() DISPLAY [C:\\mcstas-3.1\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\misc\\Progress_bar.comp:152]");
 
   printf("MCDISPLAY: component %s\n", _comp->_name);
 
@@ -11783,7 +11495,7 @@ _class_Progress_bar *class_Progress_bar_display(_class_Progress_bar *_comp
 
 _class_Arm *class_Arm_display(_class_Arm *_comp
 ) {
-  SIG_MESSAGE("[_arm_display] component arm=Arm() DISPLAY [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\optics\\Arm.comp:40]");
+  SIG_MESSAGE("[_arm_display] component arm=Arm() DISPLAY [C:\\mcstas-3.1\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\optics\\Arm.comp:40]");
 
   printf("MCDISPLAY: component %s\n", _comp->_name);
   /* A bit ugly; hard-coded dimensions. */
@@ -11845,7 +11557,7 @@ _class_Source_sam *class_Source_sam_display(_class_Source_sam *_comp
   #define pTable_dxmax (_comp->_parameters.pTable_dxmax)
   #define pTable_dymin (_comp->_parameters.pTable_dymin)
   #define pTable_dymax (_comp->_parameters.pTable_dymax)
-  SIG_MESSAGE("[_src_display] component src=Source_sam() DISPLAY [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\contrib\\Source_sam.comp:585]");
+  SIG_MESSAGE("[_src_display] component src=Source_sam() DISPLAY [C:\\mcstas-3.1\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\contrib\\Source_sam.comp:585]");
 
   printf("MCDISPLAY: component %s\n", _comp->_name);
   double xmin;
@@ -11967,7 +11679,7 @@ _class_DivPos_monitor *class_DivPos_monitor_display(_class_DivPos_monitor *_comp
   #define Div_N (_comp->_parameters.Div_N)
   #define Div_p (_comp->_parameters.Div_p)
   #define Div_p2 (_comp->_parameters.Div_p2)
-  SIG_MESSAGE("[_div1_display] component div1=DivPos_monitor() DISPLAY [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\monitors\\DivPos_monitor.comp:162]");
+  SIG_MESSAGE("[_div1_display] component div1=DivPos_monitor() DISPLAY [C:\\mcstas-3.1\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\monitors\\DivPos_monitor.comp:159]");
 
   printf("MCDISPLAY: component %s\n", _comp->_name);
 
@@ -12005,7 +11717,7 @@ _class_Set_pol *class_Set_pol_display(_class_Set_pol *_comp
   #define pz (_comp->_parameters.pz)
   #define randomOn (_comp->_parameters.randomOn)
   #define normalize (_comp->_parameters.normalize)
-  SIG_MESSAGE("[_pol_display] component pol=Set_pol() DISPLAY [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\optics\\Set_pol.comp:103]");
+  SIG_MESSAGE("[_pol_display] component pol=Set_pol() DISPLAY [C:\\mcstas-3.1\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\optics\\Set_pol.comp:103]");
 
   printf("MCDISPLAY: component %s\n", _comp->_name);
   /* A bit ugly; hard-coded dimensions. */
@@ -12044,7 +11756,7 @@ _class_Pol_MWP_v3 *class_Pol_MWP_v3_display(_class_Pol_MWP_v3 *_comp
   #define LG (_comp->_parameters.LG)
   #define phi (_comp->_parameters.phi)
   #define psi (_comp->_parameters.psi)
-  SIG_MESSAGE("[_MWP1_display] component MWP1=Pol_MWP_v3() DISPLAY [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\contrib\\Pol_MWP_v3.comp:140]");
+  SIG_MESSAGE("[_MWP1_display] component MWP1=Pol_MWP_v3() DISPLAY [C:\\mcstas-3.1\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\contrib\\Pol_MWP_v3.comp:140]");
 
   printf("MCDISPLAY: component %s\n", _comp->_name);
 	box(0, 0, zdepth/2.0, xwidth, yheight, zdepth);
@@ -12081,7 +11793,7 @@ _class_Pol_constBfield *class_Pol_constBfield_display(_class_Pol_constBfield *_c
   #define fliplambda (_comp->_parameters.fliplambda)
   #define flipangle (_comp->_parameters.flipangle)
   #define omegaL (_comp->_parameters.omegaL)
-  SIG_MESSAGE("[_CG_display] component CG=Pol_constBfield() DISPLAY [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\optics\\Pol_constBfield.comp:147]");
+  SIG_MESSAGE("[_CG_display] component CG=Pol_constBfield() DISPLAY [C:\\mcstas-3.1\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\optics\\Pol_constBfield.comp:147]");
 
   printf("MCDISPLAY: component %s\n", _comp->_name);
   box(0, 0, zdepth/2, xwidth, yheight, zdepth);
@@ -12100,7 +11812,7 @@ _class_PolAnalyser_ideal *class_PolAnalyser_ideal_display(_class_PolAnalyser_ide
   #define mx (_comp->_parameters.mx)
   #define my (_comp->_parameters.my)
   #define mz (_comp->_parameters.mz)
-  SIG_MESSAGE("[_ana_display] component ana=PolAnalyser_ideal() DISPLAY [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\optics\\PolAnalyser_ideal.comp:82]");
+  SIG_MESSAGE("[_ana_display] component ana=PolAnalyser_ideal() DISPLAY [C:\\mcstas-3.1\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\optics\\PolAnalyser_ideal.comp:82]");
 
   printf("MCDISPLAY: component %s\n", _comp->_name);
   /* A bit ugly; hard-coded dimensions. */
@@ -12145,7 +11857,7 @@ _class_grating_mask *class_grating_mask_display(_class_grating_mask *_comp
   #define x_inner_min (_comp->_parameters.x_inner_min)
   #define extra (_comp->_parameters.extra)
   #define pass (_comp->_parameters.pass)
-  SIG_MESSAGE("[_sam_display] component sam=grating_mask() DISPLAY [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\contrib\\grating_mask.comp:118]");
+  SIG_MESSAGE("[_sam_display] component sam=grating_mask() DISPLAY [C:\\mcstas-3.1\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\contrib\\grating_mask.comp:116]");
 
   printf("MCDISPLAY: component %s\n", _comp->_name);
 /* Draw outer and inner square */
@@ -12184,7 +11896,7 @@ _class_PSD_monitor *class_PSD_monitor_display(_class_PSD_monitor *_comp
   #define PSD_N (_comp->_parameters.PSD_N)
   #define PSD_p (_comp->_parameters.PSD_p)
   #define PSD_p2 (_comp->_parameters.PSD_p2)
-  SIG_MESSAGE("[_det_display] component det=PSD_monitor() DISPLAY [C:\\mcstas-3.2\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\monitors\\PSD_monitor.comp:126]");
+  SIG_MESSAGE("[_det_display] component det=PSD_monitor() DISPLAY [C:\\mcstas-3.1\\lib\\tools\\Python\\mcrun\\..\\mccodelib\\..\\..\\..\\monitors\\PSD_monitor.comp:118]");
 
   printf("MCDISPLAY: component %s\n", _comp->_name);
   
@@ -12287,27 +11999,6 @@ void* _get_particle_var(char *token, _class_particle *p)
   return 0;
 }
 
-int _getcomp_index(char* compname)
-/* Enables retrieving the component position & rotation when the index is not known.
- * Component indexing into MACROS, e.g., POS_A_COMP_INDEX, are 1-based! */
-{
-  if (!strcmp(compname, "origin")) return 1;
-  if (!strcmp(compname, "arm")) return 2;
-  if (!strcmp(compname, "src")) return 3;
-  if (!strcmp(compname, "div1")) return 4;
-  if (!strcmp(compname, "pol")) return 5;
-  if (!strcmp(compname, "MWP1")) return 6;
-  if (!strcmp(compname, "CG")) return 7;
-  if (!strcmp(compname, "MWP2")) return 8;
-  if (!strcmp(compname, "ana")) return 9;
-  if (!strcmp(compname, "div2")) return 10;
-  if (!strcmp(compname, "sam")) return 11;
-  if (!strcmp(compname, "div2b")) return 12;
-  if (!strcmp(compname, "div3")) return 13;
-  if (!strcmp(compname, "det")) return 14;
-  return -1;
-}
-
 /* embedding file "mccode_main.c" */
 
 /*******************************************************************************
@@ -12336,13 +12027,13 @@ int mccode_main(int argc, char *argv[])
   MPI_Get_processor_name(mpi_node_name, &mpi_node_name_len);
 #endif /* USE_MPI */
 
-  ct = clock();
+  //ct = clock();    /* we use clock rather than time to set the default seed */
+  //mcseed=(long)ct;
 
   // device and host functional RNG seed
   struct timeval tm;
   gettimeofday(&tm, NULL);
   mcseed = (long) tm.tv_sec*1000000 + tm.tv_usec;
-  mcstartdate = (long)tm.tv_sec;  /* set start date before parsing options and creating sim file */
   // init global _particle.randstate for random number use
   // during init(), finally() and display(). NOTE: during trace, a local
   // "_particle" variable is present and thus used instead.
@@ -12374,6 +12065,10 @@ int mccode_main(int argc, char *argv[])
   }
 #endif
 #endif
+
+  // COMMON seed - not functional
+  //time_t  t;
+  mcstartdate = (long)t;  /* set start date before parsing options and creating sim file */
 
   /* *** parse options ******************************************************* */
   SIG_MESSAGE("[" __FILE__ "] main START");

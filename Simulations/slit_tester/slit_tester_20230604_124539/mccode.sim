@@ -1,0 +1,157 @@
+McStas simulation description file for template_body_simple.
+Date:    Sun Jun 04 12:45:40 2023
+Program: McStas 3.1 - Nov. 24, 2021
+
+begin instrument: template_body_simple
+  File: C:\Users\samck\Documents\GitHub\AER-HFIR-2023\Simulations\slit_tester\slit_tester_20230604_124539/mccode
+  Source: slit_tester.instr
+  Parameters:  Par1(double)
+  Trace_enabled: yes
+  Default_main: yes
+  Embedded_runtime: yes
+end instrument
+
+begin simulation: C:\Users\samck\Documents\GitHub\AER-HFIR-2023\Simulations\slit_tester\slit_tester_20230604_124539
+  Format: McCode with text headers
+  URL: http://www.mccode.org
+  Creator: McStas 3.1 - Nov. 24, 2021
+  Instrument: slit_tester.instr
+  Ncount: 1000000
+  Trace: no
+  Gravitation: no
+  Seed: -2077142640
+  Directory: C:\Users\samck\Documents\GitHub\AER-HFIR-2023\Simulations\slit_tester\slit_tester_20230604_124539
+  Param: Par1=1
+end simulation
+
+begin data
+  Date: Sun Jun 04 12:45:41 2023 (1685897141)
+  type: array_2d(128, 100)
+  Source: template_body_simple (slit_tester.instr)
+  component: div1
+  position: 0 0 0.001
+  title: Position-divergence monitor
+  Ncount: 2000000
+  filename: one.dat
+  statistics: X0=1.2492e-006; dX=0.00432692; Y0=0.000532053; dY=0.365997;
+  signal: Min=0; Max=50897; Mean=15777.8;
+  values: 2.01956e+008 201956 1e+006
+  xvar: po
+  yvar: di
+  xlabel: pos [m]
+  ylabel: divergence [deg]
+  zvar: I
+  zlabel: Signal per bin
+  xylimits: -0.015 0.015 -0.8 0.8
+  variables: I I_err N
+end data
+
+begin data
+  Date: Sun Jun 04 12:45:41 2023 (1685897141)
+  type: array_2d(128, 100)
+  Source: template_body_simple (slit_tester.instr)
+  component: div1aa
+  position: 0 0 0.5999
+  title: Position-divergence monitor
+  Ncount: 2000000
+  filename: oneaa.dat
+  statistics: X0=6.98589e-006; dX=0.00489076; Y0=0.000532053; dY=0.365997;
+  signal: Min=0; Max=52910.7; Mean=15777.8;
+  values: 2.01956e+008 201956 1e+006
+  xvar: po
+  yvar: di
+  xlabel: pos [m]
+  ylabel: divergence [deg]
+  zvar: I
+  zlabel: Signal per bin
+  xylimits: -0.015 0.015 -0.8 0.8
+  variables: I I_err N
+end data
+
+begin data
+  Date: Sun Jun 04 12:45:41 2023 (1685897141)
+  type: array_2d(128, 100)
+  Source: template_body_simple (slit_tester.instr)
+  component: div1a
+  position: 0 0 0.6001
+  title: Position-divergence monitor
+  Ncount: 2000000
+  filename: onea.dat
+  statistics: X0=-8.32401e-007; dX=0.00219836; Y0=0.000464674; dY=0.387834;
+  signal: Min=0; Max=17571.4; Mean=7540.59;
+  values: 9.65196e+007 139616 477928
+  xvar: po
+  yvar: di
+  xlabel: pos [m]
+  ylabel: divergence [deg]
+  zvar: I
+  zlabel: Signal per bin
+  xylimits: -0.005 0.005 -0.8 0.8
+  variables: I I_err N
+end data
+
+begin data
+  Date: Sun Jun 04 12:45:41 2023 (1685897141)
+  type: array_2d(128, 100)
+  Source: template_body_simple (slit_tester.instr)
+  component: div2
+  position: 0 0 1.559
+  title: Position-divergence monitor
+  Ncount: 2000000
+  filename: two.dat
+  statistics: X0=7.26219e-006; dX=0.00742387; Y0=0.000464674; dY=0.387834;
+  signal: Min=0; Max=71491.2; Mean=7540.59;
+  values: 9.65196e+007 139616 477928
+  xvar: po
+  yvar: di
+  xlabel: pos [m]
+  ylabel: divergence [deg]
+  zvar: I
+  zlabel: Signal per bin
+  xylimits: -0.025 0.025 -0.8 0.8
+  variables: I I_err N
+end data
+
+begin data
+  Date: Sun Jun 04 12:45:41 2023 (1685897141)
+  type: array_2d(128, 100)
+  Source: template_body_simple (slit_tester.instr)
+  component: div3
+  position: 0 0 1.56
+  title: Position-divergence monitor
+  Ncount: 2000000
+  filename: three.dat
+  statistics: X0=0; dX=0; Y0=0; dY=0;
+  signal: Min=0; Max=0; Mean=0;
+  values: 0 0 0
+  xvar: po
+  yvar: di
+  xlabel: pos [m]
+  ylabel: divergence [deg]
+  zvar: I
+  zlabel: Signal per bin
+  xylimits: -0.015 0.015 -0.8 0.8
+  variables: I I_err N
+end data
+
+begin data
+  Date: Sun Jun 04 12:45:41 2023 (1685897141)
+  type: array_2d(128, 128)
+  Source: template_body_simple (slit_tester.instr)
+  component: det
+  position: 0 0 2.36
+  title: PSD monitor
+  Ncount: 2000000
+  filename: test.dat
+  statistics: X0=0; dX=0; Y0=0; dY=0;
+  signal: Min=0; Max=0; Mean=0;
+  values: 0 0 0
+  xvar: X 
+  yvar: Y 
+  xlabel: X position [cm]
+  ylabel: Y position [cm]
+  zvar: I
+  zlabel: Signal per bin
+  xylimits: -2.5 2.5 -2.5 2.5
+  variables: I I_err N
+end data

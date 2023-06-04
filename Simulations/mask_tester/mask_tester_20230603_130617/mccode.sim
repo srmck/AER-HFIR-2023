@@ -1,0 +1,46 @@
+McStas simulation description file for mask_tester.
+Date:    Sat Jun 03 13:06:19 2023
+Program: McStas 3.1 - Nov. 24, 2021
+
+begin instrument: mask_tester
+  File: C:\Users\samck\Documents\GitHub\AER-HFIR-2023\Simulations\mask_tester\mask_tester_20230603_130617/mccode
+  Source: mask_tester.instr
+  Parameters: 
+  Trace_enabled: yes
+  Default_main: yes
+  Embedded_runtime: yes
+end instrument
+
+begin simulation: C:\Users\samck\Documents\GitHub\AER-HFIR-2023\Simulations\mask_tester\mask_tester_20230603_130617
+  Format: McCode with text headers
+  URL: http://www.mccode.org
+  Creator: McStas 3.1 - Nov. 24, 2021
+  Instrument: mask_tester.instr
+  Ncount: 1000000
+  Trace: no
+  Gravitation: no
+  Seed: -1338895612
+  Directory: C:\Users\samck\Documents\GitHub\AER-HFIR-2023\Simulations\mask_tester\mask_tester_20230603_130617
+end simulation
+
+begin data
+  Date: Sat Jun 03 13:06:19 2023 (1685811979)
+  type: array_2d(128, 128)
+  Source: mask_tester (mask_tester.instr)
+  component: det
+  position: 0 0 0.02
+  title: PSD monitor
+  Ncount: 2000000
+  filename: test.dat
+  statistics: X0=9.67632e-005; dX=0.934796; Y0=-0.000706026; dY=0.936883;
+  signal: Min=0; Max=1.62135e+008; Mean=2.95234e+007;
+  values: 4.83712e+011 1.08871e+009 306196
+  xvar: X 
+  yvar: Y 
+  xlabel: X position [cm]
+  ylabel: Y position [cm]
+  zvar: I
+  zlabel: Signal per bin
+  xylimits: -2.5 2.5 -2.5 2.5
+  variables: I I_err N
+end data

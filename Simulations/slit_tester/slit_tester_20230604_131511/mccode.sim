@@ -1,0 +1,182 @@
+McStas simulation description file for Slit_tester.
+Date:    Sun Jun 04 13:15:12 2023
+Program: McStas 3.1 - Nov. 24, 2021
+
+begin instrument: Slit_tester
+  File: C:\Users\samck\Documents\GitHub\AER-HFIR-2023\Simulations\slit_tester\slit_tester_20230604_131511/mccode
+  Source: slit_tester.instr
+  Parameters:  Ld(double) Lc(double) Ls(double) W1(double)
+  Trace_enabled: yes
+  Default_main: yes
+  Embedded_runtime: yes
+end instrument
+
+begin simulation: C:\Users\samck\Documents\GitHub\AER-HFIR-2023\Simulations\slit_tester\slit_tester_20230604_131511
+  Format: McCode with text headers
+  URL: http://www.mccode.org
+  Creator: McStas 3.1 - Nov. 24, 2021
+  Instrument: slit_tester.instr
+  Ncount: 1000000
+  Trace: no
+  Gravitation: no
+  Seed: -305005530
+  Directory: C:\Users\samck\Documents\GitHub\AER-HFIR-2023\Simulations\slit_tester\slit_tester_20230604_131511
+  Param: Ld=2.36
+  Param: Lc=0.6
+  Param: Ls=0.8
+  Param: W1=0.015
+end simulation
+
+begin data
+  Date: Sun Jun 04 13:15:14 2023 (1685898914)
+  type: array_2d(128, 100)
+  Source: Slit_tester (slit_tester.instr)
+  component: div1
+  position: 0 0 0.001
+  title: Position-divergence monitor
+  Ncount: 2000000
+  filename: one.dat
+  statistics: X0=-6.41175e-006; dX=0.0043298; Y0=0.000134629; dY=0.365625;
+  signal: Min=0; Max=53926; Mean=15777.8;
+  values: 2.01956e+008 201956 1e+006
+  xvar: po
+  yvar: di
+  xlabel: pos [m]
+  ylabel: divergence [deg]
+  zvar: I
+  zlabel: Signal per bin
+  xylimits: -0.015 0.015 -0.8 0.8
+  variables: I I_err N
+end data
+
+begin data
+  Date: Sun Jun 04 13:15:14 2023 (1685898914)
+  type: array_2d(128, 100)
+  Source: Slit_tester (slit_tester.instr)
+  component: div2
+  position: 0 0 0.599
+  title: Position-divergence monitor
+  Ncount: 2000000
+  filename: two.dat
+  statistics: X0=-4.93767e-006; dX=0.00488577; Y0=0.000134629; dY=0.365625;
+  signal: Min=0; Max=51098.8; Mean=15777.8;
+  values: 2.01956e+008 201956 1e+006
+  xvar: po
+  yvar: di
+  xlabel: pos [m]
+  ylabel: divergence [deg]
+  zvar: I
+  zlabel: Signal per bin
+  xylimits: -0.015 0.015 -0.8 0.8
+  variables: I I_err N
+end data
+
+begin data
+  Date: Sun Jun 04 13:15:14 2023 (1685898914)
+  type: array_2d(128, 100)
+  Source: Slit_tester (slit_tester.instr)
+  component: div3
+  position: 0 0 0.601
+  title: Position-divergence monitor
+  Ncount: 2000000
+  filename: three.dat
+  statistics: X0=-2.29954e-006; dX=0.00232746; Y0=0.000365067; dY=0.385288;
+  signal: Min=0; Max=17971.6; Mean=7920.5;
+  values: 1.01382e+008 143090 502006
+  xvar: po
+  yvar: di
+  xlabel: pos [m]
+  ylabel: divergence [deg]
+  zvar: I
+  zlabel: Signal per bin
+  xylimits: -0.005 0.005 -0.8 0.8
+  variables: I I_err N
+end data
+
+begin data
+  Date: Sun Jun 04 13:15:14 2023 (1685898914)
+  type: array_2d(128, 100)
+  Source: Slit_tester (slit_tester.instr)
+  component: div4
+  position: 0 0 1.559
+  title: Position-divergence monitor
+  Ncount: 2000000
+  filename: four.dat
+  statistics: X0=3.85228e-006; dX=0.00747267; Y0=0.000365067; dY=0.385288;
+  signal: Min=0; Max=71294.9; Mean=7920.5;
+  values: 1.01382e+008 143090 502006
+  xvar: po
+  yvar: di
+  xlabel: pos [m]
+  ylabel: divergence [deg]
+  zvar: I
+  zlabel: Signal per bin
+  xylimits: -0.025 0.025 -0.8 0.8
+  variables: I I_err N
+end data
+
+begin data
+  Date: Sun Jun 04 13:15:14 2023 (1685898914)
+  type: array_2d(128, 100)
+  Source: Slit_tester (slit_tester.instr)
+  component: div5
+  position: 0 0 1.561
+  title: Position-divergence monitor
+  Ncount: 2000000
+  filename: five.dat
+  statistics: X0=4.276e-005; dX=0.00531812; Y0=0.00208989; dY=0.292633;
+  signal: Min=0; Max=33931.9; Mean=2144.05;
+  values: 2.74439e+007 74450.3 135881
+  xvar: po
+  yvar: di
+  xlabel: pos [m]
+  ylabel: divergence [deg]
+  zvar: I
+  zlabel: Signal per bin
+  xylimits: -0.015 0.015 -0.8 0.8
+  variables: I I_err N
+end data
+
+begin data
+  Date: Sun Jun 04 13:15:14 2023 (1685898914)
+  type: array_2d(128, 100)
+  Source: Slit_tester (slit_tester.instr)
+  component: div6
+  position: 0 0 2.359
+  title: Position-divergence monitor
+  Ncount: 2000000
+  filename: six.dat
+  statistics: X0=4.4024e-005; dX=0.00846232; Y0=0.00113283; dY=0.266478;
+  signal: Min=0; Max=32114.4; Mean=1856.19;
+  values: 2.37592e+007 69272.9 117635
+  xvar: po
+  yvar: di
+  xlabel: pos [m]
+  ylabel: divergence [deg]
+  zvar: I
+  zlabel: Signal per bin
+  xylimits: -0.015 0.015 -0.8 0.8
+  variables: I I_err N
+end data
+
+begin data
+  Date: Sun Jun 04 13:15:14 2023 (1685898914)
+  type: array_2d(128, 128)
+  Source: Slit_tester (slit_tester.instr)
+  component: det
+  position: 0 0 2.36
+  title: PSD monitor
+  Ncount: 2000000
+  filename: test.dat
+  statistics: X0=0.00715422; dX=0.917786; Y0=0.00427625; dY=0.899865;
+  signal: Min=0; Max=8482.65; Mean=1675.04;
+  values: 2.74439e+007 74450.3 135881
+  xvar: X 
+  yvar: Y 
+  xlabel: X position [cm]
+  ylabel: Y position [cm]
+  zvar: I
+  zlabel: Signal per bin
+  xylimits: -2.5 2.5 -2.5 2.5
+  variables: I I_err N
+end data

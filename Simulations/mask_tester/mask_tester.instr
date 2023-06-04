@@ -1,0 +1,66 @@
+/*******************************************************************************
+* Instrument: <instrument name>
+*
+* %I
+* Written by: <your name (email)>
+* Date: <current date>
+* Origin: <your institution>
+* %INSTRUMENT_SITE: Templates
+*
+* <instrument short description>
+*
+* %D
+* <instrument description>
+*
+* Example: <parameters=values>
+*
+* %P
+* <parameter1>: [<unit>] <parameter1 description>
+* ...
+*
+* %L
+* <reference/HTML link>
+*
+* %E
+*******************************************************************************/
+DEFINE INSTRUMENT mask_tester()
+
+DECLARE
+%{
+%}
+
+INITIALIZE
+%{
+%}
+
+TRACE 
+COMPONENT origin = Progress_bar()
+AT (0,0,0) ABSOLUTE
+
+COMPONENT arm = Arm()
+AT (0,0,0) RELATIVE origin
+
+COMPONENT src = Source_sam(
+ dist = .5, focus_xw = 0.05,
+ focus_yh = 0.05, lambda0 = 5.5,
+ dlambda = .0001, I1 = 1E+15,
+ yheight = 0.019, xwidth = 0.019)
+AT (0,0,0) RELATIVE origin
+
+COMPONENT sam = grating_mask(
+ outer = 0.04, inner = 0.02,
+ Tr_len = 0.002, Ab_len = 0.002,
+ offset = 0.001, slits = 5)
+AT (0,0.0,.01) RELATIVE origin
+
+COMPONENT det = PSD_monitor(
+ nx = 128, ny = 128,
+ filename = "test.dat", xwidth = .05,
+ yheight = 0.05)
+AT (0,0,.02) RELATIVE origin
+
+FINALLY
+%{
+%}
+
+END

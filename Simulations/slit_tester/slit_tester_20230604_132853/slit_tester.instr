@@ -1,0 +1,117 @@
+/*******************************************************************************
+* Instrument: <instrument name>
+*
+* %I
+* Written by: SRM
+* Date: 2023
+* Origin: IU
+* %INSTRUMENT_SITE: Templates
+*
+* Tests the phase space for AER cycle 501.
+*
+* %D
+* <instrument description>
+*
+* Example: <parameters=values>
+*
+* %P
+* <parameter1>: [<unit>] <parameter1 description>
+* ...
+*
+* %L
+* <reference/HTML link>
+*
+* %E
+*******************************************************************************/
+DEFINE INSTRUMENT Slit_tester(Ld=2.36,Lc=.6,Ls=.8,W1=.015,det=.1)
+
+DECLARE
+%{
+  double W2;
+  double max_div;
+%}
+
+INITIALIZE
+%{
+  W2 = W1/(1 + Lc/Ls); //focusing condition
+  max_div = (W1 + det)/(2*Ld); //maximum divergence at detector
+%}
+
+TRACE 
+COMPONENT origin = Progress_bar()
+AT (0,0,0) ABSOLUTE
+
+COMPONENT arm = Arm()
+AT (0,0,0) RELATIVE origin
+
+COMPONENT src = Source_sam(
+ dist = Ld, focus_xw = det,
+ focus_yh = det, lambda0 = 5.5,
+ dlambda = .0001, I1 = 1E+12,
+ yheight = 0.015, xwidth = 0.015)
+AT (0,0,0) RELATIVE origin
+
+COMPONENT div1 = DivPos_monitor(
+ nb = 128, ndiv = 100,
+ filename = "one.dat", xwidth = det,
+ yheight = det, maxdiv = .1,
+ vertical = 0)
+AT (0,0,.001) RELATIVE origin
+
+COMPONENT div2 = DivPos_monitor(
+ nb = 128, ndiv = 100,
+ filename = "two.dat", xwidth = det,
+ yheight = det, maxdiv = max_div,
+ vertical = 0)
+AT (0,0,Lc-.001) RELATIVE origin
+
+COMPONENT slit = Slit(
+ xwidth=W2,
+ yheight=.015)
+AT (0,0,Lc) RELATIVE origin
+
+COMPONENT div3 = DivPos_monitor(
+ nb = 128, ndiv = 100,
+ filename = "three.dat", xwidth = det,
+ yheight = det, maxdiv = max_div,
+ vertical = 0)
+AT (0,0,Lc+.001) RELATIVE origin
+
+COMPONENT div4 = DivPos_monitor(
+ nb = 128, ndiv = 100,
+ filename = "four.dat", xwidth = det,
+ yheight = det, maxdiv = max_div,
+ vertical = 0)
+AT (0,0,Ld-Ls-.001) RELATIVE origin
+
+COMPONENT sam = grating_mask(
+ outer = 0.04, inner = 0.02,
+ Tr_len = 0.002, Ab_len = 0.002,
+ offset = 0.001, slits = 5)
+AT (0,0,Ld-Ls) RELATIVE origin
+
+COMPONENT div5 = DivPos_monitor(
+ nb = 128, ndiv = 100,
+ filename = "five.dat", xwidth = det,
+ yheight = det, maxdiv = max_div,
+ vertical = 0)
+AT (0,0,Ld-Ls+.001) RELATIVE origin
+
+COMPONENT div6 = DivPos_monitor(
+ nb = 128, ndiv = 100,
+ filename = "six.dat", xwidth = det,
+ yheight = det, maxdiv = max_div,
+ vertical = 0)
+AT (0,0,Ld-.001) RELATIVE origin
+
+COMPONENT det = PSD_monitor(
+ nx = 128, ny = 128,
+ filename = "test.dat", xwidth = det,
+ yheight = det)
+AT (0,0,Ld) RELATIVE origin
+
+FINALLY
+%{
+%}
+
+END
